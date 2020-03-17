@@ -131,17 +131,17 @@ TEST_CASE("vec2d operations", "[vectors]")
 
 TEST_CASE("vec2i constructors and swizzling", "[vectors]" ) 
 {
-	vec2d a(-3, 4);
+	vec2i a(-3, 4);
 	CHECK((a.x == -3 && a.y == 4));
  	CHECK((a.u == -3 && a.v == 4));
- 	CHECK((a.width == -3.0 && a.height == 4));
+ 	CHECK((a.width == -3 && a.height == 4));
  	CHECK((a.left == -3 && a.top == 4));
  	CHECK((a.elements[0] == -3 && a.elements[1] == 4));
 
-	vec2d b(1);
+	vec2i b(1);
 	CHECK((b.x == 1 && b.y == 1));
 
-	vec2d c;
+	vec2i c;
 	CHECK((c.x == 0 && c.y == 0));
 }
 
@@ -158,11 +158,11 @@ TEST_CASE("vec2i operations", "[vectors]")
 	CHECK(subRes.x == 7);
 	CHECK(subRes.y == 1);
 	
-	vec2i scalarMulRes1 = a * -5.f;
+	vec2i scalarMulRes1 = a * -5;
 	CHECK(scalarMulRes1.x == -10);
 	CHECK(scalarMulRes1.y == -20);
 	
-	vec2i scalarMulRes2 = -5.f * a;
+	vec2i scalarMulRes2 = -5 * a;
 	CHECK(scalarMulRes1.x == -10);
 	CHECK(scalarMulRes1.y == -20);
 	
@@ -175,4 +175,49 @@ TEST_CASE("vec2i operations", "[vectors]")
 	CHECK(hadamardDivRes.y == 1);
 }
 
+TEST_CASE("vec2u constructors and swizzling", "[vectors]" ) 
+{
+	vec2u a(3, 4);
+	CHECK((a.x == 3 && a.y == 4));
+ 	CHECK((a.u == 3 && a.v == 4));
+ 	CHECK((a.width == 3 && a.height == 4));
+ 	CHECK((a.left == 3 && a.top == 4));
+ 	CHECK((a.elements[0] == 3 && a.elements[1] == 4));
+
+	vec2u b(1);
+	CHECK((b.x == 1 && b.y == 1));
+
+	vec2u c;
+	CHECK((c.x == 0 && c.y == 0));
+}
+
+TEST_CASE("vec2u operations", "[vectors]")
+{
+	vec2u a(5, 4);
+	vec2u b(1, 3);
+	
+	vec2u addRes = a + b;
+	CHECK(addRes.x == 6);
+	CHECK(addRes.y == 7);
+	
+	vec2u subRes = a - b;
+	CHECK(subRes.x == 4);
+	CHECK(subRes.y == 1);
+	
+	vec2u scalarMulRes1 = a * 5;
+	CHECK(scalarMulRes1.x == 25);
+	CHECK(scalarMulRes1.y == 20);
+	
+	vec2u scalarMulRes2 = 5 * a;
+	CHECK(scalarMulRes1.x == 25);
+	CHECK(scalarMulRes1.y == 20);
+	
+	vec2u hadamardMulRes = hadamardMul(a, b); 
+	CHECK(hadamardMulRes.x == 5);
+	CHECK(hadamardMulRes.y == 12);
+
+	vec2u hadamardDivRes = hadamardDiv(a, b); 
+	CHECK(hadamardDivRes.x == 5);
+	CHECK(hadamardDivRes.y == 1);
+}
 

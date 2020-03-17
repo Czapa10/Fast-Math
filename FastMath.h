@@ -99,6 +99,36 @@ vec2i hadamardMul(vec2i a, vec2i b);
 vec2i hadamardDiv(vec2i a, vec2i b);
 
 
+union vec2u
+{
+	vec2u(unsigned x, unsigned y) : x(x), y(y) {}
+	vec2u(unsigned a) : x(a), y(a) {}
+	vec2u() : x(0.f), y(0.f) {} 
+
+	struct {
+		unsigned x, y;
+	};
+	struct {
+		unsigned u, v;
+	};
+	struct {
+		unsigned left, top;
+	};
+	struct {
+		unsigned width, height;
+	};
+	unsigned elements[2];
+};
+
+vec2u operator+(vec2u a, vec2u b);
+vec2u operator-(vec2u a, vec2u b);
+vec2u operator*(vec2u v, unsigned scalar);
+vec2u operator*(unsigned scalar, vec2u v);
+vec2u operator/(vec2u v, unsigned scalar);
+vec2u hadamardMul(vec2u a, vec2u b);
+vec2u hadamardDiv(vec2u a, vec2u b);
+
+
 }
 
 #endif // FAST_MATH_H
@@ -252,6 +282,44 @@ vec2i hadamardMul(vec2i a, vec2i b)
 vec2i hadamardDiv(vec2i a, vec2i b)
 {
 	return vec2i(a.x / b.x, a.y / b.y);
+}
+
+///////////////////////
+// vec2u functions ////
+///////////////////////
+vec2u operator+(vec2u a, vec2u b)
+{
+	return vec2u(a.x + b.x, a.y + b.y);
+}
+
+vec2u operator-(vec2u a, vec2u b)
+{
+	return vec2u(a.x - b.x, a.y - b.y);
+}
+
+vec2u operator*(vec2u v, unsigned scalar)
+{
+	return vec2u(v.x * scalar, v.y * scalar);
+}
+
+vec2u operator*(unsigned scalar, vec2u v)
+{
+	return vec2u(v.x * scalar, v.y * scalar);
+}
+
+vec2u operator/(vec2u v, unsigned scalar)
+{
+	return vec2u(v.x / scalar, v.y / scalar);
+}
+
+vec2u hadamardMul(vec2u a, vec2u b)
+{
+	return vec2u(a.x * b.x, a.y * b.y);
+}
+
+vec2u hadamardDiv(vec2u a, vec2u b)
+{
+	return vec2u(a.x / b.x, a.y / b.y);
 }
 
 
