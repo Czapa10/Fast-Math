@@ -27,6 +27,7 @@ union vec2
 vec2 operator+(vec2 a, vec2 b);
 vec2 operator-(vec2 a, vec2 b);
 vec2 operator*(vec2 v, float scalar);
+vec2 operator*(float scalar, vec2 v);
 vec2 operator/(vec2 v, float scalar);
 vec2 hadamardMul(vec2 a, vec2 b);
 vec2 hadamardDiv(vec2 a, vec2 b);
@@ -59,12 +60,44 @@ union vec2d
 vec2d operator+(vec2d a, vec2d b);
 vec2d operator-(vec2d a, vec2d b);
 vec2d operator*(vec2d v, double scalar);
+vec2d operator*(double scalar, vec2d v);
 vec2d operator/(vec2d v, double scalar);
 vec2d hadamardMul(vec2d a, vec2d b);
 vec2d hadamardDiv(vec2d a, vec2d b);
 double dot(vec2d a, vec2d b);
 double lenght(vec2d v);
 vec2d normalize(vec2d v);
+
+
+union vec2i
+{
+	vec2i(int x, int y) : x(x), y(y) {}
+	vec2i(int a) : x(a), y(a) {}
+	vec2i() : x(0.f), y(0.f) {} 
+
+	struct {
+		int x, y;
+	};
+	struct {
+		int u, v;
+	};
+	struct {
+		int left, top;
+	};
+	struct {
+		int width, height;
+	};
+	int elements[2];
+};
+
+vec2i operator+(vec2i a, vec2i b);
+vec2i operator-(vec2i a, vec2i b);
+vec2i operator*(vec2i v, int scalar);
+vec2i operator*(int scalar, vec2i v);
+vec2i operator/(vec2i v, int scalar);
+vec2i hadamardMul(vec2i a, vec2i b);
+vec2i hadamardDiv(vec2i a, vec2i b);
+
 
 }
 
@@ -183,6 +216,43 @@ vec2d normalize(vec2d v)
 	return v / length(v);
 }
 
+///////////////////////
+// vec2i functions ////
+///////////////////////
+vec2i operator+(vec2i a, vec2i b)
+{
+	return vec2i(a.x + b.x, a.y + b.y);
+}
+
+vec2i operator-(vec2i a, vec2i b)
+{
+	return vec2i(a.x - b.x, a.y - b.y);
+}
+
+vec2i operator*(vec2i v, int scalar)
+{
+	return vec2i(v.x * scalar, v.y * scalar);
+}
+
+vec2i operator*(int scalar, vec2i v)
+{
+	return vec2i(v.x * scalar, v.y * scalar);
+}
+
+vec2i operator/(vec2i v, int scalar)
+{
+	return vec2i(v.x / scalar, v.y / scalar);
+}
+
+vec2i hadamardMul(vec2i a, vec2i b)
+{
+	return vec2i(a.x * b.x, a.y * b.y);
+}
+
+vec2i hadamardDiv(vec2i a, vec2i b)
+{
+	return vec2i(a.x / b.x, a.y / b.y);
+}
 
 
 }

@@ -128,3 +128,51 @@ TEST_CASE("vec2d operations", "[vectors]")
 	CHECK(normalizedA.x == floatCmp(0.44));
 	CHECK(normalizedA.y == floatCmp(0.89));
 }
+
+TEST_CASE("vec2i constructors and swizzling", "[vectors]" ) 
+{
+	vec2d a(-3, 4);
+	CHECK((a.x == -3 && a.y == 4));
+ 	CHECK((a.u == -3 && a.v == 4));
+ 	CHECK((a.width == -3.0 && a.height == 4));
+ 	CHECK((a.left == -3 && a.top == 4));
+ 	CHECK((a.elements[0] == -3 && a.elements[1] == 4));
+
+	vec2d b(1);
+	CHECK((b.x == 1 && b.y == 1));
+
+	vec2d c;
+	CHECK((c.x == 0 && c.y == 0));
+}
+
+TEST_CASE("vec2i operations", "[vectors]")
+{
+	vec2i a(2, 4);
+	vec2i b(-5, 3);
+	
+	vec2i addRes = a + b;
+	CHECK(addRes.x == -3);
+	CHECK(addRes.y == 7);
+	
+	vec2i subRes = a - b;
+	CHECK(subRes.x == 7);
+	CHECK(subRes.y == 1);
+	
+	vec2i scalarMulRes1 = a * -5.f;
+	CHECK(scalarMulRes1.x == -10);
+	CHECK(scalarMulRes1.y == -20);
+	
+	vec2i scalarMulRes2 = -5.f * a;
+	CHECK(scalarMulRes1.x == -10);
+	CHECK(scalarMulRes1.y == -20);
+	
+	vec2i hadamardMulRes = hadamardMul(a, b); 
+	CHECK(hadamardMulRes.x == -10);
+	CHECK(hadamardMulRes.y == 12);
+
+	vec2i hadamardDivRes = hadamardDiv(a, b); 
+	CHECK(hadamardDivRes.x == 0);
+	CHECK(hadamardDivRes.y == 1);
+}
+
+
