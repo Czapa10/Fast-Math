@@ -140,9 +140,9 @@ vec2u hadamardDiv(vec2u a, vec2u b);
 
 namespace fm {
 
-//////////////////////
-// vec2 functions ////
-//////////////////////
+///////////////////////////////
+// vec2 functions no simd  ////
+///////////////////////////////
 vec2 operator+(vec2 a, vec2 b)
 {
 	return vec2(a.x + b.x, a.y + b.y);
@@ -193,9 +193,11 @@ vec2 normalize(vec2 v)
 	return v / length(v);
 }
 
-///////////////////////
-// vec2d functions ////
-///////////////////////
+
+#ifdef FAST_MATH_NO_SIMD 
+///////////////////////////////
+// vec2d functions no simd ////
+///////////////////////////////
 vec2d operator+(vec2d a, vec2d b)
 {
 	return vec2d(a.x + b.x, a.y + b.y);
@@ -245,10 +247,11 @@ vec2d normalize(vec2d v)
 {
 	return v / length(v);
 }
+#endif
 
-///////////////////////
-// vec2i functions ////
-///////////////////////
+///////////////////////////////
+// vec2i functions no simd ////
+///////////////////////////////
 vec2i operator+(vec2i a, vec2i b)
 {
 	return vec2i(a.x + b.x, a.y + b.y);
@@ -284,9 +287,9 @@ vec2i hadamardDiv(vec2i a, vec2i b)
 	return vec2i(a.x / b.x, a.y / b.y);
 }
 
-///////////////////////
-// vec2u functions ////
-///////////////////////
+///////////////////////////////
+// vec2u functions no simd ////
+///////////////////////////////
 vec2u operator+(vec2u a, vec2u b)
 {
 	return vec2u(a.x + b.x, a.y + b.y);
@@ -321,6 +324,106 @@ vec2u hadamardDiv(vec2u a, vec2u b)
 {
 	return vec2u(a.x / b.x, a.y / b.y);
 }
+
+#ifndef FAST_MATH_NO_SIMD 
+
+#include <emmintrin.h>
+
+/////////////////////
+// vec2d functions //
+/////////////////////
+vec2d operator+(vec2d a, vec2d b)
+{
+	__m128d sA = _mm_set_pd(a.y, a.x);
+	__m128d sB = _mm_set_pd(b.y, b.x);
+	__m128d sResult = _mm_add_pd(sA, sB);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+vec2d operator-(vec2d a, vec2d b)
+{
+	__m128d sA = _mm_set_pd(a.y, a.x);
+	__m128d sB = _mm_set_pd(b.y, b.x);
+	__m128d sResult = _mm_sub_pd(sA, sB);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+vec2d operator*(vec2d v, double scalar)
+{
+	__m128d sV = _mm_set_pd(v.y, v.x);
+	__m128d sScalar = _mm_set1_pd(scalar);
+	__m128d sResult = _mm_mul_pd(sV, sScalar);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+vec2d operator*(double scalar, vec2d v)
+{
+	return v * scalar;
+}
+
+vec2d operator/(vec2d v, double scalar)
+{
+	__m128d sV = _mm_set_pd(v.y, v.x);
+	__m128d sScalar = _mm_set1_pd(scalar);
+	__m128d sResult = _mm_div_pd(sV, sScalar);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+vec2d hadamardMul(vec2d a, vec2d b)
+{
+	__m128d sA = _mm_set_pd(a.y, a.x);
+	__m128d sB = _mm_set_pd(b.y, b.x);
+	__m128d sResult = _mm_mul_pd(sA, sB);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+vec2d hadamardDiv(vec2d a, vec2d b)
+{
+	__m128d sA = _mm_set_pd(a.y, a.x);
+	__m128d sB = _mm_set_pd(b.y, b.x);
+	__m128d sResult = _mm_div_pd(sA, sB);
+	vec2d result;
+	_mm_store_pd(reinterpret_cast<double*>(&result), sResult);
+	return result;
+}
+
+double dot(vec2d a, vec2d b)
+{
+	__m128d sA = _mm_set_pd(a.y, a.x);
+	__m128d sB = _mm_set_pd(b.y, b.x);
+	__m128d sMulRes = _mm_mul_pd(sA, sB);
+	double mulRes[2];
+	_mm_store_pd(mulRes, sMulRes);
+	double result = mulRes[0] + mulRes[1];
+	return result;
+}
+
+double length(vec2d v)
+{
+	__m128d sV = _mm_set_pd(v.y, v.x);
+	__m128d sVSquared = _mm_mul_pd(sV, sV);
+	double squaredV[2];
+	_mm_store_pd(squaredV, sVSquared);
+	double result = sqrt(squaredV[0] + squaredV[1]);
+	return result;
+}
+
+vec2d normalize(vec2d v)
+{
+	return v / length(v);
+}
+
+#endif // ifndef FAST_MATH_NO_SIMD
 
 
 }
