@@ -1,16 +1,16 @@
-#define CATCH_CONFIG_MAIN
-#define CATCH_CONFIG_FAST_COMPILE
-#define CATCH_CONFIG_DISABLE_MATCHERS 
-#include "catch.hpp"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_NO_EXCEPTIONS 
+#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
+#include "doctest.h"
 
 #define FAST_MATH_IMPLEMENTATION
 #include "../../FastMath.h"
 
 using namespace fm;
 
-#define floatCmp(x) Approx(x).margin(0.01)
+#define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-TEST_CASE("vec2 constructors and swizzling", "[vectors]" ) 
+TEST_CASE("vec2 constructors and swizzling") 
 {
 	vec2 a(-3.f, 4.5f);
 	CHECK((a.x == -3.f && a.y == 4.5f));
@@ -26,7 +26,7 @@ TEST_CASE("vec2 constructors and swizzling", "[vectors]" )
 	CHECK((c.x == 0.f && c.y == 0.f));
 }
 
-TEST_CASE("vec2 operations", "[vectors]")
+TEST_CASE("vec2 operations")
 {
 	vec2 a(2.f, 4.f);	
 	vec2 b(-5.f, 3.f);	
@@ -71,7 +71,7 @@ TEST_CASE("vec2 operations", "[vectors]")
 }
 
 
-TEST_CASE("vec2d constructors and swizzling", "[vectors]" ) 
+TEST_CASE("vec2d constructors and swizzling") 
 {
 	vec2d a(-3.0, 4.0);
 	CHECK((a.x == -3.0 && a.y == 4.0));
@@ -87,7 +87,7 @@ TEST_CASE("vec2d constructors and swizzling", "[vectors]" )
 	CHECK((c.x == 0.0 && c.y == 0.0));
 }
 
-TEST_CASE("vec2d operations", "[vectors]")
+TEST_CASE("vec2d operations")
 {
 	vec2d a(2.0, 4.0);	
 	vec2d b(-5.0, 3.0);	
@@ -131,7 +131,7 @@ TEST_CASE("vec2d operations", "[vectors]")
 	CHECK(normalizedA.y == floatCmp(0.89));
 }
 
-TEST_CASE("vec2i constructors and swizzling", "[vectors]" ) 
+TEST_CASE("vec2i constructors and swizzling") 
 {
 	vec2i a(-3, 4);
 	CHECK((a.x == -3 && a.y == 4));
@@ -147,7 +147,7 @@ TEST_CASE("vec2i constructors and swizzling", "[vectors]" )
 	CHECK((c.x == 0 && c.y == 0));
 }
 
-TEST_CASE("vec2i operations", "[vectors]")
+TEST_CASE("vec2i operations")
 {
 	vec2i a(2, 4);
 	vec2i b(-5, 3);
@@ -177,7 +177,7 @@ TEST_CASE("vec2i operations", "[vectors]")
 	CHECK(hadamardDivRes.y == 1);
 }
 
-TEST_CASE("vec2u constructors and swizzling", "[vectors]" ) 
+TEST_CASE("vec2u constructors and swizzling") 
 {
 	vec2u a(3, 4);
 	CHECK((a.x == 3 && a.y == 4));
@@ -193,7 +193,7 @@ TEST_CASE("vec2u constructors and swizzling", "[vectors]" )
 	CHECK((c.x == 0 && c.y == 0));
 }
 
-TEST_CASE("vec2u operations", "[vectors]")
+TEST_CASE("vec2u operations")
 {
 	vec2u a(5, 4);
 	vec2u b(1, 3);
