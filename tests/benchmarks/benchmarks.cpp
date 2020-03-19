@@ -25,9 +25,6 @@ int main()
 		benchmark("vec2 scalar division", a / 5.f, res);
 		benchmark("vec2 hadamard multiplication", hadamardMul(a, b), res);
 		benchmark("vec2 hadamard division", hadamardDiv(a, b), res);
-		benchmark("vec2 dot product", dot(a, b), res2);
-		benchmark("vec2 length", length(b), res2);
-		benchmark("vec2 normalize", normalize(b), res);
 	}
 
 	// vec2d

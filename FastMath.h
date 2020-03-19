@@ -3,59 +3,64 @@
 
 #include <emmintrin.h>
 
-#define FAST_MATH_INLINE __forceinline
+// TODO: make FM_INLINE work on all compilers
+
+#define FM_INLINE __forceinline
+#define FM_CALL __vectorcall
 
 namespace fm {
 
-union vec2
+struct vec2
 {
-	vec2(float x, float y) : x(x), y(y) {}
-	vec2(float a) : x(a), y(a) {}
-	vec2() : x(0.f), y(0.f) {} 
+	FM_INLINE vec2(const float* v) { m = _mm_set_ps(0.f, 0.f, v[1], v[0]); }  
+	FM_INLINE vec2(float x, float y) { m = _mm_set_ps(0.f, 0.f, y, x); } 
+	FM_INLINE vec2(float a) { m = _mm_set1_ps(a); }
+	FM_INLINE vec2(__m128 m) : m(m) {}
+	FM_INLINE vec2() {} 
 
-	struct {
-		float x, y;
-	};
-	struct {
-		float u, v;
-	};
-	struct {
-		float left, top;
-	};
-	struct {
-		float width, height;
-	};
-	float elements[2];
+	FM_INLINE float FM_CALL x() const { return _mm_cvtss_f32(m); }
+	FM_INLINE float FM_CALL u() const { return x(); } 
+	FM_INLINE float FM_CALL left() const { return x(); } 
+	FM_INLINE float FM_CALL width() const { return x(); } 
+
+	FM_INLINE float FM_CALL y() const { return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); }
+	FM_INLINE float FM_CALL v() const { return y(); } 
+	FM_INLINE float FM_CALL top() const { return y(); } 
+	FM_INLINE float FM_CALL height() const { return y(); } 
+
+	// TODO: Add swizzles
+	// TODO: Add store()
+	// TODO: Add setters
+	// TODO: Add array style access
+
+	__m128 m;
 };
-
-vec2 operator+(vec2 a, vec2 b);
-vec2 operator-(vec2 a, vec2 b);
-vec2 operator*(vec2 v, float scalar);
-vec2 operator*(float scalar, vec2 v);
-vec2 operator/(vec2 v, float scalar);
-vec2 hadamardMul(vec2 a, vec2 b);
-vec2 hadamardDiv(vec2 a, vec2 b);
-float dot(vec2 a, vec2 b);
-float lenght(vec2 v);
-vec2 normalize(vec2 v);
-
+FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b) { a.m = _mm_add_ps(a.m, b.m); return a; }
+FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b) { a.m = _mm_sub_ps(a.m, b.m); return a; }
+FM_INLINE vec2 FM_CALL hadamardMul(vec2 a, vec2 b) { a.m = _mm_mul_ps(a.m, b.m); return a; }
+FM_INLINE vec2 FM_CALL hadamardDiv(vec2 a, vec2 b) { a.m = _mm_div_ps(a.m, b.m); return a; }
+FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar) { v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar)); return v; }
+FM_INLINE vec2 FM_CALL operator*(float scalar, vec2 v) { v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar)); return v; }
+FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) { v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar)); return v; }
+// TODO: Add more operators, dot, length, normalize
 
 struct vec2d
 {
-	FAST_MATH_INLINE explicit vec2d(const double* v) { _mm_set_pd(v[1], v[0]); } 
-	FAST_MATH_INLINE explicit vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
-	FAST_MATH_INLINE explicit vec2d(double a) { m = _mm_set1_pd(a); } 
-	FAST_MATH_INLINE explicit vec2d(__m128d m) : m(m) {}
-	FAST_MATH_INLINE vec2d() {}
+	FM_INLINE explicit vec2d(const double* v) { _mm_set_pd(v[1], v[0]); } 
+	FM_INLINE explicit vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
+	FM_INLINE explicit vec2d(double a) { m = _mm_set1_pd(a); } 
+	FM_INLINE explicit vec2d(__m128d m) : m(m) {}
+	FM_INLINE vec2d() {}
 
-	FAST_MATH_INLINE double __vectorcall x() const { return _mm_cvtsd_f64(m); }
-	FAST_MATH_INLINE double __vectorcall y() const { return _mm_cvtsd_f64(_mm_shuffle_pd(m, m, _MM_SHUFFLE(1, 1, 1, 1))); }
-	FAST_MATH_INLINE double __vectorcall u() const { return x(); }
-	FAST_MATH_INLINE double __vectorcall v() const { return y(); }
-	FAST_MATH_INLINE double __vectorcall width() const { return x(); }
-	FAST_MATH_INLINE double __vectorcall height() const { return y(); }
-	FAST_MATH_INLINE double __vectorcall left() const { return x(); }
-	FAST_MATH_INLINE double __vectorcall top() const { return y(); }
+	FM_INLINE double FM_CALL x() const { return _mm_cvtsd_f64(m); }
+	FM_INLINE double FM_CALL u() const { return x(); }
+	FM_INLINE double FM_CALL left() const { return x(); }
+	FM_INLINE double FM_CALL width() const { return x(); }
+
+	FM_INLINE double FM_CALL y() const { return _mm_cvtsd_f64(_mm_shuffle_pd(m, m, _MM_SHUFFLE(1, 1, 1, 1))); }
+	FM_INLINE double FM_CALL v() const { return y(); }
+	FM_INLINE double FM_CALL height() const { return y(); }
+	FM_INLINE double FM_CALL top() const { return y(); }
 
 	// TODO: Add swizzles
 	// TODO: Add store()
@@ -64,14 +69,14 @@ struct vec2d
 
 	__m128d m;
 };
-FAST_MATH_INLINE vec2d __vectorcall operator+(vec2d a, vec2d b) { a.m = _mm_add_pd(a.m, b.m); return a; }
-FAST_MATH_INLINE vec2d __vectorcall operator-(vec2d a, vec2d b) { a.m = _mm_sub_pd(a.m, b.m); return a; }
-FAST_MATH_INLINE vec2d __vectorcall hadamardMul(vec2d a, vec2d b) { a.m = _mm_mul_pd(a.m, b.m); return a; }
-FAST_MATH_INLINE vec2d __vectorcall hadamardDiv(vec2d a, vec2d b) { a.m = _mm_div_pd(a.m, b.m); return a; }
-FAST_MATH_INLINE vec2d __vectorcall operator*(vec2d v, double scalar) { v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar)); return v; }
-FAST_MATH_INLINE vec2d __vectorcall operator*(double scalar, vec2d v) { v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar)); return v; } 
-FAST_MATH_INLINE vec2d __vectorcall operator/(vec2d v, double scalar) { v.m = _mm_div_pd(v.m, _mm_set1_pd(scalar)); return v; }
-// TODO: Add more operators
+FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b) { a.m = _mm_add_pd(a.m, b.m); return a; }
+FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b) { a.m = _mm_sub_pd(a.m, b.m); return a; }
+FM_INLINE vec2d FM_CALL hadamardMul(vec2d a, vec2d b) { a.m = _mm_mul_pd(a.m, b.m); return a; }
+FM_INLINE vec2d FM_CALL hadamardDiv(vec2d a, vec2d b) { a.m = _mm_div_pd(a.m, b.m); return a; }
+FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar) { v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar)); return v; }
+FM_INLINE vec2d FM_CALL operator*(double scalar, vec2d v) { v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar)); return v; } 
+FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar) { v.m = _mm_div_pd(v.m, _mm_set1_pd(scalar)); return v; }
+// TODO: Add more operators, dot, length, normalize
 
 union vec2i
 {
@@ -143,59 +148,6 @@ vec2u hadamardDiv(vec2u a, vec2u b);
 #include <math.h>
 
 namespace fm {
-
-///////////////////////////////
-// vec2 functions no simd  ////
-///////////////////////////////
-vec2 operator+(vec2 a, vec2 b)
-{
-	return vec2(a.x + b.x, a.y + b.y);
-}
-
-vec2 operator-(vec2 a, vec2 b)
-{
-	return vec2(a.x - b.x, a.y - b.y);
-}
-
-vec2 operator*(vec2 v, float scalar)
-{
-	return vec2(v.x * scalar, v.y * scalar);
-}
-
-vec2 operator*(float scalar, vec2 v)
-{
-	return vec2(v.x * scalar, v.y * scalar);
-}
-
-vec2 operator/(vec2 v, float scalar)
-{
-	return vec2(v.x / scalar, v.y / scalar);
-}
-
-vec2 hadamardMul(vec2 a, vec2 b)
-{
-	return vec2(a.x * b.x, a.y * b.y);
-}
-
-vec2 hadamardDiv(vec2 a, vec2 b)
-{
-	return vec2(a.x / b.x, a.y / b.y);
-}
-
-float dot(vec2 a, vec2 b)
-{
-	return a.x * b.x + a.y * b.y;
-}
-
-float length(vec2 v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);	
-}
-
-vec2 normalize(vec2 v)
-{
-	return v / length(v);
-}
 
 ///////////////////////////////
 // vec2i functions no simd ////
