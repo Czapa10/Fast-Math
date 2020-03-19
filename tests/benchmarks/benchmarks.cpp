@@ -47,14 +47,14 @@ int main()
 		vec2i a(1, 2);
 		vec2i b(-5, 10);
 		vec2i res;
-		double res2;
+		int res2;
 
 		benchmark("vec2i addition", a + b, res);
 		benchmark("vec2i subtraction", a - b, res);
 		benchmark("vec2i scalar multiplication", a * 5.0, res);
-		benchmark("vec2i scalar division", a / 5.0, res);
+		//benchmark("vec2i scalar division", a / 5.0, res); // TODO
 		benchmark("vec2i hadamard multiplication", hadamardMul(a, b), res);
-		benchmark("vec2i hadamard division", hadamardDiv(a, b), res);
+		//benchmark("vec2i hadamard division", hadamardDiv(a, b), res); TODO
 	}
 
 	// vec2u

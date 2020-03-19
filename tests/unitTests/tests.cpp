@@ -122,17 +122,18 @@ TEST_CASE("vec2d operations")
 TEST_CASE("vec2i constructors and swizzling") 
 {
 	vec2i a(-3, 4);
-	CHECK((a.x == -3 && a.y == 4));
- 	CHECK((a.u == -3 && a.v == 4));
- 	CHECK((a.width == -3 && a.height == 4));
- 	CHECK((a.left == -3 && a.top == 4));
- 	CHECK((a.elements[0] == -3 && a.elements[1] == 4));
+	CHECK(a.x() == -3);
+	CHECK(a.y() == 4);
+ 	CHECK(a.u() == -3);
+	CHECK(a.v() == 4);
+ 	CHECK(a.width() == -3);
+	CHECK(a.height() == 4);
+ 	CHECK(a.left() == -3);
+	CHECK(a.top() == 4);
 
 	vec2i b(1);
-	CHECK((b.x == 1 && b.y == 1));
-
-	vec2i c;
-	CHECK((c.x == 0 && c.y == 0));
+	CHECK(b.x() == 1);
+	CHECK(b.y() == 1);
 }
 
 TEST_CASE("vec2i operations")
@@ -141,28 +142,24 @@ TEST_CASE("vec2i operations")
 	vec2i b(-5, 3);
 	
 	vec2i addRes = a + b;
-	CHECK(addRes.x == -3);
-	CHECK(addRes.y == 7);
+	CHECK(addRes.x() == -3);
+	CHECK(addRes.y() == 7);
 	
 	vec2i subRes = a - b;
-	CHECK(subRes.x == 7);
-	CHECK(subRes.y == 1);
+	CHECK(subRes.x() == 7);
+	CHECK(subRes.y() == 1);
 	
 	vec2i scalarMulRes1 = a * -5;
-	CHECK(scalarMulRes1.x == -10);
-	CHECK(scalarMulRes1.y == -20);
+	CHECK(scalarMulRes1.x() == -10);
+	CHECK(scalarMulRes1.y() == -20);
 	
 	vec2i scalarMulRes2 = -5 * a;
-	CHECK(scalarMulRes1.x == -10);
-	CHECK(scalarMulRes1.y == -20);
+	CHECK(scalarMulRes1.x() == -10);
+	CHECK(scalarMulRes1.y() == -20);
 	
 	vec2i hadamardMulRes = hadamardMul(a, b); 
-	CHECK(hadamardMulRes.x == -10);
-	CHECK(hadamardMulRes.y == 12);
-
-	vec2i hadamardDivRes = hadamardDiv(a, b); 
-	CHECK(hadamardDivRes.x == 0);
-	CHECK(hadamardDivRes.y == 1);
+	CHECK(hadamardMulRes.x() == -10);
+	CHECK(hadamardMulRes.y() == 12);
 }
 
 TEST_CASE("vec2u constructors and swizzling") 
