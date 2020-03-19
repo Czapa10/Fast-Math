@@ -16,9 +16,9 @@ namespace fm {
 
 struct vec2
 {
-	FM_INLINE vec2(const float* v) { m = _mm_set_ps(0.f, 0.f, v[1], v[0]); }  
+	FM_INLINE explicit vec2(const float* v) { m = _mm_set_ps(0.f, 0.f, v[1], v[0]); }  
 	FM_INLINE vec2(float x, float y) { m = _mm_set_ps(0.f, 0.f, y, x); } 
-	FM_INLINE vec2(float a) { m = _mm_set1_ps(a); }
+	FM_INLINE explicit vec2(float a) { m = _mm_set1_ps(a); }
 	FM_INLINE vec2(__m128 m) : m(m) {}
 	FM_INLINE vec2() {} 
 
@@ -35,7 +35,8 @@ struct vec2
 	FM_INLINE vec2 FM_CALL yx() const { return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
 	FM_INLINE vec2 FM_CALL vu() const { return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
 
-	// TODO: Add store()
+	FM_INLINE void FM_CALL storeTo(float* mem) { mem[0] = x(); mem[1] = y(); } 
+
 	// TODO: Add setters
 	// TODO: Add array style access
 
@@ -53,9 +54,9 @@ FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) { v.m = _mm_div_ps(v.m, _
 struct vec2d
 {
 	FM_INLINE explicit vec2d(const double* v) { _mm_set_pd(v[1], v[0]); } 
-	FM_INLINE explicit vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
+	FM_INLINE vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
 	FM_INLINE explicit vec2d(double a) { m = _mm_set1_pd(a); } 
-	FM_INLINE explicit vec2d(__m128d m) : m(m) {}
+	FM_INLINE vec2d(__m128d m) : m(m) {}
 	FM_INLINE vec2d() {}
 
 	FM_INLINE double FM_CALL x() const { return _mm_cvtsd_f64(m); }
@@ -71,7 +72,9 @@ struct vec2d
 	FM_INLINE vec2d FM_CALL yx() const { return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
 	FM_INLINE vec2d FM_CALL vu() const { return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
 
-	// TODO: Add store()
+	FM_INLINE void FM_CALL storeTo(double* mem) { _mm_storeu_pd(mem, m); } 
+	FM_INLINE void FM_CALL storeTo16ByteAligned(double* mem) { _mm_store_pd(mem, m); }
+
 	// TODO: Add setters
 	// TODO: Add array style access
 
@@ -88,9 +91,9 @@ FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar) { v.m = _mm_div_pd(v.m
 
 struct vec2i
 {
-	FM_INLINE vec2i(const int* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
+	FM_INLINE explicit vec2i(const int* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
 	FM_INLINE vec2i(int x, int y) { m = _mm_set_epi32(0, 0, y, x); } 
-	FM_INLINE vec2i(int a) { m = _mm_set1_epi32(a); }
+	FM_INLINE explicit vec2i(int a) { m = _mm_set1_epi32(a); }
 	FM_INLINE vec2i(__m128i m) :m(m) {}
 	FM_INLINE vec2i() {}
 
@@ -107,7 +110,8 @@ struct vec2i
 	FM_INLINE vec2i FM_CALL yx() const { return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 	FM_INLINE vec2i FM_CALL vu() const { return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 
-	// TODO: Add store()
+	FM_INLINE void FM_CALL storeTo(int* mem) { mem[0] = x(); mem[1] = y(); } 
+
 	// TODO: Add setters
 	// TODO: Add array style access
 
@@ -124,9 +128,9 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v);
 
 struct vec2u
 {
-	FM_INLINE vec2u(const unsigned* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
+	FM_INLINE explicit vec2u(const unsigned* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
 	FM_INLINE vec2u(unsigned x, unsigned y) { m = _mm_set_epi32(0, 0, y, x); }
-	FM_INLINE vec2u(unsigned a) { m = _mm_set1_epi32(a); } 
+	FM_INLINE explicit vec2u(unsigned a) { m = _mm_set1_epi32(a); } 
 	FM_INLINE vec2u(__m128i m) :m(m) {}
 	FM_INLINE vec2u() {}
 
@@ -143,7 +147,8 @@ struct vec2u
 	FM_INLINE vec2u FM_CALL yx() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 	FM_INLINE vec2u FM_CALL vu() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 
-	// TODO: Add store()
+	FM_INLINE void FM_CALL storeTo(int* mem) { mem[0] = x(); mem[1] = y(); } 
+
 	// TODO: Add setters
 	// TODO: Add array style access
 
