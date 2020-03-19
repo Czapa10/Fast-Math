@@ -71,20 +71,25 @@ TEST_CASE("vec2 operations")
 }
 
 
-TEST_CASE("vec2d constructors and swizzling") 
+TEST_CASE("vec2d constructors, aliases and swizzling") 
 {
 	vec2d a(-3.0, 4.0);
-	CHECK((a.x == -3.0 && a.y == 4.0));
- 	CHECK((a.u == -3.0 && a.v == 4.0));
- 	CHECK((a.width == -3.0 && a.height == 4.0));
- 	CHECK((a.left == -3.0 && a.top == 4.0));
- 	CHECK((a.elements[0] == -3.0 && a.elements[1] == 4.0));
+
+	CHECK(a.x() == -3.0);
+	CHECK(a.u() == -3.0);
+	CHECK(a.left() == -3.0);
+	CHECK(a.width() == -3.0);
+
+	CHECK(a.y() == 4.0);
+	CHECK(a.v() == 4.0);
+	CHECK(a.top() == 4.0);
+	CHECK(a.height() == 4.0);
 
 	vec2d b(1.0);
-	CHECK((b.x == 1.0 && b.y == 1.0));
+	CHECK(b.x() == 1.0); 
+	CHECK(b.y() == 1.0); 
 
-	vec2d c;
-	CHECK((c.x == 0.0 && c.y == 0.0));
+	// TODO: Check other constructors
 }
 
 TEST_CASE("vec2d operations")
@@ -93,42 +98,32 @@ TEST_CASE("vec2d operations")
 	vec2d b(-5.0, 3.0);	
 
 	vec2d addRes = a + b; 
-	CHECK(addRes.x == -3.0);
-	CHECK(addRes.y == 7.0);
+	CHECK(addRes.x() == -3.0);
+	CHECK(addRes.y() == 7.0);
 
 	vec2d subRes = a - b;
-	CHECK(subRes.x == 7.0);
-	CHECK(subRes.y == 1.0);
+	CHECK(subRes.x() == 7.0);
+	CHECK(subRes.y() == 1.0);
 
 	vec2d scalarMulRes1 = a * 4.5;
-	CHECK(scalarMulRes1.x == 9.0);
-	CHECK(scalarMulRes1.y == 18.0);
+	CHECK(scalarMulRes1.x() == 9.0);
+	CHECK(scalarMulRes1.y() == 18.0);
 
 	vec2d scalarMulRes2 = 4.5 * a;
-	CHECK(scalarMulRes2.x == 9.0);
-	CHECK(scalarMulRes2.y == 18.0);
+	CHECK(scalarMulRes2.x() == 9.0);
+	CHECK(scalarMulRes2.y() == 18.0);
 
 	vec2d scalarDivRes = a / 2.0;
-	CHECK(scalarDivRes.x == 1.0);
-	CHECK(scalarDivRes.y == 2.0);
+	CHECK(scalarDivRes.x() == 1.0);
+	CHECK(scalarDivRes.y() == 2.0);
 
 	vec2d hadamardMulRes = hadamardMul(a, b);
-	CHECK(hadamardMulRes.x == -10.0);
-	CHECK(hadamardMulRes.y == 12.0);
+	CHECK(hadamardMulRes.x() == -10.0);
+	CHECK(hadamardMulRes.y() == 12.0);
 	
 	vec2d hadamardDivRes = hadamardDiv(a, b);
-	CHECK(hadamardDivRes.x == floatCmp(2.0 / -5.0));
-	CHECK(hadamardDivRes.y == floatCmp(4.0 / 3.0));
-
-	double dotProduct = dot(a, b);
-	CHECK(dotProduct == 2.0);
-
-	double lengthA = length(a);
-	CHECK(lengthA == floatCmp(4.47));
-
-	vec2d normalizedA = normalize(a);
-	CHECK(normalizedA.x == floatCmp(0.44));
-	CHECK(normalizedA.y == floatCmp(0.89));
+	CHECK(hadamardDivRes.x() == floatCmp(2.0 / -5.0));
+	CHECK(hadamardDivRes.y() == floatCmp(4.0 / 3.0));
 }
 
 TEST_CASE("vec2i constructors and swizzling") 
