@@ -106,7 +106,6 @@ struct vec2i
 
 	__m128i m;
 };
-
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b) { a.m = _mm_add_epi32(a.m, b.m); return a; }
 FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b) { a.m = _mm_sub_epi32(a.m, b.m); return a; }
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b);
@@ -116,35 +115,37 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v);
 // TODO: Add more operators
 
 
-union vec2u
+struct vec2u
 {
-	vec2u(unsigned x, unsigned y) : x(x), y(y) {}
-	vec2u(unsigned a) : x(a), y(a) {}
-	vec2u() : x(0.f), y(0.f) {} 
+	FM_INLINE vec2u(const unsigned* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
+	FM_INLINE vec2u(unsigned x, unsigned y) { m = _mm_set_epi32(0, 0, y, x); }
+	FM_INLINE vec2u(unsigned a) { m = _mm_set1_epi32(a); } 
+	FM_INLINE vec2u() {}
 
-	struct {
-		unsigned x, y;
-	};
-	struct {
-		unsigned u, v;
-	};
-	struct {
-		unsigned left, top;
-	};
-	struct {
-		unsigned width, height;
-	};
-	unsigned elements[2];
+	FM_INLINE unsigned FM_CALL x() const { return (unsigned)_mm_cvtsi128_si32(m); } 
+	FM_INLINE unsigned FM_CALL u() const { return x(); }
+	FM_INLINE unsigned FM_CALL left() const { return x(); }
+	FM_INLINE unsigned FM_CALL width() const { return x(); }
+
+	FM_INLINE unsigned FM_CALL y() const { return (unsigned)_mm_cvtsi128_si32(_mm_shuffle_epi32(m, _MM_SHUFFLE(1, 1, 1, 1))); } 
+	FM_INLINE unsigned FM_CALL v() const { return y(); }
+	FM_INLINE unsigned FM_CALL top() const { return y(); }
+	FM_INLINE unsigned FM_CALL height() const { return y(); }
+
+	// TODO: Add swizzles
+	// TODO: Add store()
+	// TODO: Add setters
+	// TODO: Add array style access
+
+	__m128i m;
 };
-
-vec2u operator+(vec2u a, vec2u b);
-vec2u operator-(vec2u a, vec2u b);
-vec2u operator*(vec2u v, unsigned scalar);
-vec2u operator*(unsigned scalar, vec2u v);
-vec2u operator/(vec2u v, unsigned scalar);
-vec2u hadamardMul(vec2u a, vec2u b);
-vec2u hadamardDiv(vec2u a, vec2u b);
-
+FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b) { a.m = _mm_add_epi32(a.m, b.m); return a; }
+FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b) { a.m = _mm_sub_epi32(a.m, b.m); return a; }
+FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b);
+FM_INLINE vec2u FM_CALL operator*(vec2u v, unsigned scalar); 
+FM_INLINE vec2u FM_CALL operator*(unsigned scalar, vec2u v);
+// TODO: Add hadamardDiv() and operator/
+// TODO: Add more operators
 
 }
 
@@ -157,6 +158,9 @@ vec2u hadamardDiv(vec2u a, vec2u b);
 
 namespace fm {
 
+/////////////////////
+// vec2i functions //
+/////////////////////
 #ifdef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) 
 {
@@ -176,7 +180,6 @@ FM_INLINE vec2i FM_CALL operator*(vec2i v, int scalar)
 	vArr[1] *= scalar;
 	return vec2i(vArr);
 }
-
 FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v) { return v * scalar; }
 #else
 FM_INLINE vec2i FM_CALL operator*(vec2i v, int scalar) { v.m = _mm_mullo_epi32(v.m, _mm_set1_epi32(scalar)); return v; }
@@ -184,45 +187,36 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v) { v.m =_mm_mullo_epi32(v.
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) { a.m = _mm_mullo_epi32(a.m, b.m); return a; }
 #endif
 
-///////////////////////////////
-// vec2u functions no simd ////
-///////////////////////////////
-vec2u operator+(vec2u a, vec2u b)
+/////////////////////
+// vec2u functions //
+/////////////////////
+#ifdef FM_USE_SSE2_INSTEAD_OF_SSE4
+FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b) 
 {
-	return vec2u(a.x + b.x, a.y + b.y);
+	unsigned aArr[4], bArr[4];
+	_mm_store_si128((__m128i*)aArr, a.m);
+	_mm_store_si128((__m128i*)bArr, b.m);
+	aArr[0] = aArr[0] * bArr[0]; 
+	aArr[1] = aArr[1] * bArr[1]; 
+	return vec2u(aArr);
 }
 
-vec2u operator-(vec2u a, vec2u b)
+FM_INLINE vec2u FM_CALL operator*(vec2u v, unsigned scalar) 
 {
-	return vec2u(a.x - b.x, a.y - b.y);
+	unsigned vArr[4];
+	_mm_store_si128((__m128i*)vArr, v.m);
+	vArr[0] *= scalar;
+	vArr[1] *= scalar;
+	return vec2u(vArr);
 }
+FM_INLINE vec2u FM_CALL operator*(unsigned scalar, vec2u v) { return v * scalar; }
+#else
+FM_INLINE vec2u FM_CALL operator*(vec2u v, unsigned scalar) { v.m = _mm_mullo_epi32(v.m, _mm_set1_epi32(scalar)); return v; }
+FM_INLINE vec2u FM_CALL operator*(unsigned scalar, vec2u v) { v.m =_mm_mullo_epi32(v.m, _mm_set1_epi32(scalar)); return v; }
+FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b) { a.m = _mm_mullo_epi32(a.m, b.m); return a; }
+#endif
 
-vec2u operator*(vec2u v, unsigned scalar)
-{
-	return vec2u(v.x * scalar, v.y * scalar);
-}
-
-vec2u operator*(unsigned scalar, vec2u v)
-{
-	return vec2u(v.x * scalar, v.y * scalar);
-}
-
-vec2u operator/(vec2u v, unsigned scalar)
-{
-	return vec2u(v.x / scalar, v.y / scalar);
-}
-
-vec2u hadamardMul(vec2u a, vec2u b)
-{
-	return vec2u(a.x * b.x, a.y * b.y);
-}
-
-vec2u hadamardDiv(vec2u a, vec2u b)
-{
-	return vec2u(a.x / b.x, a.y / b.y);
-}
-
-}
+} // !namespace fm
 
 #endif FAST_MATH_IMPLEMENTATION
 

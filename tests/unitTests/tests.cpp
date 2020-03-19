@@ -165,17 +165,24 @@ TEST_CASE("vec2i operations")
 TEST_CASE("vec2u constructors and swizzling") 
 {
 	vec2u a(3, 4);
-	CHECK((a.x == 3 && a.y == 4));
- 	CHECK((a.u == 3 && a.v == 4));
- 	CHECK((a.width == 3 && a.height == 4));
- 	CHECK((a.left == 3 && a.top == 4));
- 	CHECK((a.elements[0] == 3 && a.elements[1] == 4));
+	CHECK(a.x() == 3);
+ 	CHECK(a.u() == 3);
+ 	CHECK(a.left() == 3);
+ 	CHECK(a.width() == 3);
+
+	CHECK(a.y() == 4);
+	CHECK(a.v() == 4);
+	CHECK(a.top() == 4);
+	CHECK(a.height() == 4);
 
 	vec2u b(1);
-	CHECK((b.x == 1 && b.y == 1));
+	CHECK(b.x() == 1);
+	CHECK(b.y() == 1);
 
-	vec2u c;
-	CHECK((c.x == 0 && c.y == 0));
+	// TODO: Should it be like that? Maybe I should clamp it?
+	vec2u c(-2, 3);
+	CHECK(c.x() == -2);
+	CHECK(c.y() == 3);
 }
 
 TEST_CASE("vec2u operations")
@@ -184,27 +191,23 @@ TEST_CASE("vec2u operations")
 	vec2u b(1, 3);
 	
 	vec2u addRes = a + b;
-	CHECK(addRes.x == 6);
-	CHECK(addRes.y == 7);
+	CHECK(addRes.x() == 6);
+	CHECK(addRes.y() == 7);
 	
 	vec2u subRes = a - b;
-	CHECK(subRes.x == 4);
-	CHECK(subRes.y == 1);
+	CHECK(subRes.x() == 4);
+	CHECK(subRes.y() == 1);
 	
 	vec2u scalarMulRes1 = a * 5;
-	CHECK(scalarMulRes1.x == 25);
-	CHECK(scalarMulRes1.y == 20);
+	CHECK(scalarMulRes1.x() == 25);
+	CHECK(scalarMulRes1.y() == 20);
 	
 	vec2u scalarMulRes2 = 5 * a;
-	CHECK(scalarMulRes1.x == 25);
-	CHECK(scalarMulRes1.y == 20);
+	CHECK(scalarMulRes1.x() == 25);
+	CHECK(scalarMulRes1.y() == 20);
 	
 	vec2u hadamardMulRes = hadamardMul(a, b); 
-	CHECK(hadamardMulRes.x == 5);
-	CHECK(hadamardMulRes.y == 12);
-
-	vec2u hadamardDivRes = hadamardDiv(a, b); 
-	CHECK(hadamardDivRes.x == 5);
-	CHECK(hadamardDivRes.y == 1);
+	CHECK(hadamardMulRes.x() == 5);
+	CHECK(hadamardMulRes.y() == 12);
 }
 

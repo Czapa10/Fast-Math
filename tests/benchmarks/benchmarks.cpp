@@ -66,9 +66,9 @@ int main()
 		benchmark("vec2u addition", a + b, res);
 		benchmark("vec2u subtraction", a - b, res);
 		benchmark("vec2u scalar multiplication", a * 5.0, res);
-		benchmark("vec2u scalar division", a / 5.0, res);
+		//benchmark("vec2u scalar division", a / 5.0, res); TODO
 		benchmark("vec2u hadamard multiplication", hadamardMul(a, b), res);
-		benchmark("vec2u hadamard division", hadamardDiv(a, b), res);
+		//benchmark("vec2u hadamard division", hadamardDiv(a, b), res); TODO
 	}
 }
 
