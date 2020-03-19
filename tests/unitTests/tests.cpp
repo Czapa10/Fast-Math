@@ -10,7 +10,7 @@ using namespace fm;
 
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-TEST_CASE("vec2 constructors and swizzling") 
+TEST_CASE("vec2 constructors, aliases and swizzling") 
 {
 	vec2 a(-3.f, 4.5f);
 
@@ -23,6 +23,11 @@ TEST_CASE("vec2 constructors and swizzling")
 	CHECK(a.v() == 4.5f);
 	CHECK(a.top() == 4.5f);
 	CHECK(a.height() == 4.5f);
+
+	CHECK(a.yx().x() == 4.5f);
+	CHECK(a.yx().y() == -3.f);
+	CHECK(a.vu().u() == 4.5f);
+	CHECK(a.vu().v() == -3.f);
 
 	vec2 b(1.f);
 	CHECK(b.x() == 1.f);
@@ -78,6 +83,11 @@ TEST_CASE("vec2d constructors, aliases and swizzling")
 	CHECK(a.top() == 4.0);
 	CHECK(a.height() == 4.0);
 
+	CHECK(a.yx().x() == 4.0);
+	CHECK(a.yx().y() == -3.0);
+	CHECK(a.vu().u() == 4.0);
+	CHECK(a.vu().v() == -3.0);
+
 	vec2d b(1.0);
 	CHECK(b.x() == 1.0); 
 	CHECK(b.y() == 1.0); 
@@ -122,14 +132,21 @@ TEST_CASE("vec2d operations")
 TEST_CASE("vec2i constructors and swizzling") 
 {
 	vec2i a(-3, 4);
+
 	CHECK(a.x() == -3);
-	CHECK(a.y() == 4);
  	CHECK(a.u() == -3);
-	CHECK(a.v() == 4);
- 	CHECK(a.width() == -3);
-	CHECK(a.height() == 4);
  	CHECK(a.left() == -3);
+ 	CHECK(a.width() == -3);
+
+	CHECK(a.y() == 4);
+	CHECK(a.v() == 4);
+	CHECK(a.height() == 4);
 	CHECK(a.top() == 4);
+
+	CHECK(a.yx().x() == 4);
+	CHECK(a.yx().y() == -3);
+	CHECK(a.vu().u() == 4);
+	CHECK(a.vu().v() == -3);
 
 	vec2i b(1);
 	CHECK(b.x() == 1);
@@ -174,6 +191,11 @@ TEST_CASE("vec2u constructors and swizzling")
 	CHECK(a.v() == 4);
 	CHECK(a.top() == 4);
 	CHECK(a.height() == 4);
+
+	CHECK(a.yx().x() == 4);
+	CHECK(a.yx().y() == 3);
+	CHECK(a.vu().u() == 4);
+	CHECK(a.vu().v() == 3);
 
 	vec2u b(1);
 	CHECK(b.x() == 1);

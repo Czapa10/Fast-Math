@@ -32,7 +32,9 @@ struct vec2
 	FM_INLINE float FM_CALL top() const { return y(); } 
 	FM_INLINE float FM_CALL height() const { return y(); } 
 
-	// TODO: Add swizzles
+	FM_INLINE vec2 FM_CALL yx() const { return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
+	FM_INLINE vec2 FM_CALL vu() const { return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
+
 	// TODO: Add store()
 	// TODO: Add setters
 	// TODO: Add array style access
@@ -66,7 +68,9 @@ struct vec2d
 	FM_INLINE double FM_CALL height() const { return y(); }
 	FM_INLINE double FM_CALL top() const { return y(); }
 
-	// TODO: Add swizzles
+	FM_INLINE vec2d FM_CALL yx() const { return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
+	FM_INLINE vec2d FM_CALL vu() const { return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); }
+
 	// TODO: Add store()
 	// TODO: Add setters
 	// TODO: Add array style access
@@ -87,6 +91,7 @@ struct vec2i
 	FM_INLINE vec2i(const int* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
 	FM_INLINE vec2i(int x, int y) { m = _mm_set_epi32(0, 0, y, x); } 
 	FM_INLINE vec2i(int a) { m = _mm_set1_epi32(a); }
+	FM_INLINE vec2i(__m128i m) :m(m) {}
 	FM_INLINE vec2i() {}
 
 	FM_INLINE int FM_CALL x() const { return _mm_cvtsi128_si32(m); } 
@@ -99,7 +104,9 @@ struct vec2i
 	FM_INLINE int FM_CALL top() const { return y(); }
 	FM_INLINE int FM_CALL height() const { return y(); }
 
-	// TODO: Add swizzles
+	FM_INLINE vec2i FM_CALL yx() const { return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
+	FM_INLINE vec2i FM_CALL vu() const { return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
+
 	// TODO: Add store()
 	// TODO: Add setters
 	// TODO: Add array style access
@@ -120,6 +127,7 @@ struct vec2u
 	FM_INLINE vec2u(const unsigned* v) { m = _mm_set_epi32(0, 0, v[1], v[0]); }
 	FM_INLINE vec2u(unsigned x, unsigned y) { m = _mm_set_epi32(0, 0, y, x); }
 	FM_INLINE vec2u(unsigned a) { m = _mm_set1_epi32(a); } 
+	FM_INLINE vec2u(__m128i m) :m(m) {}
 	FM_INLINE vec2u() {}
 
 	FM_INLINE unsigned FM_CALL x() const { return (unsigned)_mm_cvtsi128_si32(m); } 
@@ -132,7 +140,9 @@ struct vec2u
 	FM_INLINE unsigned FM_CALL top() const { return y(); }
 	FM_INLINE unsigned FM_CALL height() const { return y(); }
 
-	// TODO: Add swizzles
+	FM_INLINE vec2u FM_CALL yx() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
+	FM_INLINE vec2u FM_CALL vu() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
+
 	// TODO: Add store()
 	// TODO: Add setters
 	// TODO: Add array style access
