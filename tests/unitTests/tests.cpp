@@ -10,7 +10,7 @@ using namespace fm;
 
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-TEST_CASE("vec2 constructors, aliases, swizzling and storing") 
+TEST_CASE("vec2 constructors and getters") 
 {
 	vec2 a(-3.f, 4.5f);
 
@@ -41,6 +41,11 @@ TEST_CASE("vec2 constructors, aliases, swizzling and storing")
 	vec2 c;
 	CHECK(c.x() == 0.f);
 	CHECK(c.y() == 0.f);
+
+	float initArr[] = {-1.f, 2.f};	
+	vec2 d(initArr);
+	CHECK(d.x() == -1.f);
+	CHECK(d.y() == 2.f);
 }
 
 TEST_CASE("vec2 setters")
@@ -93,7 +98,7 @@ TEST_CASE("vec2 operations")
 }
 
 
-TEST_CASE("vec2d constructors, aliases ,swizzling and storing") 
+TEST_CASE("vec2d constructors and getters") 
 {
 	vec2d a(-3.0, 4.0);
 
@@ -128,7 +133,10 @@ TEST_CASE("vec2d constructors, aliases ,swizzling and storing")
 	CHECK(c.x() == 0.0);
 	CHECK(c.y() == 0.0);
 
-	// TODO: Check other constructors
+	double initArr[] = {-1.0, 2.0};	
+	vec2d d(initArr);
+	CHECK(d.x() == -1.0);
+	CHECK(d.y() == 2.0);
 }
 
 TEST_CASE("vec2d setters")
@@ -181,7 +189,7 @@ TEST_CASE("vec2d operations")
 	CHECK(hadamardDivRes.y() == floatCmp(4.0 / 3.0));
 }
 
-TEST_CASE("vec2i constructors, aliases ,swizzling and storing") 
+TEST_CASE("vec2i constructors and getters") 
 {
 	vec2i a(-3, 4);
 
@@ -212,6 +220,11 @@ TEST_CASE("vec2i constructors, aliases ,swizzling and storing")
 	vec2i c;
 	CHECK(c.x() == 0);
 	CHECK(c.y() == 0);
+
+	int initArr[] = {-1, 2};	
+	vec2i d(initArr);
+	CHECK(d.x() == -1);
+	CHECK(d.y() == 2);
 }
 
 TEST_CASE("vec2i setters")
@@ -255,7 +268,7 @@ TEST_CASE("vec2i operations")
 	CHECK(hadamardMulRes.y() == 12);
 }
 
-TEST_CASE("vec2u constructors, aliases ,swizzling and storing") 
+TEST_CASE("vec2u constructors and getters") 
 {
 	vec2u a(3, 4);
 	CHECK(a.x() == 3);
@@ -289,6 +302,11 @@ TEST_CASE("vec2u constructors, aliases ,swizzling and storing")
 	vec2u d;
 	CHECK(d.x() == 0);
 	CHECK(d.y() == 0);
+
+	unsigned initArr[] = {1, 2};	
+	vec2u e(initArr);
+	CHECK(e.x() == 1);
+	CHECK(e.y() == 2);
 }
 
 TEST_CASE("vec2u setters")

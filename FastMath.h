@@ -40,8 +40,6 @@ struct vec2
 	FM_INLINE void FM_CALL setX(float x);
 	FM_INLINE void FM_CALL setY(float y); 
 
-	// TODO: Add array style access
-
 	__m128 m;
 };
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b) { a.m = _mm_add_ps(a.m, b.m); return a; }
@@ -55,7 +53,7 @@ FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) { v.m = _mm_div_ps(v.m, _
 
 struct vec2d
 {
-	FM_INLINE explicit vec2d(const double* v) { _mm_set_pd(v[1], v[0]); } 
+	FM_INLINE explicit vec2d(const double* v) { m = _mm_set_pd(v[1], v[0]); } 
 	FM_INLINE vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
 	FM_INLINE explicit vec2d(double a) { m = _mm_set1_pd(a); } 
 	FM_INLINE vec2d(__m128d m) : m(m) {}
@@ -79,8 +77,6 @@ struct vec2d
 
 	FM_INLINE void FM_CALL setX(double x);
 	FM_INLINE void FM_CALL setY(double y);
-
-	// TODO: Add array style access
 
 	__m128d m;
 };
@@ -119,8 +115,6 @@ struct vec2i
 	FM_INLINE void FM_CALL setX(int x);
 	FM_INLINE void FM_CALL setY(int y);
 
-	// TODO: Add array style access
-
 	__m128i m;
 };
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b) { a.m = _mm_add_epi32(a.m, b.m); return a; }
@@ -157,8 +151,6 @@ struct vec2u
 
 	FM_INLINE void FM_CALL setX(unsigned x);
 	FM_INLINE void FM_CALL setY(unsigned y);
-
-	// TODO: Add array style access
 
 	__m128i m;
 };
