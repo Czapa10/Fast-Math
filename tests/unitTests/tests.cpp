@@ -10,6 +10,18 @@ using namespace fm;
 
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
+TEST_CASE("min max functions")
+{
+	CHECK(5.f == min(5.f, 10.f));
+	CHECK(5.f == max(5.f, -1.f));
+	CHECK(5.0 == min(5.0, 10.0));
+	CHECK(5.0 == max(5.0, -1.0));
+	CHECK(5 == min(5, 10));
+	CHECK(5 == max(5, -1));
+	CHECK(5u == min(5u, 10u));
+	CHECK(5u == max(5u, 0u));
+}
+
 TEST_CASE("vec2 constructors and getters") 
 {
 	vec2 a(-3.f, 4.5f);
@@ -95,6 +107,14 @@ TEST_CASE("vec2 operations")
 	vec2 hadamardDivRes = hadamardDiv(a, b);
 	CHECK(hadamardDivRes.x() == 2.f / -5.f);
 	CHECK(hadamardDivRes.y() == 4.f / 3.f);
+
+	vec2 minRes = min(a, b);
+	CHECK(minRes.x() == -5.f);
+	CHECK(minRes.y() == 3.f);
+
+	vec2 maxRes = max(a, b);
+	CHECK(maxRes.x() == 2.f);
+	CHECK(maxRes.y() == 4.f);
 }
 
 
@@ -187,6 +207,14 @@ TEST_CASE("vec2d operations")
 	vec2d hadamardDivRes = hadamardDiv(a, b);
 	CHECK(hadamardDivRes.x() == floatCmp(2.0 / -5.0));
 	CHECK(hadamardDivRes.y() == floatCmp(4.0 / 3.0));
+
+	vec2d minRes = min(a, b);
+	CHECK(minRes.x() == -5.0);
+	CHECK(minRes.y() == 3.0);
+
+	vec2d maxRes = max(a, b);
+	CHECK(maxRes.x() == 2.0);
+	CHECK(maxRes.y() == 4.0);
 }
 
 TEST_CASE("vec2i constructors and getters") 
@@ -266,6 +294,14 @@ TEST_CASE("vec2i operations")
 	vec2i hadamardMulRes = hadamardMul(a, b); 
 	CHECK(hadamardMulRes.x() == -10);
 	CHECK(hadamardMulRes.y() == 12);
+
+	vec2i minRes = min(a, b);
+	CHECK(minRes.x() == -5);
+	CHECK(minRes.y() == 3);
+
+	vec2i maxRes = max(a, b);
+	CHECK(maxRes.x() == 2);
+	CHECK(maxRes.y() == 4);
 }
 
 TEST_CASE("vec2u constructors and getters") 
@@ -328,6 +364,9 @@ TEST_CASE("vec2u operations")
 {
 	vec2u a(5, 4);
 	vec2u b(1, 3);
+
+	INFO("a == (" << a.x() << ", " << a.y() << ")");
+	INFO("b == (" << b.x() << ", " << b.y() << ")");
 	
 	vec2u addRes = a + b;
 	CHECK(addRes.x() == 6);
@@ -348,5 +387,13 @@ TEST_CASE("vec2u operations")
 	vec2u hadamardMulRes = hadamardMul(a, b); 
 	CHECK(hadamardMulRes.x() == 5);
 	CHECK(hadamardMulRes.y() == 12);
+
+	vec2u minRes = min(a, b);
+	CHECK(minRes.x() == 1);
+	CHECK(minRes.y() == 3);
+
+	vec2u maxRes = max(a, b);
+	CHECK(maxRes.x() == 5);
+	CHECK(maxRes.y() == 4);
 }
 
