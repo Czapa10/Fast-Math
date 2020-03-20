@@ -37,6 +37,10 @@ TEST_CASE("vec2 constructors, aliases, swizzling and storing")
 	vec2 b(1.f);
 	CHECK(b.x() == 1.f);
 	CHECK(b.y() == 1.f);
+
+	vec2 c;
+	CHECK(c.x() == 0.f);
+	CHECK(c.y() == 0.f);
 }
 
 TEST_CASE("vec2 setters")
@@ -120,6 +124,10 @@ TEST_CASE("vec2d constructors, aliases ,swizzling and storing")
 	CHECK(b.x() == 1.0); 
 	CHECK(b.y() == 1.0); 
 
+	vec2d c;
+	CHECK(c.x() == 0.0);
+	CHECK(c.y() == 0.0);
+
 	// TODO: Check other constructors
 }
 
@@ -173,7 +181,7 @@ TEST_CASE("vec2d operations")
 	CHECK(hadamardDivRes.y() == floatCmp(4.0 / 3.0));
 }
 
-TEST_CASE("vec2i constructors and swizzling") 
+TEST_CASE("vec2i constructors, aliases ,swizzling and storing") 
 {
 	vec2i a(-3, 4);
 
@@ -200,6 +208,10 @@ TEST_CASE("vec2i constructors and swizzling")
 	vec2i b(1);
 	CHECK(b.x() == 1);
 	CHECK(b.y() == 1);
+
+	vec2i c;
+	CHECK(c.x() == 0);
+	CHECK(c.y() == 0);
 }
 
 TEST_CASE("vec2i setters")
@@ -243,7 +255,7 @@ TEST_CASE("vec2i operations")
 	CHECK(hadamardMulRes.y() == 12);
 }
 
-TEST_CASE("vec2u constructors and swizzling") 
+TEST_CASE("vec2u constructors, aliases ,swizzling and storing") 
 {
 	vec2u a(3, 4);
 	CHECK(a.x() == 3);
@@ -265,15 +277,18 @@ TEST_CASE("vec2u constructors and swizzling")
 	CHECK(b.x() == 1);
 	CHECK(b.y() == 1);
 
-	int arr[2];
+	unsigned arr[2];
 	a.storeTo(arr);
 	CHECK(arr[0] == 3);
 	CHECK(arr[1] == 4);
 
-	// TODO: Should it be like that? Maybe I should clamp it?
 	vec2u c(-2, 3);
 	CHECK(c.x() == -2);
 	CHECK(c.y() == 3);
+
+	vec2u d;
+	CHECK(d.x() == 0);
+	CHECK(d.y() == 0);
 }
 
 TEST_CASE("vec2u setters")

@@ -20,7 +20,7 @@ struct vec2
 	FM_INLINE vec2(float x, float y) { m = _mm_set_ps(0.f, 0.f, y, x); } 
 	FM_INLINE explicit vec2(float a) { m = _mm_set1_ps(a); }
 	FM_INLINE vec2(__m128 m) : m(m) {}
-	FM_INLINE vec2() {} 
+	FM_INLINE vec2() { m = _mm_setzero_ps(); } 
 
 	FM_INLINE float FM_CALL x() const { return _mm_cvtss_f32(m); }
 	FM_INLINE float FM_CALL u() const { return x(); } 
@@ -59,7 +59,7 @@ struct vec2d
 	FM_INLINE vec2d(double x, double y) { m = _mm_set_pd(y, x); } 
 	FM_INLINE explicit vec2d(double a) { m = _mm_set1_pd(a); } 
 	FM_INLINE vec2d(__m128d m) : m(m) {}
-	FM_INLINE vec2d() {}
+	FM_INLINE vec2d() { m = _mm_setzero_pd(); }
 
 	FM_INLINE double FM_CALL x() const { return _mm_cvtsd_f64(m); }
 	FM_INLINE double FM_CALL u() const { return x(); }
@@ -99,7 +99,7 @@ struct vec2i
 	FM_INLINE vec2i(int x, int y) { m = _mm_set_epi32(0, 0, y, x); } 
 	FM_INLINE explicit vec2i(int a) { m = _mm_set1_epi32(a); }
 	FM_INLINE vec2i(__m128i m) :m(m) {}
-	FM_INLINE vec2i() {}
+	FM_INLINE vec2i() { m = _mm_setzero_si128(); }
 
 	FM_INLINE int FM_CALL x() const { return _mm_cvtsi128_si32(m); } 
 	FM_INLINE int FM_CALL u() const { return x(); }
@@ -138,7 +138,7 @@ struct vec2u
 	FM_INLINE vec2u(unsigned x, unsigned y) { m = _mm_set_epi32(0, 0, y, x); }
 	FM_INLINE explicit vec2u(unsigned a) { m = _mm_set1_epi32(a); } 
 	FM_INLINE vec2u(__m128i m) :m(m) {}
-	FM_INLINE vec2u() {}
+	FM_INLINE vec2u() { m = _mm_setzero_si128(); }
 
 	FM_INLINE unsigned FM_CALL x() const { return (unsigned)_mm_cvtsi128_si32(m); } 
 	FM_INLINE unsigned FM_CALL u() const { return x(); }
@@ -153,7 +153,7 @@ struct vec2u
 	FM_INLINE vec2u FM_CALL yx() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 	FM_INLINE vec2u FM_CALL vu() const { return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); }
 
-	FM_INLINE void FM_CALL storeTo(int* mem) { mem[0] = x(); mem[1] = y(); } 
+	FM_INLINE void FM_CALL storeTo(unsigned* mem) { mem[0] = x(); mem[1] = y(); } 
 
 	FM_INLINE void FM_CALL setX(unsigned x);
 	FM_INLINE void FM_CALL setY(unsigned y);
