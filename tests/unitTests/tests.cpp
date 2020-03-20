@@ -39,6 +39,21 @@ TEST_CASE("vec2 constructors, aliases, swizzling and storing")
 	CHECK(b.y() == 1.f);
 }
 
+TEST_CASE("vec2 setters")
+{
+	vec2 a;
+	a.setX(4.f);
+	a.setY(-2.5f);
+	CHECK(a.x() == 4.f);
+	CHECK(a.y() == -2.5f);
+
+	vec2 b;
+	b.setY(-2.5f);
+	b.setX(4.f);
+	CHECK(a.x() == 4.f);
+	CHECK(a.y() == -2.5f);
+}
+
 TEST_CASE("vec2 operations")
 {
 	vec2 a(2.f, 4.f);	
@@ -108,6 +123,22 @@ TEST_CASE("vec2d constructors, aliases ,swizzling and storing")
 	// TODO: Check other constructors
 }
 
+TEST_CASE("vec2d setters")
+{
+	vec2d a;
+	a.setX(4.0);
+	a.setY(-2.5);
+	CHECK(a.x() == 4.0);
+	CHECK(a.y() == -2.5);
+
+	vec2d b;
+	b.setY(-2.5);
+	b.setX(4.0);
+	CHECK(a.x() == 4.0);
+	CHECK(a.y() == -2.5);
+}
+
+
 TEST_CASE("vec2d operations")
 {
 	vec2d a(2.0, 4.0);	
@@ -171,6 +202,21 @@ TEST_CASE("vec2i constructors and swizzling")
 	CHECK(b.y() == 1);
 }
 
+TEST_CASE("vec2i setters")
+{
+	vec2i a;
+	a.setX(4);
+	a.setY(-2);
+	CHECK(a.x() == 4);
+	CHECK(a.y() == -2);
+
+	vec2d b;
+	b.setY(-2);
+	b.setX(4);
+	CHECK(a.x() == 4);
+	CHECK(a.y() == -2);
+}
+
 TEST_CASE("vec2i operations")
 {
 	vec2i a(2, 4);
@@ -228,6 +274,21 @@ TEST_CASE("vec2u constructors and swizzling")
 	vec2u c(-2, 3);
 	CHECK(c.x() == -2);
 	CHECK(c.y() == 3);
+}
+
+TEST_CASE("vec2u setters")
+{
+	vec2u a;
+	a.setX(4);
+	a.setY(2);
+	CHECK(a.x() == 4);
+	CHECK(a.y() == 2);
+
+	vec2u b;
+	b.setY(2);
+	b.setX(4);
+	CHECK(a.x() == 4);
+	CHECK(a.y() == 2);
 }
 
 TEST_CASE("vec2u operations")
