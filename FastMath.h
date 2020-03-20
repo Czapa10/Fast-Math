@@ -49,6 +49,8 @@ struct vec2
 };
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
+FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b);
+FM_INLINE vec2& FM_CALL operator-=(vec2& a, vec2 b);
 FM_INLINE vec2 FM_CALL hadamardMul(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL hadamardDiv(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar);
@@ -90,6 +92,8 @@ struct vec2d
 };
 FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
+FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b);
+FM_INLINE vec2d& FM_CALL operator-=(vec2d& a, vec2d b);
 FM_INLINE vec2d FM_CALL hadamardMul(vec2d a, vec2d b);
 FM_INLINE vec2d FM_CALL hadamardDiv(vec2d a, vec2d b);
 FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar);
@@ -130,6 +134,8 @@ struct vec2i
 };
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b); 
+FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b);
+FM_INLINE vec2i& FM_CALL operator-=(vec2i& a, vec2i b);
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator*(vec2i v, int scalar); 
 FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v);
@@ -170,6 +176,8 @@ struct vec2u
 };
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
+FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b);
+FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b);
 FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator*(vec2u v, unsigned scalar); 
 FM_INLINE vec2u FM_CALL operator*(unsigned scalar, vec2u v);
@@ -270,6 +278,14 @@ FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b) {
 	a.m = _mm_sub_ps(a.m, b.m);
 	return a; 
 }
+FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b) {
+	a.m = _mm_add_ps(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2& FM_CALL operator-=(vec2& a, vec2 b) {
+	a.m = _mm_sub_ps(a.m, b.m);
+	return a; 
+}
 FM_INLINE vec2 FM_CALL hadamardMul(vec2 a, vec2 b) {
 	a.m = _mm_mul_ps(a.m, b.m);
 	return a;
@@ -352,6 +368,14 @@ FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b) {
 	a.m = _mm_sub_pd(a.m, b.m);
 	return a; 
 }
+FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b) {
+	a.m = _mm_add_pd(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2d& FM_CALL operator-=(vec2d& a, vec2d b) {
+	a.m = _mm_sub_pd(a.m, b.m);
+	return a; 
+}
 FM_INLINE vec2d FM_CALL hadamardMul(vec2d a, vec2d b) {
 	a.m = _mm_mul_pd(a.m, b.m);
 	return a; 
@@ -426,6 +450,18 @@ FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b) {
 	a.m = _mm_sub_epi32(a.m, b.m);
 	return a; 
 }
+FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b) {
+	a.m = _mm_add_epi32(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2i& FM_CALL operator-=(vec2i& a, vec2i b) {
+	a.m = _mm_sub_epi32(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2i FM_CALL operator-(vec2i v) {
+	v.m = _mm_sub_epi32(_mm_setzero_si128(), v.m);
+	return v;
+}
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2i::setX(int x) {
 	m = _mm_insert_epi32(m, x, 0);
@@ -444,10 +480,6 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v) {
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) {
 	a.m = _mm_mullo_epi32(a.m, b.m); 
 	return a; 
-}
-FM_INLINE vec2i FM_CALL operator-(vec2i v) {
-	v.m = _mm_sub_epi32(_mm_setzero_si128(), v.m);
-	return v;
 }
 FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b) {
 	a.m = _mm_min_epi32(a.m, b.m);
@@ -547,6 +579,14 @@ FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b) {
 	return a; 
 }
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b) {
+	a.m = _mm_sub_epi32(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b) {
+	a.m = _mm_add_epi32(a.m, b.m);
+	return a; 
+}
+FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b) {
 	a.m = _mm_sub_epi32(a.m, b.m);
 	return a; 
 }

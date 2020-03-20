@@ -91,6 +91,16 @@ TEST_CASE("vec2 operations")
 	CHECK(subRes.x() == 7.f);
 	CHECK(subRes.y() == 1.f);
 
+	vec2 addAsignmentRes = a;
+	addAsignmentRes += b;
+	CHECK(addAsignmentRes.x() == -3.f);
+	CHECK(addAsignmentRes.y() == 7.f);
+
+	vec2 subAsignmentRes = a;
+	subAsignmentRes -= b;
+	CHECK(subAsignmentRes.x() == 7.f);
+	CHECK(subAsignmentRes.y() == 1.f);
+
 	vec2 scalarMulRes1 = a * 4.5f;
 	CHECK(scalarMulRes1.x() == 9.f);
 	CHECK(scalarMulRes1.y() == 18.f);
@@ -198,6 +208,16 @@ TEST_CASE("vec2d operations")
 	CHECK(subRes.x() == 7.0);
 	CHECK(subRes.y() == 1.0);
 
+	vec2d addAsignmentRes = a;
+	addAsignmentRes += b;
+	CHECK(addAsignmentRes.x() == -3.0);
+	CHECK(addAsignmentRes.y() == 7.0);
+
+	vec2d subAsignmentRes = a;
+	subAsignmentRes -= b;
+	CHECK(subAsignmentRes.x() == 7.0);
+	CHECK(subAsignmentRes.y() == 1.0);
+
 	vec2d scalarMulRes1 = a * 4.5;
 	CHECK(scalarMulRes1.x() == 9.0);
 	CHECK(scalarMulRes1.y() == 18.0);
@@ -299,6 +319,16 @@ TEST_CASE("vec2i operations")
 	vec2i subRes = a - b;
 	CHECK(subRes.x() == 7);
 	CHECK(subRes.y() == 1);
+
+	vec2i addAsignmentRes = a;
+	addAsignmentRes += b;
+	CHECK(addAsignmentRes.x() == -3);
+	CHECK(addAsignmentRes.y() == 7);
+
+	vec2i subAsignmentRes = a;
+	subAsignmentRes -= b;
+	CHECK(subAsignmentRes.x() == 7);
+	CHECK(subAsignmentRes.y() == 1);
 	
 	vec2i scalarMulRes1 = a * -5;
 	CHECK(scalarMulRes1.x() == -10);
@@ -396,6 +426,16 @@ TEST_CASE("vec2u operations")
 	vec2u subRes = a - b;
 	CHECK(subRes.x() == 4);
 	CHECK(subRes.y() == 1);
+
+	vec2u addAsignmentRes = a;
+	addAsignmentRes += b;
+	CHECK(addAsignmentRes.x() == 6);
+	CHECK(addAsignmentRes.y() == 7);
+
+	vec2u subAsignmentRes = a;
+	subAsignmentRes -= b;
+	CHECK(subAsignmentRes.x() == 4);
+	CHECK(subAsignmentRes.y() == 1);
 	
 	vec2u scalarMulRes1 = a * 5;
 	CHECK(scalarMulRes1.x() == 25);
