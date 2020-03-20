@@ -54,6 +54,7 @@ FM_INLINE vec2 FM_CALL hadamardDiv(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar);
 FM_INLINE vec2 FM_CALL operator*(float scalar, vec2 v);
 FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar); 
+FM_INLINE vec2 FM_CALL operator-(vec2 v); 
 FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b); 
 // TODO: Add more operators, dot, length, normalize
@@ -94,6 +95,7 @@ FM_INLINE vec2d FM_CALL hadamardDiv(vec2d a, vec2d b);
 FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar);
 FM_INLINE vec2d FM_CALL operator*(double scalar, vec2d v);
 FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar);
+FM_INLINE vec2d FM_CALL operator-(vec2d v); 
 FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b); 
 // TODO: Add more operators, dot, length, normalize
@@ -131,6 +133,7 @@ FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator*(vec2i v, int scalar); 
 FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v);
+FM_INLINE vec2i FM_CALL operator-(vec2i v); 
 FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b); 
 FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b); 
 // TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
@@ -287,6 +290,10 @@ FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) {
 	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
 	return v; 
 }
+FM_INLINE vec2 FM_CALL operator-(vec2 v) {
+	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
+	return v;
+}
 FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b) {
 	a.m = _mm_min_ps(a.m, b.m);
 	return a;
@@ -365,6 +372,10 @@ FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar) {
 	v.m = _mm_div_pd(v.m, _mm_set1_pd(scalar));
 	return v; 
 }
+FM_INLINE vec2d FM_CALL operator-(vec2d v) {
+	v.m = _mm_sub_pd(_mm_setzero_pd(), v.m);
+	return v;
+}
 FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b) {
 	a.m = _mm_min_pd(a.m, b.m);
 	return a;
@@ -433,6 +444,10 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v) {
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) {
 	a.m = _mm_mullo_epi32(a.m, b.m); 
 	return a; 
+}
+FM_INLINE vec2i FM_CALL operator-(vec2i v) {
+	v.m = _mm_sub_epi32(_mm_setzero_si128(), v.m);
+	return v;
 }
 FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b) {
 	a.m = _mm_min_epi32(a.m, b.m);

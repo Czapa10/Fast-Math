@@ -80,6 +80,9 @@ TEST_CASE("vec2 operations")
 	vec2 a(2.f, 4.f);	
 	vec2 b(-5.f, 3.f);	
 
+	INFO("a == (" << a.x() << ", " << a.y() << ")");
+	INFO("b == (" << b.x() << ", " << b.y() << ")");
+
 	vec2 addRes = a + b; 
 	CHECK(addRes.x() == -3.f);
 	CHECK(addRes.y() == 7.f);
@@ -107,6 +110,10 @@ TEST_CASE("vec2 operations")
 	vec2 hadamardDivRes = hadamardDiv(a, b);
 	CHECK(hadamardDivRes.x() == 2.f / -5.f);
 	CHECK(hadamardDivRes.y() == 4.f / 3.f);
+
+	vec2 negatedB = -b;
+	CHECK(negatedB.x() == 5.f);
+	CHECK(negatedB.y() == -3.0f);
 
 	vec2 minRes = min(a, b);
 	CHECK(minRes.x() == -5.f);
@@ -180,6 +187,9 @@ TEST_CASE("vec2d operations")
 	vec2d a(2.0, 4.0);	
 	vec2d b(-5.0, 3.0);	
 
+	INFO("a == (" << a.x() << ", " << a.y() << ")");
+	INFO("b == (" << b.x() << ", " << b.y() << ")");
+
 	vec2d addRes = a + b; 
 	CHECK(addRes.x() == -3.0);
 	CHECK(addRes.y() == 7.0);
@@ -207,6 +217,10 @@ TEST_CASE("vec2d operations")
 	vec2d hadamardDivRes = hadamardDiv(a, b);
 	CHECK(hadamardDivRes.x() == floatCmp(2.0 / -5.0));
 	CHECK(hadamardDivRes.y() == floatCmp(4.0 / 3.0));
+
+	vec2d negatedB = -b;
+	CHECK(negatedB.x() == 5.0);
+	CHECK(negatedB.y() == -3.0);
 
 	vec2d minRes = min(a, b);
 	CHECK(minRes.x() == -5.0);
@@ -274,6 +288,9 @@ TEST_CASE("vec2i operations")
 {
 	vec2i a(2, 4);
 	vec2i b(-5, 3);
+
+	INFO("a == (" << a.x() << ", " << a.y() << ")");
+	INFO("b == (" << b.x() << ", " << b.y() << ")");
 	
 	vec2i addRes = a + b;
 	CHECK(addRes.x() == -3);
@@ -294,6 +311,10 @@ TEST_CASE("vec2i operations")
 	vec2i hadamardMulRes = hadamardMul(a, b); 
 	CHECK(hadamardMulRes.x() == -10);
 	CHECK(hadamardMulRes.y() == 12);
+
+	vec2i negatedB = -b;
+	CHECK(negatedB.x() == 5);
+	CHECK(negatedB.y() == -3);
 
 	vec2i minRes = min(a, b);
 	CHECK(minRes.x() == -5);
