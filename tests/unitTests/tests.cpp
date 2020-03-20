@@ -3,23 +3,51 @@
 #define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
 #include "doctest.h"
 
-#define FAST_MATH_IMPLEMENTATION
+#define FM_IMPLEMENTATION
 #include "../../FastMath.h"
+
+#include <string>
 
 using namespace fm;
 
+static long long vElements;
+static char binaryOutput[128];
+
+#define logRegisterOf(v, name) \
+	_mm_store_ps((float*)(&vElements), v.m); \
+	for(int i = 0; i < 128; ++i) \
+	{ \
+		binaryOutput[i] = (vElements >> i) & 1 ? '1' : '0'; \
+	} \
+	INFO(name << " (binary): " << std::string(binaryOutput)); 
+
+#define logIntRegisterOf(v, name) \
+	_mm_store_si128((__m128i*)(&vElements), v.m); \
+	for(int i = 0; i < 128; ++i) \
+	{ \
+		binaryOutput[i] = (vElements >> i) & 1 ? '1' : '0'; \
+	} \
+	INFO(name << " (binary): " << std::string(binaryOutput)); 
+
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-TEST_CASE("min max functions")
+TEST_CASE("utility functions")
 {
-	CHECK(5.f == min(5.f, 10.f));
-	CHECK(5.f == max(5.f, -1.f));
-	CHECK(5.0 == min(5.0, 10.0));
-	CHECK(5.0 == max(5.0, -1.0));
-	CHECK(5 == min(5, 10));
-	CHECK(5 == max(5, -1));
-	CHECK(5u == min(5u, 10u));
-	CHECK(5u == max(5u, 0u));
+	CHECK(5.f == fm::min(5.f, 10.f));
+	CHECK(5.f == fm::max(5.f, -1.f));
+	CHECK(5.0 == fm::min(5.0, 10.0));
+	CHECK(5.0 == fm::max(5.0, -1.0));
+	CHECK(5 == fm::min(5, 10));
+	CHECK(5 == fm::max(5, -1));
+	CHECK(5u == fm::min(5u, 10u));
+	CHECK(5u == fm::max(5u, 0u));
+
+	CHECK(5.f == fm::abs(5.f));
+	CHECK(5.f == fm::abs(-5.f));
+	CHECK(5.0 == fm::abs(5.0));
+	CHECK(5.0 == fm::abs(-5.0));
+	CHECK(5 == fm::abs(5));
+	CHECK(5 == fm::abs(-5));
 }
 
 TEST_CASE("vec2 constructors and getters") 
@@ -132,6 +160,10 @@ TEST_CASE("vec2 operations")
 	vec2 maxRes = max(a, b);
 	CHECK(maxRes.x() == 2.f);
 	CHECK(maxRes.y() == 4.f);
+
+	vec2 absoluteB = abs(b);
+	CHECK(absoluteB.x() == 5);
+	CHECK(absoluteB.y() == 3);
 }
 
 
@@ -249,6 +281,10 @@ TEST_CASE("vec2d operations")
 	vec2d maxRes = max(a, b);
 	CHECK(maxRes.x() == 2.0);
 	CHECK(maxRes.y() == 4.0);
+
+	vec2d absoluteB = abs(b);
+	CHECK(absoluteB.x() == 5);
+	CHECK(absoluteB.y() == 3);
 }
 
 TEST_CASE("vec2i constructors and getters") 
@@ -353,6 +389,10 @@ TEST_CASE("vec2i operations")
 	vec2i maxRes = max(a, b);
 	CHECK(maxRes.x() == 2);
 	CHECK(maxRes.y() == 4);
+
+	vec2i absoluteB = abs(b);
+	CHECK(absoluteB.x() == 5);
+	CHECK(absoluteB.y() == 3);
 }
 
 TEST_CASE("vec2u constructors and getters") 

@@ -1,7 +1,7 @@
 #define ANKERL_NANOBENCH_IMPLEMENT
 #include "nanobench.h"
 
-#define FAST_MATH_IMPLEMENTATION
+#define FM_IMPLEMENTATION
 #include "../../FastMath.h"
 
 using namespace fm;

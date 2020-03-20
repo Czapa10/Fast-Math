@@ -19,6 +19,10 @@ FM_INLINE int max(int a, int b);
 FM_INLINE unsigned min(unsigned a, unsigned b);
 FM_INLINE unsigned max(unsigned a, unsigned b);
 
+FM_INLINE float abs(float a); 
+FM_INLINE double abs(double a); 
+FM_INLINE int abs(int a);
+
 struct vec2
 {
 	FM_INLINE explicit vec2(const float* v); 
@@ -59,6 +63,7 @@ FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar);
 FM_INLINE vec2 FM_CALL operator-(vec2 v); 
 FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b); 
+FM_INLINE vec2 FM_CALL abs(vec2 v); 
 // TODO: Add more operators, dot, length, normalize
 
 struct vec2d
@@ -102,6 +107,7 @@ FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar);
 FM_INLINE vec2d FM_CALL operator-(vec2d v); 
 FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b); 
+FM_INLINE vec2d FM_CALL abs(vec2d v); 
 // TODO: Add more operators, dot, length, normalize
 
 struct vec2i
@@ -142,6 +148,7 @@ FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v);
 FM_INLINE vec2i FM_CALL operator-(vec2i v); 
 FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b); 
 FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b); 
+FM_INLINE vec2i FM_CALL abs(vec2i v); 
 // TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
 // TODO: Add more operators
 
@@ -191,7 +198,7 @@ FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b);
 #endif // FAST_MATH_H
 
 
-#ifdef FAST_MATH_IMPLEMENTATION
+#ifdef FM_IMPLEMENTATION
 
 #include <math.h>
 
@@ -227,6 +234,15 @@ FM_INLINE unsigned min(unsigned a, unsigned b) {
 }
 FM_INLINE unsigned max(unsigned a, unsigned b) {
 	return a > b ? a : b;
+}
+FM_INLINE float abs(float a) {
+	return a < 0 ? -a : a;
+}
+FM_INLINE double abs(double a) {
+	return a < 0 ? -a : a;
+}
+FM_INLINE int abs(int a) {
+	return a < 0 ? -a : a;
 }
 
 ////////////////////
@@ -307,6 +323,7 @@ FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) {
 	return v; 
 }
 FM_INLINE vec2 FM_CALL operator-(vec2 v) {
+	// TODO: Maybe do that with static sign mask
 	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
 	return v;
 }
@@ -317,6 +334,11 @@ FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b) {
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b) {
 	a.m = _mm_max_ps(a.m, b.m);
 	return a;
+}
+FM_INLINE vec2 FM_CALL abs(vec2 v) {
+	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000)); 
+	v.m = _mm_andnot_ps(signMask, v.m);
+	return v;
 }
 
 /////////////////////
@@ -408,6 +430,11 @@ FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b) {
 	a.m = _mm_max_pd(a.m, b.m);
 	return a;
 }
+FM_INLINE vec2d FM_CALL abs(vec2d v) {
+	__m128d signBits = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
+	v.m = _mm_andnot_pd(signBits, v.m);
+	return v;
+}
 
 /////////////////////
 // vec2i functions //
@@ -489,7 +516,11 @@ FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b) {
 	a.m = _mm_max_epi32(a.m, b.m);
 	return a;
 }
-#else
+FM_INLINE vec2i FM_CALL abs(vec2i v) {
+	v.m = _mm_abs_epi32(v.m);
+	return v;
+}
+#else // SSE 2 implementations 
 FM_INLINE void FM_CALL vec2i::setX(int x) {
 	int arr[4];
 	_mm_store_si128((__m128i*)arr, m);
@@ -538,6 +569,13 @@ FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b) {
 	aArr[1] = max(aArr[1], bArr[1]);
 	return vec2i(aArr);
 	// TODO: This code is repeated. Make utility function!
+}
+FM_INLINE vec2i FM_CALL abs(vec2i v) {
+	int vArr[4];
+	_mm_store_si128((__m128i*)vArr, v.m);
+	vArr[0] = abs(vArr[0]);
+	vArr[1] = abs(vArr[1]);
+	return vec2i(vArr);
 }
 #endif
 
@@ -617,7 +655,7 @@ FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b) {
 	a.m = _mm_max_epu32(a.m, b.m);
 	return a;
 }
-#else
+#else // SSE 2 implementations
 FM_INLINE void FM_CALL vec2u::setX(unsigned x) {
 	unsigned arr[4];
 	_mm_store_si128((__m128i*)arr, m);
@@ -669,5 +707,5 @@ FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b) {
 
 } // !namespace fm
 
-#endif FAST_MATH_IMPLEMENTATION
+#endif // FM_IMPLEMENTATION
 
