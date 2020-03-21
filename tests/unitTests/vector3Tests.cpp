@@ -11,6 +11,12 @@ TEST_CASE("vec3 constructors and getters")
 	CHECK(a.w() == -3.f);
 	CHECK(a.b() == -3.f);
 
+	float storage[3];
+	a.storeTo(storage);
+	CHECK(storage[0] == 1.f);
+	CHECK(storage[1] == 5.f);
+	CHECK(storage[2] == -3.f);
+
 	vec3 b(2.f);
 	CHECK(b.x() == 2.f);
 	CHECK(b.y() == 2.f);
@@ -472,3 +478,23 @@ TEST_CASE("vec3 constructors and getters")
 	CHECK(f.y() == 3.f);
 	CHECK(f.z() == 3.f);
 }
+
+TEST_CASE("vec3 setters")
+{
+	vec3 a;
+	a.setX(-1.f);
+	a.setY(2.f);
+	a.setZ(-3.f);
+	CHECK(a.x() == -1.f);
+	CHECK(a.y() == 2.f);
+	CHECK(a.z() == -3.f);
+
+	vec3 b;
+	b.setY(2.f);
+	b.setX(-1.f);
+	b.setZ(-3.f);
+	CHECK(b.x() == -1.f);
+	CHECK(b.y() == 2.f);
+	CHECK(b.z() == -3.f);
+}
+

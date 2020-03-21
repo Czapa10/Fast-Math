@@ -1,3 +1,30 @@
+/*
+FAST MATH
+C++ single header math libary
+https://github.com/Czapa10/Fast-Math
+
+Written by Grzegorz "Czapa" Bednorz
+
+YOU HAVE TO
+#define FM_IMPLEMENTATION
+in EXACTLY one C++ file that includes this header, BEFORE the include, like this:
+
+#define FM_IMPLEMENTATION
+#include <FastMath.h>
+
+If you don't need certain functionality you can also define some of these macros:
+FM_EXCLUDE_SWIZZLES
+FM_EXCLUDE_TEX_COORD_SWIZZLES
+FM_EXCLUDE_COLOR_SWIZZLES
+
+like this:
+
+#define FM_IMPLEMENTATION
+#define FM_EXCLUDE_TEX_COORD_SWIZZLES
+#define FM_EXCLUDE_COLOR_SWIZZLES
+#include <FastMath.h>
+*/
+
 #ifndef FAST_MATH_H
 #define FAST_MATH_H
 
@@ -219,6 +246,12 @@ struct vec3
 	FM_INLINE explicit vec3(__m128 m);
 	FM_INLINE vec3();
 
+	FM_INLINE void FM_CALL setX(float x);
+	FM_INLINE void FM_CALL setY(float y);
+	FM_INLINE void FM_CALL setZ(float z);
+
+	FM_INLINE void FM_CALL storeTo(float* mem); 
+
 	FM_INLINE float FM_CALL x() const;
 	FM_INLINE float FM_CALL u() const { return x(); }
 	FM_INLINE float FM_CALL r() const { return x(); }
@@ -231,6 +264,7 @@ struct vec3
 	FM_INLINE float FM_CALL w() const { return z(); }
 	FM_INLINE float FM_CALL b() const { return z(); }
 
+#ifndef FM_EXCLUDE_SWIZZLES
 	FM_INLINE vec2 FM_CALL xy() const;
 	FM_INLINE vec2 FM_CALL yx() const;
 	FM_INLINE vec2 FM_CALL yz() const;
@@ -241,6 +275,7 @@ struct vec3
 	FM_INLINE vec2 FM_CALL yy() const;
 	FM_INLINE vec2 FM_CALL zz() const;
 
+#ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
 	FM_INLINE vec2 FM_CALL uv() const { return xy(); }
 	FM_INLINE vec2 FM_CALL vu() const { return yx(); }
 	FM_INLINE vec2 FM_CALL vw() const { return yz(); }
@@ -250,7 +285,9 @@ struct vec3
 	FM_INLINE vec2 FM_CALL uu() const { return xx(); }
 	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
 	FM_INLINE vec2 FM_CALL ww() const { return zz(); }
+#endif
 
+#ifndef FM_EXCLUDE_COLOR_SWIZZLES
 	FM_INLINE vec2 FM_CALL rg() const { return xy(); }
 	FM_INLINE vec2 FM_CALL gr() const { return yx(); }
 	FM_INLINE vec2 FM_CALL gb() const { return yz(); }
@@ -260,6 +297,7 @@ struct vec3
 	FM_INLINE vec2 FM_CALL rr() const { return xx(); }
 	FM_INLINE vec2 FM_CALL gg() const { return yy(); }
 	FM_INLINE vec2 FM_CALL bb() const { return zz(); }
+#endif
 
 	FM_INLINE vec3 FM_CALL xyz() const;
 	FM_INLINE vec3 FM_CALL yzx() const;
@@ -289,6 +327,7 @@ struct vec3
 	FM_INLINE vec3 FM_CALL yyy() const;
 	FM_INLINE vec3 FM_CALL zzz() const;
 
+#ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
 	FM_INLINE vec3 FM_CALL uvw() const { return xyz(); }
 	FM_INLINE vec3 FM_CALL vwu() const { return yzx(); }
 	FM_INLINE vec3 FM_CALL wuv() const { return zxy(); }
@@ -316,7 +355,9 @@ struct vec3
 	FM_INLINE vec3 FM_CALL uuu() const { return xxx(); }
 	FM_INLINE vec3 FM_CALL vvv() const { return yyy(); }
 	FM_INLINE vec3 FM_CALL www() const { return zzz(); }
+#endif
 
+#ifndef FM_EXCLUDE_COLOR_SWIZZLES
 	FM_INLINE vec3 FM_CALL rgb() const { return xyz(); }
 	FM_INLINE vec3 FM_CALL gbr() const { return yzx(); }
 	FM_INLINE vec3 FM_CALL brg() const { return zxy(); }
@@ -344,6 +385,8 @@ struct vec3
 	FM_INLINE vec3 FM_CALL rrr() const { return xxx(); }
 	FM_INLINE vec3 FM_CALL ggg() const { return yyy(); }
 	FM_INLINE vec3 FM_CALL bbb() const { return zzz(); }
+#endif
+#endif
 };
 
 }
@@ -932,6 +975,24 @@ FM_INLINE vec3::vec3(__m128 m)
 FM_INLINE vec3::vec3() {
 	m = _mm_setzero_ps();
 }
+FM_INLINE void FM_CALL vec3::setX(float x) {
+	m = _mm_move_ss(m, _mm_set_ss(x));
+}
+FM_INLINE void FM_CALL vec3::setY(float y) {
+	__m128 temp = _mm_move_ss(m, _mm_set_ss(y));
+	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
+	m = _mm_move_ss(temp, m);	
+}
+FM_INLINE void FM_CALL vec3::setZ(float z) {
+	__m128 temp = _mm_move_ss(m, _mm_set_ss(z));
+	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
+	m = _mm_move_ss(temp, m);
+}
+FM_INLINE void FM_CALL vec3::storeTo(float* mem) {
+	mem[0] = x();		
+	mem[1] = y();		
+	mem[2] = z();		
+}
 FM_INLINE float FM_CALL vec3::x() const {
 	return _mm_cvtss_f32(m);
 }
@@ -941,6 +1002,7 @@ FM_INLINE float FM_CALL vec3::y() const {
 FM_INLINE float FM_CALL vec3::z() const {
 	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(2, 2, 2, 2)));
 }
+#ifndef FM_EXCLUDE_SWIZZLES
 FM_INLINE vec2 FM_CALL vec3::xy() const {
 	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 0)));
 }
@@ -1052,6 +1114,7 @@ FM_INLINE vec3 FM_CALL vec3::yyy() const {
 FM_INLINE vec3 FM_CALL vec3::zzz() const {
 	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 2)));
 }
+#endif
 
 } // !namespace fm
 
