@@ -61,10 +61,15 @@ FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar);
 FM_INLINE vec2 FM_CALL operator*(float scalar, vec2 v);
 FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar); 
 FM_INLINE vec2 FM_CALL operator-(vec2 v); 
+FM_INLINE float FM_CALL dot(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL abs(vec2 v); 
-// TODO: Add more operators, dot, length, normalize
+FM_INLINE float FM_CALL sumOfElements(vec2 v);
+FM_INLINE float FM_CALL length(vec2 v);
+FM_INLINE float FM_CALL lengthSquared(vec2 v); 
+FM_INLINE vec2 FM_CALL normalize(vec2 v);
+// TODO: Add comparison functions, lerp and clamp  
 
 struct vec2d
 {
@@ -105,10 +110,15 @@ FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar);
 FM_INLINE vec2d FM_CALL operator*(double scalar, vec2d v);
 FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar);
 FM_INLINE vec2d FM_CALL operator-(vec2d v); 
+FM_INLINE double FM_CALL dot(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL abs(vec2d v); 
-// TODO: Add more operators, dot, length, normalize
+FM_INLINE vec2d FM_CALL normalize(vec2d v);
+FM_INLINE vec2d FM_CALL abs(vec2d v);
+FM_INLINE double FM_CALL sumOfElements(vec2d v);
+FM_INLINE double FM_CALL length(vec2d v);
+FM_INLINE double FM_CALL lengthSquared(vec2d v); 
+// TODO: Add comparison functions, lerp and clamp  
 
 struct vec2i
 {
@@ -149,6 +159,9 @@ FM_INLINE vec2i FM_CALL operator-(vec2i v);
 FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b); 
 FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b); 
 FM_INLINE vec2i FM_CALL abs(vec2i v); 
+FM_INLINE int FM_CALL sumOfElements(vec2i v);
+FM_INLINE int FM_CALL length(vec2i v);
+FM_INLINE int FM_CALL lengthSquared(vec2i v); 
 // TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
 // TODO: Add more operators
 
@@ -188,8 +201,11 @@ FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b);
 FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator*(vec2u v, unsigned scalar); 
 FM_INLINE vec2u FM_CALL operator*(unsigned scalar, vec2u v);
-FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b); 
-FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b); 
+FM_INLINE vec2u FM_CALL min(vec2u a, vec2u b); 
+FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b); 
+FM_INLINE unsigned FM_CALL sumOfElements(vec2u v);
+FM_INLINE unsigned FM_CALL length(vec2u v);
+FM_INLINE unsigned FM_CALL lengthSquared(vec2u v); 
 // TODO: Add hadamardDiv() and operator/
 // TODO: Add more operators
 
@@ -244,6 +260,7 @@ FM_INLINE double abs(double a) {
 FM_INLINE int abs(int a) {
 	return a < 0 ? -a : a;
 }
+// TODO: Do faster implementations of these 
 
 ////////////////////
 // vec2 functions //
@@ -331,6 +348,9 @@ FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b) {
 	a.m = _mm_min_ps(a.m, b.m);
 	return a;
 }
+FM_INLINE float FM_CALL dot(vec2 a, vec2 b) {
+	return sumOfElements(hadamardMul(a, b));
+}
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b) {
 	a.m = _mm_max_ps(a.m, b.m);
 	return a;
@@ -339,6 +359,18 @@ FM_INLINE vec2 FM_CALL abs(vec2 v) {
 	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000)); 
 	v.m = _mm_andnot_ps(signMask, v.m);
 	return v;
+}
+FM_INLINE float FM_CALL sumOfElements(vec2 v) {
+	return v.x() + v.y();
+}
+FM_INLINE float FM_CALL length(vec2 v) {
+	return sqrt(dot(v, v));
+}
+FM_INLINE float FM_CALL lengthSquared(vec2 v) {
+	return dot(v, v);
+}
+FM_INLINE vec2 FM_CALL normalize(vec2 v) {
+	return v / length(v);
 }
 
 /////////////////////
@@ -422,6 +454,9 @@ FM_INLINE vec2d FM_CALL operator-(vec2d v) {
 	v.m = _mm_sub_pd(_mm_setzero_pd(), v.m);
 	return v;
 }
+FM_INLINE double FM_CALL dot(vec2d a, vec2d b) {
+	return sumOfElements(hadamardMul(a, b));
+}
 FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b) {
 	a.m = _mm_min_pd(a.m, b.m);
 	return a;
@@ -434,6 +469,18 @@ FM_INLINE vec2d FM_CALL abs(vec2d v) {
 	__m128d signBits = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
 	v.m = _mm_andnot_pd(signBits, v.m);
 	return v;
+}
+FM_INLINE double FM_CALL sumOfElements(vec2d v) {
+	return v.x() + v.y();
+}
+FM_INLINE double FM_CALL length(vec2d v) {
+	return sqrt(dot(v, v));
+}
+FM_INLINE double FM_CALL lengthSquared(vec2d v) {
+	return dot(v, v);
+}
+FM_INLINE vec2d FM_CALL normalize(vec2d v) {
+	return v / length(v);
 }
 
 /////////////////////
@@ -489,6 +536,19 @@ FM_INLINE vec2i FM_CALL operator-(vec2i v) {
 	v.m = _mm_sub_epi32(_mm_setzero_si128(), v.m);
 	return v;
 }
+FM_INLINE int FM_CALL sumOfElements(vec2i v) {
+	return v.x() + v.y();
+}
+FM_INLINE int FM_CALL length(vec2i v) {
+	int x = v.x();
+	int y = v.y();
+	return (int)sqrt(x*x + y*y);
+}
+FM_INLINE int FM_CALL lengthSquared(vec2i v) {
+	int x = v.x();
+	int y = v.y();
+	return x*x + y*y;
+}
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2i::setX(int x) {
 	m = _mm_insert_epi32(m, x, 0);
@@ -532,7 +592,7 @@ FM_INLINE void FM_CALL vec2i::setY(int y) {
 	_mm_store_si128((__m128i*)arr, m);
 	arr[1] = y;
 	m = _mm_load_si128((__m128i*)arr);
-	// TODO: This code is repeated. Make utility function!
+	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
 FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) {
 	int aArr[4], bArr[4];
@@ -548,7 +608,7 @@ FM_INLINE vec2i FM_CALL operator*(vec2i v, int scalar) {
 	vArr[0] *= scalar;
 	vArr[1] *= scalar;
 	return vec2i(vArr);
-	// TODO: This code is repeated. Make utility function!
+	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
 FM_INLINE vec2i FM_CALL operator*(int scalar, vec2i v) {
 	return v * scalar; 
@@ -568,7 +628,7 @@ FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b) {
 	aArr[0] = max(aArr[0], bArr[0]);
 	aArr[1] = max(aArr[1], bArr[1]);
 	return vec2i(aArr);
-	// TODO: This code is repeated. Make utility function!
+	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
 FM_INLINE vec2i FM_CALL abs(vec2i v) {
 	int vArr[4];
@@ -627,6 +687,19 @@ FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b) {
 FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b) {
 	a.m = _mm_sub_epi32(a.m, b.m);
 	return a; 
+}
+FM_INLINE unsigned FM_CALL sumOfElements(vec2u v) {
+	return v.x() + v.y();
+}
+FM_INLINE unsigned FM_CALL length(vec2u v) {
+	unsigned x = v.x();
+	unsigned y = v.y();
+	return (unsigned)sqrt(x*x + y*y);
+}
+FM_INLINE unsigned FM_CALL lengthSquared(vec2u v) {
+	unsigned x = v.x();
+	unsigned y = v.y();
+	return x*x + y*y;	
 }
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2u::setX(unsigned x) {

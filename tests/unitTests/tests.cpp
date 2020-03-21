@@ -7,6 +7,7 @@
 #include "../../FastMath.h"
 
 #include <string>
+#include <cmath>
 
 using namespace fm;
 
@@ -164,6 +165,15 @@ TEST_CASE("vec2 operations")
 	vec2 absoluteB = abs(b);
 	CHECK(absoluteB.x() == 5);
 	CHECK(absoluteB.y() == 3);
+
+	vec2 normalizedB = normalize(b);
+	CHECK(normalizedB.x() == floatCmp(b.x() / sqrt(34)));
+	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(34)));
+
+	CHECK(dot(a, b) == 2.f);
+	CHECK(sumOfElements(b) == -2.f);
+	CHECK(length(b) == floatCmp(sqrt(34.f)));
+	CHECK(lengthSquared(b) == 34.f);
 }
 
 
@@ -285,6 +295,15 @@ TEST_CASE("vec2d operations")
 	vec2d absoluteB = abs(b);
 	CHECK(absoluteB.x() == 5);
 	CHECK(absoluteB.y() == 3);
+
+	vec2d normalizedB = normalize(b);
+	CHECK(normalizedB.x() == floatCmp(b.x() / sqrt(34)));
+	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(34)));
+
+	CHECK(dot(a, b) == 2.0);
+	CHECK(sumOfElements(b) == -2.0);
+	CHECK(length(b) == floatCmp(sqrt(34.0)));
+	CHECK(lengthSquared(b) == 34.0);
 }
 
 TEST_CASE("vec2i constructors and getters") 
@@ -393,6 +412,10 @@ TEST_CASE("vec2i operations")
 	vec2i absoluteB = abs(b);
 	CHECK(absoluteB.x() == 5);
 	CHECK(absoluteB.y() == 3);
+
+	CHECK(sumOfElements(b) == -2);
+	CHECK(length(b) == (int)sqrt(34));
+	CHECK(lengthSquared(b) == 34);
 }
 
 TEST_CASE("vec2u constructors and getters") 
@@ -496,5 +519,9 @@ TEST_CASE("vec2u operations")
 	vec2u maxRes = max(a, b);
 	CHECK(maxRes.x() == 5);
 	CHECK(maxRes.y() == 4);
+
+	CHECK(sumOfElements(b) == 4);
+	CHECK(length(b) == (unsigned)sqrt(10));
+	CHECK(lengthSquared(b) == 10);
 }
 
