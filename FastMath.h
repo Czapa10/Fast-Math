@@ -25,10 +25,12 @@ FM_INLINE int abs(int a);
 
 struct vec2
 {
+	__m128 m;
+
 	FM_INLINE explicit vec2(const float* v); 
 	FM_INLINE vec2(float x, float y);
 	FM_INLINE explicit vec2(float a);
-	FM_INLINE vec2(__m128 m);
+	FM_INLINE explicit vec2(__m128 m);
 	FM_INLINE vec2();
 
 	FM_INLINE float FM_CALL x() const;
@@ -48,8 +50,6 @@ struct vec2
 
 	FM_INLINE void FM_CALL setX(float x);
 	FM_INLINE void FM_CALL setY(float y); 
-
-	__m128 m;
 };
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
@@ -73,10 +73,12 @@ FM_INLINE vec2 FM_CALL normalize(vec2 v);
 
 struct vec2d
 {
+	__m128d m;
+
 	FM_INLINE explicit vec2d(const double* v);
 	FM_INLINE vec2d(double x, double y);
 	FM_INLINE explicit vec2d(double a);
-	FM_INLINE vec2d(__m128d m);
+	FM_INLINE explicit vec2d(__m128d m);
 	FM_INLINE vec2d();
 
 	FM_INLINE double FM_CALL x() const;
@@ -97,8 +99,6 @@ struct vec2d
 
 	FM_INLINE void FM_CALL setX(double x);
 	FM_INLINE void FM_CALL setY(double y);
-
-	__m128d m;
 };
 FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
@@ -122,10 +122,12 @@ FM_INLINE double FM_CALL lengthSquared(vec2d v);
 
 struct vec2i
 {
+	__m128i m;
+
 	FM_INLINE explicit vec2i(const int* v);
 	FM_INLINE vec2i(int x, int y);
 	FM_INLINE explicit vec2i(int a); 
-	FM_INLINE vec2i(__m128i m); 
+	FM_INLINE explicit vec2i(__m128i m); 
 	FM_INLINE vec2i();
 
 	FM_INLINE int FM_CALL x() const;
@@ -145,8 +147,6 @@ struct vec2i
 
 	FM_INLINE void FM_CALL setX(int x);
 	FM_INLINE void FM_CALL setY(int y);
-
-	__m128i m;
 };
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b); 
@@ -168,10 +168,12 @@ FM_INLINE int FM_CALL lengthSquared(vec2i v);
 
 struct vec2u
 {
+	__m128i m;
+
 	FM_INLINE explicit vec2u(const unsigned* v); 
 	FM_INLINE vec2u(unsigned x, unsigned y); 
 	FM_INLINE explicit vec2u(unsigned a);
-	FM_INLINE vec2u(__m128i m);
+	FM_INLINE explicit vec2u(__m128i m);
 	FM_INLINE vec2u();
 
 	FM_INLINE unsigned FM_CALL x() const;
@@ -191,8 +193,6 @@ struct vec2u
 
 	FM_INLINE void FM_CALL setX(unsigned x);
 	FM_INLINE void FM_CALL setY(unsigned y);
-
-	__m128i m;
 };
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
@@ -209,6 +209,143 @@ FM_INLINE unsigned FM_CALL lengthSquared(vec2u v);
 // TODO: Add hadamardDiv() and operator/
 // TODO: Add more operators
 
+struct vec3
+{
+	__m128 m;
+
+	FM_INLINE explicit vec3(float* v);
+	FM_INLINE vec3(float x, float y, float z);
+	FM_INLINE explicit vec3(float a);
+	FM_INLINE explicit vec3(__m128 m);
+	FM_INLINE vec3();
+
+	FM_INLINE float FM_CALL x() const;
+	FM_INLINE float FM_CALL u() const { return x(); }
+	FM_INLINE float FM_CALL r() const { return x(); }
+
+	FM_INLINE float FM_CALL y() const;
+	FM_INLINE float FM_CALL v() const { return y(); }
+	FM_INLINE float FM_CALL g() const { return y(); }
+
+	FM_INLINE float FM_CALL z() const;
+	FM_INLINE float FM_CALL w() const { return z(); }
+	FM_INLINE float FM_CALL b() const { return z(); }
+
+	FM_INLINE vec2 FM_CALL xy() const;
+	FM_INLINE vec2 FM_CALL yx() const;
+	FM_INLINE vec2 FM_CALL yz() const;
+	FM_INLINE vec2 FM_CALL zy() const;
+	FM_INLINE vec2 FM_CALL xz() const;
+	FM_INLINE vec2 FM_CALL zx() const;
+	FM_INLINE vec2 FM_CALL xx() const;
+	FM_INLINE vec2 FM_CALL yy() const;
+	FM_INLINE vec2 FM_CALL zz() const;
+
+	FM_INLINE vec2 FM_CALL uv() const { return xy(); }
+	FM_INLINE vec2 FM_CALL vu() const { return yx(); }
+	FM_INLINE vec2 FM_CALL vw() const { return yz(); }
+	FM_INLINE vec2 FM_CALL wv() const { return zy(); }
+	FM_INLINE vec2 FM_CALL uw() const { return xz(); }
+	FM_INLINE vec2 FM_CALL wu() const { return zx(); }
+	FM_INLINE vec2 FM_CALL uu() const { return xx(); }
+	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
+	FM_INLINE vec2 FM_CALL ww() const { return zz(); }
+
+	FM_INLINE vec2 FM_CALL rg() const { return xy(); }
+	FM_INLINE vec2 FM_CALL gr() const { return yx(); }
+	FM_INLINE vec2 FM_CALL gb() const { return yz(); }
+	FM_INLINE vec2 FM_CALL bg() const { return zy(); }
+	FM_INLINE vec2 FM_CALL rb() const { return xz(); }
+	FM_INLINE vec2 FM_CALL br() const { return zx(); }
+	FM_INLINE vec2 FM_CALL rr() const { return xx(); }
+	FM_INLINE vec2 FM_CALL gg() const { return yy(); }
+	FM_INLINE vec2 FM_CALL bb() const { return zz(); }
+
+	FM_INLINE vec3 FM_CALL xyz() const;
+	FM_INLINE vec3 FM_CALL yzx() const;
+	FM_INLINE vec3 FM_CALL zxy() const;
+	FM_INLINE vec3 FM_CALL zyx() const;
+	FM_INLINE vec3 FM_CALL xzy() const;
+	FM_INLINE vec3 FM_CALL yxz() const;
+	FM_INLINE vec3 FM_CALL xxy() const;
+	FM_INLINE vec3 FM_CALL xxz() const;
+	FM_INLINE vec3 FM_CALL yyx() const;
+	FM_INLINE vec3 FM_CALL yyz() const;
+	FM_INLINE vec3 FM_CALL zzx() const;
+	FM_INLINE vec3 FM_CALL zzy() const;
+	FM_INLINE vec3 FM_CALL yxx() const;
+	FM_INLINE vec3 FM_CALL zxx() const;
+	FM_INLINE vec3 FM_CALL xyy() const;
+	FM_INLINE vec3 FM_CALL zyy() const;
+	FM_INLINE vec3 FM_CALL xzz() const;
+	FM_INLINE vec3 FM_CALL yzz() const;
+	FM_INLINE vec3 FM_CALL xyx() const;
+	FM_INLINE vec3 FM_CALL xzx() const;
+	FM_INLINE vec3 FM_CALL yxy() const;
+	FM_INLINE vec3 FM_CALL yzy() const;
+	FM_INLINE vec3 FM_CALL zxz() const;
+	FM_INLINE vec3 FM_CALL zyz() const;
+	FM_INLINE vec3 FM_CALL xxx() const;
+	FM_INLINE vec3 FM_CALL yyy() const;
+	FM_INLINE vec3 FM_CALL zzz() const;
+
+	FM_INLINE vec3 FM_CALL uvw() const { return xyz(); }
+	FM_INLINE vec3 FM_CALL vwu() const { return yzx(); }
+	FM_INLINE vec3 FM_CALL wuv() const { return zxy(); }
+	FM_INLINE vec3 FM_CALL wvu() const { return zyx(); }
+	FM_INLINE vec3 FM_CALL uwv() const { return xzy(); }
+	FM_INLINE vec3 FM_CALL vuw() const { return yxz(); }
+	FM_INLINE vec3 FM_CALL uuv() const { return xxy(); }
+	FM_INLINE vec3 FM_CALL uuw() const { return xxz(); }
+	FM_INLINE vec3 FM_CALL vvu() const { return yyx(); }
+	FM_INLINE vec3 FM_CALL vvw() const { return yyz(); }
+	FM_INLINE vec3 FM_CALL wwu() const { return zzx(); }
+	FM_INLINE vec3 FM_CALL wwv() const { return zzy(); }
+	FM_INLINE vec3 FM_CALL vuu() const { return yxx(); }
+	FM_INLINE vec3 FM_CALL wuu() const { return zxx(); }
+	FM_INLINE vec3 FM_CALL uvv() const { return xyy(); }
+	FM_INLINE vec3 FM_CALL wvv() const { return zyy(); }
+	FM_INLINE vec3 FM_CALL uww() const { return xzz(); }
+	FM_INLINE vec3 FM_CALL vww() const { return yzz(); }
+	FM_INLINE vec3 FM_CALL uvu() const { return xyx(); }
+	FM_INLINE vec3 FM_CALL uwu() const { return xzx(); }
+	FM_INLINE vec3 FM_CALL vuv() const { return yxy(); }
+	FM_INLINE vec3 FM_CALL vwv() const { return yzy(); }
+	FM_INLINE vec3 FM_CALL wuw() const { return zxz(); }
+	FM_INLINE vec3 FM_CALL wvw() const { return zyz(); }
+	FM_INLINE vec3 FM_CALL uuu() const { return xxx(); }
+	FM_INLINE vec3 FM_CALL vvv() const { return yyy(); }
+	FM_INLINE vec3 FM_CALL www() const { return zzz(); }
+
+	FM_INLINE vec3 FM_CALL rgb() const { return xyz(); }
+	FM_INLINE vec3 FM_CALL gbr() const { return yzx(); }
+	FM_INLINE vec3 FM_CALL brg() const { return zxy(); }
+	FM_INLINE vec3 FM_CALL bgr() const { return zyx(); }
+	FM_INLINE vec3 FM_CALL rbg() const { return xzy(); }
+	FM_INLINE vec3 FM_CALL grb() const { return yxz(); }
+	FM_INLINE vec3 FM_CALL rrg() const { return xxy(); }
+	FM_INLINE vec3 FM_CALL rrb() const { return xxz(); }
+	FM_INLINE vec3 FM_CALL ggr() const { return yyx(); }
+	FM_INLINE vec3 FM_CALL ggb() const { return yyz(); }
+	FM_INLINE vec3 FM_CALL bbr() const { return zzx(); }
+	FM_INLINE vec3 FM_CALL bbg() const { return zzy(); }
+	FM_INLINE vec3 FM_CALL grr() const { return yxx(); }
+	FM_INLINE vec3 FM_CALL brr() const { return zxx(); }
+	FM_INLINE vec3 FM_CALL rgg() const { return xyy(); }
+	FM_INLINE vec3 FM_CALL bgg() const { return zyy(); }
+	FM_INLINE vec3 FM_CALL rbb() const { return xzz(); }
+	FM_INLINE vec3 FM_CALL gbb() const { return yzz(); }
+	FM_INLINE vec3 FM_CALL rgr() const { return xyx(); }
+	FM_INLINE vec3 FM_CALL rbr() const { return xzx(); }
+	FM_INLINE vec3 FM_CALL grg() const { return yxy(); }
+	FM_INLINE vec3 FM_CALL gbg() const { return yzy(); }
+	FM_INLINE vec3 FM_CALL brb() const { return zxz(); }
+	FM_INLINE vec3 FM_CALL bgb() const { return zyz(); }
+	FM_INLINE vec3 FM_CALL rrr() const { return xxx(); }
+	FM_INLINE vec3 FM_CALL ggg() const { return yyy(); }
+	FM_INLINE vec3 FM_CALL bbb() const { return zzz(); }
+};
+
 }
 
 #endif // FAST_MATH_H
@@ -224,9 +361,9 @@ FM_INLINE unsigned FM_CALL lengthSquared(vec2u v);
 
 namespace fm {
 
-///////////////////////
-// utility functions //
-///////////////////////
+////////////////////////////
+// utility functions impl //
+////////////////////////////
 FM_INLINE float min(float a, float b) {
 	return a < b ? a : b; 
 }
@@ -262,9 +399,9 @@ FM_INLINE int abs(int a) {
 }
 // TODO: Do faster implementations of these 
 
-////////////////////
-// vec2 functions //
-////////////////////
+///////////////
+// vec2 impl //
+///////////////
 FM_INLINE vec2::vec2(const float* v) {
 	m = _mm_set_ps(0.f, 0.f, v[1], v[0]); 
 }  
@@ -373,9 +510,9 @@ FM_INLINE vec2 FM_CALL normalize(vec2 v) {
 	return v / length(v);
 }
 
-/////////////////////
-// vec2d functions //
-/////////////////////
+////////////////
+// vec2d impl //
+////////////////
 FM_INLINE vec2d::vec2d(const double* v) { 
 	m = _mm_set_pd(v[1], v[0]); 
 } 
@@ -483,9 +620,9 @@ FM_INLINE vec2d FM_CALL normalize(vec2d v) {
 	return v / length(v);
 }
 
-/////////////////////
-// vec2i functions //
-/////////////////////
+////////////////
+// vec2i impl //
+////////////////
 FM_INLINE vec2i::vec2i(const int* v) {
 	m = _mm_set_epi32(0, 0, v[1], v[0]); 
 }
@@ -639,9 +776,9 @@ FM_INLINE vec2i FM_CALL abs(vec2i v) {
 }
 #endif
 
-/////////////////////
-// vec2u functions //
-/////////////////////
+////////////////
+// vec2u impl //
+////////////////
 FM_INLINE vec2u::vec2u(const unsigned* v) {
 	m = _mm_set_epi32(0, 0, v[1], v[0]); 
 }
@@ -777,6 +914,144 @@ FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b) {
 	return vec2u(aArr);
 }
 #endif
+
+///////////////
+// vec3 impl //
+///////////////
+FM_INLINE vec3::vec3(float* v) {
+	m = _mm_set_ps(0, v[2], v[1], v[0]);
+}
+FM_INLINE vec3::vec3(float x, float y, float z) {
+	m = _mm_set_ps(0, z, y, x); 
+}
+FM_INLINE vec3::vec3(float a) {
+	m = _mm_set1_ps(a);
+}
+FM_INLINE vec3::vec3(__m128 m)
+	:m(m) {}
+FM_INLINE vec3::vec3() {
+	m = _mm_setzero_ps();
+}
+FM_INLINE float FM_CALL vec3::x() const {
+	return _mm_cvtss_f32(m);
+}
+FM_INLINE float FM_CALL vec3::y() const {
+	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1)));
+}
+FM_INLINE float FM_CALL vec3::z() const {
+	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(2, 2, 2, 2)));
+}
+FM_INLINE vec2 FM_CALL vec3::xy() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 0)));
+}
+FM_INLINE vec2 FM_CALL vec3::yx() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1)));
+}
+FM_INLINE vec2 FM_CALL vec3::yz() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 1)));
+}
+FM_INLINE vec2 FM_CALL vec3::zy() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 2)));
+}
+FM_INLINE vec2 FM_CALL vec3::xz() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 0)));
+}
+FM_INLINE vec2 FM_CALL vec3::zx() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 2)));
+}
+FM_INLINE vec2 FM_CALL vec3::xx() const {
+	// TODO: Try to optimize it
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0)));
+}
+FM_INLINE vec2 FM_CALL vec3::yy() const {
+	// TODO: Try to optimize it
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 1)));
+}
+FM_INLINE vec2 FM_CALL vec3::zz() const {
+	// TODO: Try to optimize it
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::xyz() const {
+	return *this;
+}
+FM_INLINE vec3 FM_CALL vec3::yzx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::zxy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::zyx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::xzy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::yxz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::xxy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::xxz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::yyx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::yyz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 1, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::zzx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::zzy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::yxx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::zxx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::xyy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::zyy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::xzz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::yzz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::xyx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::xzx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::yxy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::yzy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::zxz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::zyz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 1, 2)));
+}
+FM_INLINE vec3 FM_CALL vec3::xxx() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0)));
+}
+FM_INLINE vec3 FM_CALL vec3::yyy() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 1)));
+}
+FM_INLINE vec3 FM_CALL vec3::zzz() const {
+	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 2)));
+}
 
 } // !namespace fm
 
