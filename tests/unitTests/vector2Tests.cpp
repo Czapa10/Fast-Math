@@ -23,11 +23,6 @@ TEST_CASE("vec2 constructors and getters")
 	CHECK(a.top() == 4.5f);
 	CHECK(a.height() == 4.5f);
 
-	CHECK(a.yx().x() == 4.5f);
-	CHECK(a.yx().y() == -3.f);
-	CHECK(a.vu().u() == 4.5f);
-	CHECK(a.vu().v() == -3.f);
-
 	float arr[2];
 	a.storeTo(arr);
 	CHECK(arr[0] == -3.f);
@@ -45,6 +40,21 @@ TEST_CASE("vec2 constructors and getters")
 	vec2 d(initArr);
 	CHECK(d.x() == -1.f);
 	CHECK(d.y() == 2.f);
+
+	CHECK(a.yx().x() == 4.5f);
+	CHECK(a.yx().y() == -3.f);
+	CHECK(a.vu().u() == 4.5f);
+	CHECK(a.vu().v() == -3.f);
+
+	CHECK(a.xx().x() == -3.f);
+	CHECK(a.xx().y() == -3.f);
+	CHECK(a.uu().u() == -3.f);
+	CHECK(a.uu().v() == -3.f);
+
+	CHECK(a.yy().x() == 4.5f);
+	CHECK(a.yy().y() == 4.5f);
+	CHECK(a.vv().u() == 4.5f);
+	CHECK(a.vv().v() == 4.5f);
 }
 
 TEST_CASE("vec2 setters")
@@ -153,6 +163,16 @@ TEST_CASE("vec2d constructors and getters")
 	CHECK(a.yx().y() == -3.0);
 	CHECK(a.vu().u() == 4.0);
 	CHECK(a.vu().v() == -3.0);
+
+	CHECK(a.xx().x() == -3.0);
+	CHECK(a.xx().y() == -3.0);
+	CHECK(a.uu().u() == -3.0);
+	CHECK(a.uu().v() == -3.0);
+
+	CHECK(a.yy().x() == 4.0);
+	CHECK(a.yy().y() == 4.0);
+	CHECK(a.vv().u() == 4.0);
+	CHECK(a.vv().v() == 4.0);
 
 	double arr[2];
 	a.storeTo16ByteAligned(arr);
@@ -283,6 +303,16 @@ TEST_CASE("vec2i constructors and getters")
 	CHECK(a.vu().u() == 4);
 	CHECK(a.vu().v() == -3);
 
+	CHECK(a.xx().x() == -3);
+	CHECK(a.xx().y() == -3);
+	CHECK(a.uu().u() == -3);
+	CHECK(a.uu().v() == -3);
+
+	CHECK(a.yy().x() == 4);
+	CHECK(a.yy().y() == 4);
+	CHECK(a.vv().u() == 4);
+	CHECK(a.vv().v() == 4);
+
 	int arr[2];
 	a.storeTo(arr);
 	CHECK(arr[0] == -3);
@@ -393,6 +423,16 @@ TEST_CASE("vec2u constructors and getters")
 	CHECK(a.yx().y() == 3);
 	CHECK(a.vu().u() == 4);
 	CHECK(a.vu().v() == 3);
+
+	CHECK(a.xx().x() == 3);
+	CHECK(a.xx().y() == 3);
+	CHECK(a.uu().u() == 3);
+	CHECK(a.uu().v() == 3);
+
+	CHECK(a.yy().x() == 4);
+	CHECK(a.yy().y() == 4);
+	CHECK(a.vv().u() == 4);
+	CHECK(a.vv().v() == 4);
 
 	vec2u b(1);
 	CHECK(b.x() == 1);

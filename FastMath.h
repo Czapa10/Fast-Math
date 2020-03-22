@@ -13,7 +13,6 @@ one of C++ files that include this header, BEFORE the include, like this:
 #include <FastMath.h>
 
 If you don't need certain functionality you can also define some of these macros:
-FM_EXCLUDE_SWIZZLES
 FM_EXCLUDE_TEX_COORD_SWIZZLES
 FM_EXCLUDE_COLOR_SWIZZLES
 
@@ -60,6 +59,11 @@ struct vec2
 	FM_INLINE explicit vec2(__m128 m);
 	FM_INLINE vec2();
 
+	FM_INLINE void FM_CALL storeTo(float* mem);
+
+	FM_INLINE void FM_CALL setX(float x);
+	FM_INLINE void FM_CALL setY(float y); 
+
 	FM_INLINE float FM_CALL x() const;
 	FM_INLINE float FM_CALL u() const { return x(); }
 	FM_INLINE float FM_CALL left() const { return x(); }
@@ -71,12 +75,14 @@ struct vec2
 	FM_INLINE float FM_CALL height() const { return y(); }
 
 	FM_INLINE vec2 FM_CALL yx() const;
-	FM_INLINE vec2 FM_CALL vu() const;
+	FM_INLINE vec2 FM_CALL xx() const;
+	FM_INLINE vec2 FM_CALL yy() const;
 
-	FM_INLINE void FM_CALL storeTo(float* mem);
-
-	FM_INLINE void FM_CALL setX(float x);
-	FM_INLINE void FM_CALL setY(float y); 
+#ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
+	FM_INLINE vec2 FM_CALL vu() const { return yx(); }
+	FM_INLINE vec2 FM_CALL uu() const { return xx(); }
+	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
+#endif
 };
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
@@ -119,7 +125,12 @@ struct vec2d
 	FM_INLINE double FM_CALL top() const { return y(); }
 
 	FM_INLINE vec2d FM_CALL yx() const;
-	FM_INLINE vec2d FM_CALL vu() const;
+	FM_INLINE vec2d FM_CALL xx() const;
+	FM_INLINE vec2d FM_CALL yy() const;
+
+	FM_INLINE vec2d FM_CALL vu() const { return yx(); }
+	FM_INLINE vec2d FM_CALL uu() const { return xx(); }
+	FM_INLINE vec2d FM_CALL vv() const { return yy(); }
 
 	FM_INLINE void FM_CALL storeTo(double* mem);
 	FM_INLINE void FM_CALL storeTo16ByteAligned(double* mem);
@@ -168,7 +179,12 @@ struct vec2i
 	FM_INLINE int FM_CALL height() const { return y(); }
 
 	FM_INLINE vec2i FM_CALL yx() const;
-	FM_INLINE vec2i FM_CALL vu() const;
+	FM_INLINE vec2i FM_CALL xx() const;
+	FM_INLINE vec2i FM_CALL yy() const;
+
+	FM_INLINE vec2i FM_CALL vu() const { return yx(); }
+	FM_INLINE vec2i FM_CALL uu() const { return xx(); }
+	FM_INLINE vec2i FM_CALL vv() const { return yy(); }
 
 	FM_INLINE void FM_CALL storeTo(int* mem); 
 
@@ -203,6 +219,11 @@ struct vec2u
 	FM_INLINE explicit vec2u(__m128i m);
 	FM_INLINE vec2u();
 
+	FM_INLINE void FM_CALL setX(unsigned x);
+	FM_INLINE void FM_CALL setY(unsigned y);
+
+	FM_INLINE void FM_CALL storeTo(unsigned* mem);
+
 	FM_INLINE unsigned FM_CALL x() const;
 	FM_INLINE unsigned FM_CALL u() const { return x(); }
 	FM_INLINE unsigned FM_CALL left() const { return x(); }
@@ -214,12 +235,12 @@ struct vec2u
 	FM_INLINE unsigned FM_CALL height() const { return y(); }
 
 	FM_INLINE vec2u FM_CALL yx() const;
-	FM_INLINE vec2u FM_CALL vu() const;
+	FM_INLINE vec2u FM_CALL xx() const;
+	FM_INLINE vec2u FM_CALL yy() const;
 
-	FM_INLINE void FM_CALL storeTo(unsigned* mem);
-
-	FM_INLINE void FM_CALL setX(unsigned x);
-	FM_INLINE void FM_CALL setY(unsigned y);
+	FM_INLINE vec2u FM_CALL vu() const { return yx(); }
+	FM_INLINE vec2u FM_CALL uu() const { return xx(); }
+	FM_INLINE vec2u FM_CALL vv() const { return yy(); }
 };
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
@@ -264,7 +285,6 @@ struct vec3
 	FM_INLINE float FM_CALL w() const { return z(); }
 	FM_INLINE float FM_CALL b() const { return z(); }
 
-#ifndef FM_EXCLUDE_SWIZZLES
 	FM_INLINE vec2 FM_CALL xy() const;
 	FM_INLINE vec2 FM_CALL yx() const;
 	FM_INLINE vec2 FM_CALL yz() const;
@@ -386,7 +406,6 @@ struct vec3
 	FM_INLINE vec3 FM_CALL ggg() const { return yyy(); }
 	FM_INLINE vec3 FM_CALL bbb() const { return zzz(); }
 #endif
-#endif
 };
 FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b); 
 FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b);
@@ -489,8 +508,11 @@ FM_INLINE float FM_CALL vec2::y() const {
 FM_INLINE vec2 FM_CALL vec2::yx() const {
 	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
 }
-FM_INLINE vec2 FM_CALL vec2::vu() const { 
-	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
+FM_INLINE vec2 FM_CALL vec2::xx() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0))); 
+}
+FM_INLINE vec2 FM_CALL vec2::yy() const {
+	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
 FM_INLINE void FM_CALL vec2::storeTo(float* mem) {
 	mem[0] = x();
@@ -597,11 +619,14 @@ FM_INLINE double FM_CALL vec2d::x() const {
 FM_INLINE double FM_CALL vec2d::y() const { 
 	return _mm_cvtsd_f64(_mm_shuffle_pd(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
-FM_INLINE vec2d FM_CALL vec2d::yx() const { 
+FM_INLINE vec2d FM_CALL vec2d::yx() const {
 	return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
 }
-FM_INLINE vec2d FM_CALL vec2d::vu() const { 
-	return vec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
+FM_INLINE vec2d FM_CALL vec2d::xx() const {
+	return vec2d(_mm_unpacklo_pd(m, m));
+}
+FM_INLINE vec2d FM_CALL vec2d::yy() const {
+	return vec2d(_mm_unpackhi_pd(m, m));
 }
 FM_INLINE void FM_CALL vec2d::storeTo(double* mem) { 
 	_mm_storeu_pd(mem, m); 
@@ -708,10 +733,13 @@ FM_INLINE int FM_CALL vec2i::y() const {
 	return _mm_cvtsi128_si32(_mm_shuffle_epi32(m, _MM_SHUFFLE(1, 1, 1, 1))); 
 } 
 FM_INLINE vec2i FM_CALL vec2i::yx() const {
-	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1)));
+	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 1)));
 }
-FM_INLINE vec2i FM_CALL vec2i::vu() const {
-	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1)));
+FM_INLINE vec2i FM_CALL vec2i::xx() const {
+	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 0)));
+}
+FM_INLINE vec2i FM_CALL vec2i::yy() const {
+	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
 }
 FM_INLINE void FM_CALL vec2i::storeTo(int* mem) {
 	mem[0] = x();
@@ -864,10 +892,13 @@ FM_INLINE unsigned FM_CALL vec2u::y() const {
 	return (unsigned)_mm_cvtsi128_si32(_mm_shuffle_epi32(m, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
 FM_INLINE vec2u FM_CALL vec2u::yx() const { 
-	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); 
+	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 1))); 
 }
-FM_INLINE vec2u FM_CALL vec2u::vu() const {
-	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(0, 0, 0, 1))); 
+FM_INLINE vec2u FM_CALL vec2u::xx() const { 
+	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 0)));
+}
+FM_INLINE vec2u FM_CALL vec2u::yy() const { 
+	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
 }
 FM_INLINE void FM_CALL vec2u::storeTo(unsigned* mem) {
 	mem[0] = x();

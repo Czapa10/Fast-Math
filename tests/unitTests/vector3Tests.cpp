@@ -604,7 +604,6 @@ TEST_CASE("vec3 operations")
 	CHECK(crossRes2.y() == 6.f);
 	CHECK(crossRes2.z() == -3.f);
 
-
 	CHECK(dot(a, b) == 15.f);
 	CHECK(sumOfElements(b) == 4.f);
 	CHECK(length(b) == floatCmp(sqrt(30.f)));
