@@ -102,7 +102,8 @@ FM_INLINE float FM_CALL sumOfElements(vec2 v);
 FM_INLINE float FM_CALL length(vec2 v);
 FM_INLINE float FM_CALL lengthSquared(vec2 v); 
 FM_INLINE vec2 FM_CALL normalize(vec2 v);
-// TODO: Add comparison functions, lerp and clamp  
+FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 min, vec2 max);
+// TODO: Add comparison functions, lerp  
 
 struct vec2d
 {
@@ -156,7 +157,8 @@ FM_INLINE vec2d FM_CALL abs(vec2d v);
 FM_INLINE double FM_CALL sumOfElements(vec2d v);
 FM_INLINE double FM_CALL length(vec2d v);
 FM_INLINE double FM_CALL lengthSquared(vec2d v); 
-// TODO: Add comparison functions, lerp and clamp  
+FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d min, vec2d max); 
+// TODO: Add comparison functions, lerp 
 
 struct vec2i
 {
@@ -205,6 +207,7 @@ FM_INLINE vec2i FM_CALL abs(vec2i v);
 FM_INLINE int FM_CALL sumOfElements(vec2i v);
 FM_INLINE int FM_CALL length(vec2i v);
 FM_INLINE int FM_CALL lengthSquared(vec2i v); 
+FM_INLINE vec2i FM_CALL clamp(vec2i v, vec2i min, vec2i max); 
 // TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
 // TODO: Add more operators
 
@@ -254,6 +257,7 @@ FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b);
 FM_INLINE unsigned FM_CALL sumOfElements(vec2u v);
 FM_INLINE unsigned FM_CALL length(vec2u v);
 FM_INLINE unsigned FM_CALL lengthSquared(vec2u v); 
+FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u min, vec2u max); 
 // TODO: Add hadamardDiv() and operator/
 // TODO: Add more operators
 
@@ -426,6 +430,7 @@ FM_INLINE vec3 FM_CALL abs(vec3 v);
 FM_INLINE float FM_CALL sumOfElements(vec3 v);
 FM_INLINE float FM_CALL length(vec3 v);
 FM_INLINE float FM_CALL lengthSquared(vec3 v); 
+FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 min, vec3 max); 
 // TODO: Add comparison functions, lerp and clamp  
 
 
@@ -476,6 +481,7 @@ FM_INLINE vec4 FM_CALL abs(vec4 v);
 FM_INLINE float FM_CALL sumOfElements(vec4 v);
 FM_INLINE float FM_CALL length(vec4 v);
 FM_INLINE float FM_CALL lengthSquared(vec4 v); 
+FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 min, vec4 max); 
 // TODO: Add comparison functions, lerp and clamp  
 
 
@@ -499,21 +505,23 @@ namespace fm {
 // fast math internal helper functions //
 /////////////////////////////////////////
 namespace internal {
-	FM_INLINE __m128 insertFloatY(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
-		return _mm_move_ss(temp, m);
-	}
-	FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
-		return _mm_move_ss(temp, m);
-	}
-	FM_INLINE __m128 insertFloatW(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
-		return _mm_move_ss(temp, m);
-	}
+
+FM_INLINE __m128 insertFloatY(__m128 m, float a) {
+	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
+	return _mm_move_ss(temp, m);
+}
+FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
+	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
+	return _mm_move_ss(temp, m);
+}
+FM_INLINE __m128 insertFloatW(__m128 m, float a) {
+	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
+	return _mm_move_ss(temp, m);
+}
+
 }
 
 ////////////////////////////
@@ -637,12 +645,12 @@ FM_INLINE vec2 FM_CALL operator-(vec2 v) {
 	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
 	return v;
 }
+FM_INLINE float FM_CALL dot(vec2 a, vec2 b) {
+	return sumOfElements(hadamardMul(a, b));
+}
 FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b) {
 	a.m = _mm_min_ps(a.m, b.m);
 	return a;
-}
-FM_INLINE float FM_CALL dot(vec2 a, vec2 b) {
-	return sumOfElements(hadamardMul(a, b));
 }
 FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b) {
 	a.m = _mm_max_ps(a.m, b.m);
@@ -664,6 +672,9 @@ FM_INLINE float FM_CALL lengthSquared(vec2 v) {
 }
 FM_INLINE vec2 FM_CALL normalize(vec2 v) {
 	return v / length(v);
+}
+FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 minV, vec2 maxV) {
+	return min(max(v, minV), maxV);
 }
 
 ////////////////
@@ -778,6 +789,9 @@ FM_INLINE double FM_CALL lengthSquared(vec2d v) {
 FM_INLINE vec2d FM_CALL normalize(vec2d v) {
 	return v / length(v);
 }
+FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d minV, vec2d maxV) {
+	return min(max(v, minV), maxV);
+} 
 
 ////////////////
 // vec2i impl //
@@ -879,6 +893,9 @@ FM_INLINE vec2i FM_CALL abs(vec2i v) {
 	v.m = _mm_abs_epi32(v.m);
 	return v;
 }
+FM_INLINE vec2i FM_CALL clamp(vec2i v, vec2i minV, vec2i maxV) {
+	return min(max(v, minV), maxV);
+} 
 #else // SSE 2 implementations 
 FM_INLINE void FM_CALL vec2i::setX(int x) {
 	int arr[4];
@@ -1003,6 +1020,9 @@ FM_INLINE unsigned FM_CALL lengthSquared(vec2u v) {
 	unsigned y = v.y();
 	return x*x + y*y;	
 }
+FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u minV, vec2u maxV) {
+	return min(max(v, minV), maxV);
+} 
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2u::setX(unsigned x) {
 	m = _mm_insert_epi32(m, (int)x, 0);
@@ -1303,6 +1323,9 @@ FM_INLINE float FM_CALL length(vec3 v) {
 FM_INLINE float FM_CALL lengthSquared(vec3 v) {
 	return dot(v, v);
 }
+FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 minV, vec3 maxV) {
+	return min(max(v, minV), maxV);
+}
 
 ///////////////
 // vec4 impl //
@@ -1417,6 +1440,9 @@ FM_INLINE float FM_CALL lengthSquared(vec4 v) {
 }
 FM_INLINE vec4 FM_CALL normalize(vec4 v) {
 	return v / length(v);
+}
+FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 minV, vec4 maxV) {
+	return min(max(v, minV), maxV);
 }
 
 } // !namespace fm

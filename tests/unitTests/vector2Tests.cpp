@@ -142,6 +142,12 @@ TEST_CASE("vec2 operations")
 	CHECK(sumOfElements(b) == -2.f);
 	CHECK(length(b) == floatCmp(sqrt(34.f)));
 	CHECK(lengthSquared(b) == 34.f);
+
+	vec2 min(0.f, 0.f);
+	vec2 max(5.f, 2.f);
+	vec2 clampBRes = clamp(b, min, max);
+	CHECK(clampBRes.x() == 0.f);
+	CHECK(clampBRes.y() == 2.f);
 }
 
 
@@ -282,6 +288,12 @@ TEST_CASE("vec2d operations")
 	CHECK(sumOfElements(b) == -2.0);
 	CHECK(length(b) == floatCmp(sqrt(34.0)));
 	CHECK(lengthSquared(b) == 34.0);
+
+	vec2d min(0.0, 0.0);
+	vec2d max(5.0, 7.0);
+	vec2d clampRes = clamp(vec2d(-1.0, 8.0), min, max);
+	CHECK(clampRes.x() == 0.0);
+	CHECK(clampRes.y() == 7.0);
 }
 
 TEST_CASE("vec2i constructors and getters") 
@@ -404,6 +416,12 @@ TEST_CASE("vec2i operations")
 	CHECK(sumOfElements(b) == -2);
 	CHECK(length(b) == (int)sqrt(34));
 	CHECK(lengthSquared(b) == 34);
+
+	vec2i min(0, 0);
+	vec2i max(5, 2);
+	vec2i clampBRes = clamp(b, min, max);
+	CHECK(clampBRes.x() == 0);
+	CHECK(clampBRes.y() == 2);
 }
 
 TEST_CASE("vec2u constructors and getters") 
@@ -521,4 +539,10 @@ TEST_CASE("vec2u operations")
 	CHECK(sumOfElements(b) == 4);
 	CHECK(length(b) == (unsigned)sqrt(10));
 	CHECK(lengthSquared(b) == 10);
+
+	vec2u min(2, 0);
+	vec2u max(5, 3);
+	vec2u clampBRes = clamp(b, min, max);
+	CHECK(clampBRes.x() == 2);
+	CHECK(clampBRes.y() == 3);
 }

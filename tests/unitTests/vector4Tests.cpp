@@ -171,4 +171,12 @@ TEST_CASE("vec4 operations")
 	CHECK(length(b) == floatCmp(sqrt(120.f)));
 	CHECK(lengthSquared(b) == 120.f);
 
+	vec4 a(1.f, 3.f, 5.f, -7.f);
+	vec4 min(2.f, 2.f, 2.f, 2.f);
+	vec4 max(5.f, 5.f, 3.f, 2.f);
+	vec4 clampRes = clamp(a, min, max);
+	CHECK(clampRes.x() == 2.f);
+	CHECK(clampRes.y() == 3.f);
+	CHECK(clampRes.z() == 3.f);
+	CHECK(clampRes.w() == 2.f);
 }

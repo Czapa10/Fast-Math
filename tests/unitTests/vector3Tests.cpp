@@ -7,7 +7,6 @@
 
 #include "util.cpp"
 
-
 using namespace fm;
 
 TEST_CASE("vec3 constructors and getters")
@@ -608,4 +607,11 @@ TEST_CASE("vec3 operations")
 	CHECK(sumOfElements(b) == 4.f);
 	CHECK(length(b) == floatCmp(sqrt(30.f)));
 	CHECK(lengthSquared(b) == 30.f);
+
+	vec3 min(-1.f, 7.f, -5.f);
+	vec3 max(4.f, 8.f, -1.f);
+	vec3 clampRes = clamp(b, min, max);
+	CHECK(clampRes.x() == -1.f);
+	CHECK(clampRes.y() == 7.f);
+	CHECK(clampRes.z() == -1.f);
 }
