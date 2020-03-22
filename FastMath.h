@@ -114,6 +114,12 @@ struct vec2d
 	FM_INLINE explicit vec2d(__m128d m);
 	FM_INLINE vec2d();
 
+	FM_INLINE void FM_CALL storeTo(double* mem);
+	FM_INLINE void FM_CALL storeTo16ByteAligned(double* mem);
+
+	FM_INLINE void FM_CALL setX(double x);
+	FM_INLINE void FM_CALL setY(double y);
+
 	FM_INLINE double FM_CALL x() const;
 	FM_INLINE double FM_CALL u() const { return x(); }
 	FM_INLINE double FM_CALL left() const { return x(); }
@@ -131,12 +137,6 @@ struct vec2d
 	FM_INLINE vec2d FM_CALL vu() const { return yx(); }
 	FM_INLINE vec2d FM_CALL uu() const { return xx(); }
 	FM_INLINE vec2d FM_CALL vv() const { return yy(); }
-
-	FM_INLINE void FM_CALL storeTo(double* mem);
-	FM_INLINE void FM_CALL storeTo16ByteAligned(double* mem);
-
-	FM_INLINE void FM_CALL setX(double x);
-	FM_INLINE void FM_CALL setY(double y);
 };
 FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
@@ -428,6 +428,36 @@ FM_INLINE float FM_CALL length(vec3 v);
 FM_INLINE float FM_CALL lengthSquared(vec3 v); 
 // TODO: Add comparison functions, lerp and clamp  
 
+
+struct vec4
+{
+	__m128 m;
+
+	FM_INLINE explicit vec4(const float* v); 
+	FM_INLINE vec4(float x, float y, float z, float w);
+	FM_INLINE explicit vec4(float a);
+	FM_INLINE explicit vec4(__m128 m);
+	FM_INLINE vec4();
+
+	FM_INLINE void FM_CALL storeTo(float* mem);
+	FM_INLINE void FM_CALL storeTo16ByteAligned(float* mem);
+
+	FM_INLINE void FM_CALL setX(float x);
+	FM_INLINE void FM_CALL setY(float y); 
+	FM_INLINE void FM_CALL setZ(float z); 
+	FM_INLINE void FM_CALL setW(float w); 
+
+	FM_INLINE float FM_CALL x() const;
+	FM_INLINE float FM_CALL y() const;
+	FM_INLINE float FM_CALL z() const;
+	FM_INLINE float FM_CALL w() const;
+
+	FM_INLINE float FM_CALL r() const { return x(); }
+	FM_INLINE float FM_CALL g() const { return y(); }
+	FM_INLINE float FM_CALL b() const { return z(); }
+	FM_INLINE float FM_CALL a() const { return w(); }
+};
+
 }
 
 #endif // FAST_MATH_H
@@ -443,6 +473,27 @@ FM_INLINE float FM_CALL lengthSquared(vec3 v);
 #endif
 
 namespace fm {
+
+/////////////////////////////////////////
+// fast math internal helper functions //
+/////////////////////////////////////////
+namespace internal {
+	FM_INLINE __m128 insertFloatY(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
+		return _mm_move_ss(temp, m);
+	}
+	FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
+		return _mm_move_ss(temp, m);
+	}
+	FM_INLINE __m128 insertFloatW(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
+		return _mm_move_ss(temp, m);
+	}
+}
 
 ////////////////////////////
 // utility functions impl //
@@ -522,9 +573,7 @@ FM_INLINE void FM_CALL vec2::setX(float x) {
 	m = _mm_move_ss(m, _mm_set_ss(x)); 
 }
 FM_INLINE void FM_CALL vec2::setY(float y) { 
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(y));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
-	m = _mm_move_ss(temp, m);
+	m = internal::insertFloatY(m, y);
 }  
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b) {
 	a.m = _mm_add_ps(a.m, b.m);
@@ -1031,14 +1080,10 @@ FM_INLINE void FM_CALL vec3::setX(float x) {
 	m = _mm_move_ss(m, _mm_set_ss(x));
 }
 FM_INLINE void FM_CALL vec3::setY(float y) {
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(y));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
-	m = _mm_move_ss(temp, m);	
+	m = internal::insertFloatY(m, y);
 }
 FM_INLINE void FM_CALL vec3::setZ(float z) {
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(z));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
-	m = _mm_move_ss(temp, m);
+	m = internal::insertFloatZ(m, z);
 }
 FM_INLINE void FM_CALL vec3::storeTo(float* mem) {
 	mem[0] = x();		
@@ -1236,6 +1281,54 @@ FM_INLINE float FM_CALL length(vec3 v) {
 }
 FM_INLINE float FM_CALL lengthSquared(vec3 v) {
 	return dot(v, v);
+}
+
+///////////////
+// vec4 impl //
+///////////////
+FM_INLINE vec4::vec4(const float* v) {
+	m = _mm_set_ps(v[3], v[2], v[1], v[0]);	
+} 
+FM_INLINE vec4::vec4(float x, float y, float z, float w) {
+	m = _mm_set_ps(w, z, y, x);
+}
+FM_INLINE vec4::vec4(float a) {
+	m = _mm_set1_ps(a);
+}
+FM_INLINE vec4::vec4(__m128 m) 
+	:m(m) {}
+FM_INLINE vec4::vec4() {
+	m = _mm_setzero_ps();
+}
+FM_INLINE void FM_CALL vec4::storeTo(float* mem) {
+	_mm_storeu_ps(mem, m);
+}
+FM_INLINE void FM_CALL vec4::storeTo16ByteAligned(float* mem) {
+	_mm_store_ps(mem, m);
+}
+FM_INLINE void FM_CALL vec4::setX(float x) {
+	m = _mm_move_ss(m, _mm_set_ss(x));
+}
+FM_INLINE void FM_CALL vec4::setY(float y) {
+	m = internal::insertFloatY(m, y);
+} 
+FM_INLINE void FM_CALL vec4::setZ(float z) {
+	m = internal::insertFloatZ(m, z);
+} 
+FM_INLINE void FM_CALL vec4::setW(float w) {
+	m = internal::insertFloatW(m, w);
+} 
+FM_INLINE float FM_CALL vec4::x() const {
+	return _mm_cvtss_f32(m);
+}
+FM_INLINE float FM_CALL vec4::y() const {
+	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 1)));
+}
+FM_INLINE float FM_CALL vec4::z() const {
+	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 2)));
+}
+FM_INLINE float FM_CALL vec4::w() const {
+	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
 }
 
 } // !namespace fm
