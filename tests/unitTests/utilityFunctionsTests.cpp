@@ -1,3 +1,14 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
+#include "doctest.h"
+
+#define FM_IMPLEMENTATION
+#include "../../FastMath.h"
+
+#include "util.cpp"
+
+using namespace fm;
+
 TEST_CASE("utility functions")
 {
 	CHECK(5.f == fm::min(5.f, 10.f));

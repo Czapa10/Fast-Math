@@ -1,3 +1,15 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
+#include "doctest.h"
+
+#define FM_IMPLEMENTATION
+#include "../../FastMath.h"
+
+#include "util.cpp"
+
+
+using namespace fm;
+
 TEST_CASE("vec3 constructors and getters")
 {
 	vec3 a(1.f, 5.f, -3.f);
@@ -498,3 +510,103 @@ TEST_CASE("vec3 setters")
 	CHECK(b.z() == -3.f);
 }
 
+TEST_CASE("vec3 operations")
+{
+	vec3 a(2.f, 3.f, 4.f); 	
+	vec3 b(-2.f, 5.f, 1.f); 	
+
+	INFO("a == (" << a.x() << ", " << a.y() << ", " << a.z() << ")");
+	INFO("b == (" << b.x() << ", " << b.y() << ", " << b.z() << ")");
+
+	auto addRes = a + b;
+	CHECK(addRes.x() == 0.f);
+	CHECK(addRes.y() == 8.f);
+	CHECK(addRes.z() == 5.f);
+
+	auto subRes = a - b;
+	CHECK(subRes.x() == 4.f);
+	CHECK(subRes.y() == -2.f);
+	CHECK(subRes.z() == 3.f);
+
+	auto addAsignmentRes = a;
+	addAsignmentRes += b;
+	CHECK(addAsignmentRes.x() == 0.f);
+	CHECK(addAsignmentRes.y() == 8.f);
+	CHECK(addAsignmentRes.z() == 5.f);
+
+	auto subAsignmentRes = a;
+	subAsignmentRes -= b;
+	CHECK(subAsignmentRes.x() == 4.f);
+	CHECK(subAsignmentRes.y() == -2.f);
+	CHECK(subAsignmentRes.z() == 3.f);
+
+	auto scalarMulRes1 = a * 4.5f;
+	CHECK(scalarMulRes1.x() == 9.f);
+	CHECK(scalarMulRes1.y() == 13.5f);
+	CHECK(scalarMulRes1.z() == 18.f);
+
+	auto scalarMulRes2 = 4.5f * a;
+	CHECK(scalarMulRes2.x() == 9.f);
+	CHECK(scalarMulRes2.y() == 13.5f);
+	CHECK(scalarMulRes2.z() == 18.f);
+
+	auto scalarDivRes = a / 2.f;
+	CHECK(scalarDivRes.x() == 1.f);
+	CHECK(scalarDivRes.y() == 1.5f);
+	CHECK(scalarDivRes.z() == 2.f);
+
+	auto hadamardMulRes = hadamardMul(a, b); 
+	CHECK(hadamardMulRes.x() == -4.f);
+	CHECK(hadamardMulRes.y() == 15.f);
+	CHECK(hadamardMulRes.z() == 4.f);
+
+	auto hadamardDivRes = hadamardDiv(a, b); 
+	CHECK(hadamardDivRes.x() == -1.f);
+	CHECK(hadamardDivRes.y() == 0.6f);
+	CHECK(hadamardDivRes.z() == 4.f);
+
+	auto negatedB = -b;
+	CHECK(negatedB.x() == 2.f);
+	CHECK(negatedB.y() == -5.f);
+	CHECK(negatedB.z() == -1.f);
+
+	auto minRes = min(a, b);
+	CHECK(minRes.x() == -2.f);
+	CHECK(minRes.y() == 3.f);
+	CHECK(minRes.z() == 1.f);
+
+	auto maxRes = max(a, b);
+	CHECK(maxRes.x() == 2.f);
+	CHECK(maxRes.y() == 5.f);
+	CHECK(maxRes.z() == 4.f);
+
+	auto absoluteB = abs(b);
+	CHECK(absoluteB.x() == 2);
+	CHECK(absoluteB.y() == 5);
+	CHECK(absoluteB.z() == 1);
+
+	auto normalizedB = normalize(b);
+	CHECK(normalizedB.x() == floatCmp(b.x() / sqrt(30)));
+	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(30)));
+	CHECK(normalizedB.z() == floatCmp(b.z() / sqrt(30)));
+	
+	vec3 c(1.f, 0.f, 0.f);
+	vec3 d(0.f, 1.f, 0.f);
+	auto crossRes = cross(c, d);
+	CHECK(crossRes.x() == 0.f);
+	CHECK(crossRes.y() == 0.f);
+	CHECK(crossRes.z() == 1.f);
+
+	vec3 e(2,3,4);
+	vec3 f(5,6,7);
+	auto crossRes2 = cross(e, f);
+	CHECK(crossRes2.x() == -3.f);
+	CHECK(crossRes2.y() == 6.f);
+	CHECK(crossRes2.z() == -3.f);
+
+
+	CHECK(dot(a, b) == 15.f);
+	CHECK(sumOfElements(b) == 4.f);
+	CHECK(length(b) == floatCmp(sqrt(30.f)));
+	CHECK(lengthSquared(b) == 30.f);
+}

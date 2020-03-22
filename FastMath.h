@@ -7,7 +7,7 @@ Written by Grzegorz "Czapa" Bednorz
 
 YOU HAVE TO
 #define FM_IMPLEMENTATION
-in EXACTLY one C++ file that includes this header, BEFORE the include, like this:
+one of C++ files that include this header, BEFORE the include, like this:
 
 #define FM_IMPLEMENTATION
 #include <FastMath.h>
@@ -388,13 +388,34 @@ struct vec3
 #endif
 #endif
 };
+FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b); 
+FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b);
+FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b);
+FM_INLINE vec3& FM_CALL operator-=(vec3& a, vec3 b);
+FM_INLINE vec3 FM_CALL hadamardMul(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL hadamardDiv(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL operator*(vec3 v, float  scalar);
+FM_INLINE vec3 FM_CALL operator*(float scalar, vec3 v);
+FM_INLINE vec3 FM_CALL operator/(vec3 v, float scalar);
+FM_INLINE vec3 FM_CALL operator-(vec3 v); 
+FM_INLINE vec3 FM_CALL cross(vec3 a, vec3 b); 
+FM_INLINE float FM_CALL dot(vec3 a, vec3 b); 
+FM_INLINE vec3 FM_CALL min(vec3 a, vec3 b); 
+FM_INLINE vec3 FM_CALL max(vec3 a, vec3 b); 
+FM_INLINE vec3 FM_CALL normalize(vec3 v);
+FM_INLINE vec3 FM_CALL abs(vec3 v);
+FM_INLINE float FM_CALL sumOfElements(vec3 v);
+FM_INLINE float FM_CALL length(vec3 v);
+FM_INLINE float FM_CALL lengthSquared(vec3 v); 
+// TODO: Add comparison functions, lerp and clamp  
 
 }
 
 #endif // FAST_MATH_H
 
-
+#ifndef FM_IMPLEMENTATION_ALREADY_DEFINED
 #ifdef FM_IMPLEMENTATION
+#define FM_IMPLEMENTATION_ALREADY_DEFINED
 
 #include <math.h>
 
@@ -1115,8 +1136,79 @@ FM_INLINE vec3 FM_CALL vec3::zzz() const {
 	return vec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 2)));
 }
 #endif
+FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b) {
+	a.m = _mm_add_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b) {
+	a.m = _mm_sub_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b) {
+	a.m = _mm_add_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3& FM_CALL operator-=(vec3& a, vec3 b) {
+	a.m = _mm_sub_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL hadamardMul(vec3 a, vec3 b) {
+	a.m = _mm_mul_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL hadamardDiv(vec3 a, vec3 b) {
+	a.m = _mm_div_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL operator*(vec3 v, float scalar) {
+	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar));
+	return v;
+}
+FM_INLINE vec3 FM_CALL operator*(float scalar, vec3 v) {
+	return v * scalar;
+}
+FM_INLINE vec3 FM_CALL operator/(vec3 v, float scalar) {
+	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
+	return v;
+}
+FM_INLINE vec3 FM_CALL operator-(vec3 v) {
+	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
+	return v;
+}
+FM_INLINE vec3 FM_CALL cross(vec3 a, vec3 b) {
+	return vec3(hadamardMul(a.zxy(), b) - hadamardMul(a, b.zxy())).zxy(); 
+}
+FM_INLINE float FM_CALL dot(vec3 a, vec3 b) {
+	return sumOfElements(hadamardMul(a, b));
+}
+FM_INLINE vec3 FM_CALL min(vec3 a, vec3 b) {
+	a.m = _mm_min_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL max(vec3 a, vec3 b) {
+	a.m = _mm_max_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL normalize(vec3 v) {
+	return v / length(v);
+}
+FM_INLINE vec3 FM_CALL abs(vec3 v) {
+	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+	v.m = _mm_andnot_ps(signMask, v.m);
+	return v;
+}
+FM_INLINE float FM_CALL sumOfElements(vec3 v) {
+	return v.x() + v.y() + v.z();
+}
+FM_INLINE float FM_CALL length(vec3 v) {
+	return sqrt(dot(v, v));
+}
+FM_INLINE float FM_CALL lengthSquared(vec3 v) {
+	return dot(v, v);
+}
 
 } // !namespace fm
 
 #endif // FM_IMPLEMENTATION
+#endif // FM_IMPLEMENTATION_ALREADY_DEFINED
 

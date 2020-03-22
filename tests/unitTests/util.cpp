@@ -1,14 +1,8 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
-#include "doctest.h"
-
-#define FM_IMPLEMENTATION
-#include "../../FastMath.h"
+#ifndef TESTS_UTIL
+#define TESTS_UTIL
 
 #include <string>
 #include <cmath>
-
-using namespace fm;
 
 static long long vElements;
 static char binaryOutput[128];
@@ -31,6 +25,4 @@ static char binaryOutput[128];
 
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-#include "utilityFunctionsTests.cpp"
-#include "vector2Tests.cpp"
-#include "vector3Tests.cpp"
+#endif // TESTS_UTIL

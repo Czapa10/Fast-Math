@@ -1,3 +1,14 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
+#include "doctest.h"
+
+#define FM_IMPLEMENTATION
+#include "../../FastMath.h"
+
+#include "util.cpp"
+
+using namespace fm;
+
 TEST_CASE("vec2 constructors and getters") 
 {
 	vec2 a(-3.f, 4.5f);
@@ -99,7 +110,7 @@ TEST_CASE("vec2 operations")
 
 	vec2 negatedB = -b;
 	CHECK(negatedB.x() == 5.f);
-	CHECK(negatedB.y() == -3.0f);
+	CHECK(negatedB.y() == -3.f);
 
 	vec2 minRes = min(a, b);
 	CHECK(minRes.x() == -5.f);
