@@ -131,12 +131,12 @@ TEST_CASE("vec2 operations")
 	CHECK(maxRes.y() == 4.f);
 
 	vec2 absoluteB = abs(b);
-	CHECK(absoluteB.x() == 5);
-	CHECK(absoluteB.y() == 3);
+	CHECK(absoluteB.x() == 5.f);
+	CHECK(absoluteB.y() == 3.f);
 
 	vec2 normalizedB = normalize(b);
-	CHECK(normalizedB.x() == floatCmp(b.x() / sqrt(34)));
-	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(34)));
+	CHECK(normalizedB.x() == floatCmp(b.x() / sqrt(34.f)));
+	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(34.f)));
 
 	CHECK(dot(a, b) == 2.f);
 	CHECK(sumOfElements(b) == -2.f);

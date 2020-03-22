@@ -457,6 +457,27 @@ struct vec4
 	FM_INLINE float FM_CALL b() const { return z(); }
 	FM_INLINE float FM_CALL a() const { return w(); }
 };
+FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b); 
+FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b);
+FM_INLINE vec4& FM_CALL operator+=(vec4& a, vec4 b);
+FM_INLINE vec4& FM_CALL operator-=(vec4& a, vec4 b);
+FM_INLINE vec4 FM_CALL hadamardMul(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL hadamardDiv(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL operator*(vec4 v, float  scalar);
+FM_INLINE vec4 FM_CALL operator*(float scalar, vec4 v);
+FM_INLINE vec4 FM_CALL operator/(vec4 v, float scalar);
+FM_INLINE vec4 FM_CALL operator-(vec4 v); 
+FM_INLINE vec4 FM_CALL cross(vec4 a, vec4 b); 
+FM_INLINE float FM_CALL dot(vec4 a, vec4 b); 
+FM_INLINE vec4 FM_CALL min(vec4 a, vec4 b); 
+FM_INLINE vec4 FM_CALL max(vec4 a, vec4 b); 
+FM_INLINE vec4 FM_CALL normalize(vec4 v);
+FM_INLINE vec4 FM_CALL abs(vec4 v);
+FM_INLINE float FM_CALL sumOfElements(vec4 v);
+FM_INLINE float FM_CALL length(vec4 v);
+FM_INLINE float FM_CALL lengthSquared(vec4 v); 
+// TODO: Add comparison functions, lerp and clamp  
+
 
 }
 
@@ -1329,6 +1350,73 @@ FM_INLINE float FM_CALL vec4::z() const {
 }
 FM_INLINE float FM_CALL vec4::w() const {
 	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
+}
+FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b) {
+	a.m = _mm_add_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b) {
+	a.m = _mm_sub_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4& FM_CALL operator+=(vec4& a, vec4 b) {
+	a.m = _mm_add_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4& FM_CALL operator-=(vec4& a, vec4 b) {
+	a.m = _mm_sub_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL hadamardMul(vec4 a, vec4 b) {
+	a.m = _mm_mul_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL hadamardDiv(vec4 a, vec4 b) {
+	a.m = _mm_div_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL operator*(vec4 v, float scalar) {
+	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar));
+	return v;
+}
+FM_INLINE vec4 FM_CALL operator*(float scalar, vec4 v) {
+	return v * scalar;
+}
+FM_INLINE vec4 FM_CALL operator/(vec4 v, float scalar) {
+	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
+	return v;
+}
+FM_INLINE vec4 FM_CALL operator-(vec4 v) {
+	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
+	return v;
+}
+FM_INLINE float FM_CALL dot(vec4 a, vec4 b) {
+	return sumOfElements(hadamardMul(a, b));
+}
+FM_INLINE vec4 FM_CALL min(vec4 a, vec4 b) {
+	a.m = _mm_min_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL max(vec4 a, vec4 b) {
+	a.m = _mm_max_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL abs(vec4 v) {
+	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+	v.m = _mm_andnot_ps(signMask, v.m);
+	return v;
+}
+FM_INLINE float FM_CALL sumOfElements(vec4 v) {
+	return v.x() + v.y() + v.z() + v.w();
+}
+FM_INLINE float FM_CALL length(vec4 v) {
+	return sqrt(dot(v, v));
+}
+FM_INLINE float FM_CALL lengthSquared(vec4 v) {
+	return dot(v, v);
+}
+FM_INLINE vec4 FM_CALL normalize(vec4 v) {
+	return v / length(v);
 }
 
 } // !namespace fm
