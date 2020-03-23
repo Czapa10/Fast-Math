@@ -179,4 +179,17 @@ TEST_CASE("vec4 operations")
 	CHECK(clampRes.y() == 3.f);
 	CHECK(clampRes.z() == 3.f);
 	CHECK(clampRes.w() == 2.f);
+
+	vec4 g(0.f, 2.f, 3.f, 0.f);
+	vec4 h(4.f, 5.f, 6.f, 100.f);
+	auto lerpRes = lerp(g, h, 0.5f);
+	CHECK(lerpRes.x() == 2.f);
+	CHECK(lerpRes.y() == 3.5f);
+	CHECK(lerpRes.z() == 4.5f);
+	CHECK(lerpRes.w() == 50.f);
+	lerpRes = lerp(h, g, 0.5f);
+	CHECK(lerpRes.x() == 2.f);
+	CHECK(lerpRes.y() == 3.5f);
+	CHECK(lerpRes.z() == 4.5f);
+	CHECK(lerpRes.w() == 50.f);
 }

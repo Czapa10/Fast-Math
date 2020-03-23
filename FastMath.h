@@ -103,6 +103,7 @@ FM_INLINE float FM_CALL length(vec2 v);
 FM_INLINE float FM_CALL lengthSquared(vec2 v); 
 FM_INLINE vec2 FM_CALL normalize(vec2 v);
 FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 min, vec2 max);
+FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t);
 // TODO: Add comparison functions, lerp  
 
 struct vec2d
@@ -158,6 +159,7 @@ FM_INLINE double FM_CALL sumOfElements(vec2d v);
 FM_INLINE double FM_CALL length(vec2d v);
 FM_INLINE double FM_CALL lengthSquared(vec2d v); 
 FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d min, vec2d max); 
+FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t);
 // TODO: Add comparison functions, lerp 
 
 struct vec2i
@@ -431,6 +433,7 @@ FM_INLINE float FM_CALL sumOfElements(vec3 v);
 FM_INLINE float FM_CALL length(vec3 v);
 FM_INLINE float FM_CALL lengthSquared(vec3 v); 
 FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 min, vec3 max); 
+FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t);
 // TODO: Add comparison functions, lerp and clamp  
 
 
@@ -482,6 +485,7 @@ FM_INLINE float FM_CALL sumOfElements(vec4 v);
 FM_INLINE float FM_CALL length(vec4 v);
 FM_INLINE float FM_CALL lengthSquared(vec4 v); 
 FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 min, vec4 max); 
+FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t);
 // TODO: Add comparison functions, lerp and clamp  
 
 
@@ -676,6 +680,9 @@ FM_INLINE vec2 FM_CALL normalize(vec2 v) {
 FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 minV, vec2 maxV) {
 	return min(max(v, minV), maxV);
 }
+FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t) {
+	return a + (b-a)*t;
+}
 
 ////////////////
 // vec2d impl //
@@ -791,6 +798,9 @@ FM_INLINE vec2d FM_CALL normalize(vec2d v) {
 }
 FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d minV, vec2d maxV) {
 	return min(max(v, minV), maxV);
+} 
+FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t) {
+	return a + (b-a)*t;
 } 
 
 ////////////////
@@ -1326,6 +1336,9 @@ FM_INLINE float FM_CALL lengthSquared(vec3 v) {
 FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 minV, vec3 maxV) {
 	return min(max(v, minV), maxV);
 }
+FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t) {
+	return a + (b-a)*t;
+} 
 
 ///////////////
 // vec4 impl //
@@ -1444,6 +1457,9 @@ FM_INLINE vec4 FM_CALL normalize(vec4 v) {
 FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 minV, vec4 maxV) {
 	return min(max(v, minV), maxV);
 }
+FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t) {
+	return a + (b-a)*t;
+} 
 
 } // !namespace fm
 

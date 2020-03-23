@@ -148,6 +148,16 @@ TEST_CASE("vec2 operations")
 	vec2 clampBRes = clamp(b, min, max);
 	CHECK(clampBRes.x() == 0.f);
 	CHECK(clampBRes.y() == 2.f);
+
+	vec2 c(0.f, 0.f);
+	vec2 d(2.f, 4.f);
+	vec2 lerpRes = lerp(c, d, 0.5f);
+	CHECK(lerpRes.x() == 1.f);
+	CHECK(lerpRes.y() == 2.f);
+
+	lerpRes = lerp(d, c, 0.5f);
+	CHECK(lerpRes.x() == 1.f);
+	CHECK(lerpRes.y() == 2.f);
 }
 
 
@@ -294,6 +304,16 @@ TEST_CASE("vec2d operations")
 	vec2d clampRes = clamp(vec2d(-1.0, 8.0), min, max);
 	CHECK(clampRes.x() == 0.0);
 	CHECK(clampRes.y() == 7.0);
+
+	vec2 c(0.0, 0.0);
+	vec2 d(2.0, 4.0);
+	vec2 lerpRes = lerp(c, d, 0.5f);
+	CHECK(lerpRes.x() == 1.0);
+	CHECK(lerpRes.y() == 2.0);
+
+	lerpRes = lerp(d, c, 0.5);
+	CHECK(lerpRes.x() == 1.0);
+	CHECK(lerpRes.y() == 2.0);
 }
 
 TEST_CASE("vec2i constructors and getters") 

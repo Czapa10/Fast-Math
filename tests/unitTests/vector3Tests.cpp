@@ -614,4 +614,15 @@ TEST_CASE("vec3 operations")
 	CHECK(clampRes.x() == -1.f);
 	CHECK(clampRes.y() == 7.f);
 	CHECK(clampRes.z() == -1.f);
+
+	vec3 g(0.f, 2.f, 3.f);
+	vec3 h(4.f, 5.f, 6.f);
+	auto lerpRes = lerp(g, h, 0.5f);
+	CHECK(lerpRes.x() == 2.f);
+	CHECK(lerpRes.y() == 3.5f);
+	CHECK(lerpRes.z() == 4.5f);
+	lerpRes = lerp(h, g, 0.5f);
+	CHECK(lerpRes.x() == 2.f);
+	CHECK(lerpRes.y() == 3.5f);
+	CHECK(lerpRes.z() == 4.5f);
 }
