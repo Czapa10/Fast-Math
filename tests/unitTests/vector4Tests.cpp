@@ -171,10 +171,10 @@ TEST_CASE("vec4 operations")
 	CHECK(length(b) == floatCmp(sqrt(120.f)));
 	CHECK(lengthSquared(b) == 120.f);
 
-	vec4 a(1.f, 3.f, 5.f, -7.f);
+	vec4 c(1.f, 3.f, 5.f, -7.f);
 	vec4 min(2.f, 2.f, 2.f, 2.f);
 	vec4 max(5.f, 5.f, 3.f, 2.f);
-	vec4 clampRes = clamp(a, min, max);
+	vec4 clampRes = clamp(c, min, max);
 	CHECK(clampRes.x() == 2.f);
 	CHECK(clampRes.y() == 3.f);
 	CHECK(clampRes.z() == 3.f);
@@ -192,4 +192,28 @@ TEST_CASE("vec4 operations")
 	CHECK(lerpRes.y() == 3.5f);
 	CHECK(lerpRes.z() == 4.5f);
 	CHECK(lerpRes.w() == 50.f);
+}
+
+TEST_CASE("vec4 comparisons")
+{
+	vec4 a(1.f, 2.f, 4.f, 5.f);
+	vec4 b(1.f, 3.f, -5.f, 5.f);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	auto eqMask = equalsMask(a, b);
+	CHECK((eqMask.x() && !eqMask.y() && !eqMask.z() && eqMask.w()));
+
+	auto gtMask = greaterMask(a, b);
+	CHECK((!gtMask.x() && !gtMask.y() && gtMask.z() && !gtMask.w()));
+
+	auto geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && !geMask.y() && geMask.z() && geMask.w()));
+
+	auto ltMask = lesserMask(a, b);
+	CHECK((!ltMask.x() && ltMask.y() && !ltMask.z() && !ltMask.w()));
+
+	auto leMask = lesserOrEqualMask(a, b);
+	CHECK((leMask.x() && leMask.y() && !leMask.z() && leMask.w()));
 }

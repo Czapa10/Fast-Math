@@ -104,7 +104,14 @@ FM_INLINE float FM_CALL lengthSquared(vec2 v);
 FM_INLINE vec2 FM_CALL normalize(vec2 v);
 FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 min, vec2 max);
 FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t);
-// TODO: Add comparison functions, lerp  
+
+FM_INLINE bool FM_CALL operator==(vec2 a, vec2 b); 
+FM_INLINE bool FM_CALL operator!=(vec2 a, vec2 b); 
+FM_INLINE vec2 FM_CALL equalsMask(vec2 a, vec2 b);
+FM_INLINE vec2 FM_CALL greaterMask(vec2 a, vec2 b);
+FM_INLINE vec2 FM_CALL greaterOrEqualMask(vec2 a, vec2 b);
+FM_INLINE vec2 FM_CALL lesserMask(vec2 a, vec2 b);
+FM_INLINE vec2 FM_CALL lesserOrEqualMask(vec2 a, vec2 b);
 
 struct vec2d
 {
@@ -160,7 +167,14 @@ FM_INLINE double FM_CALL length(vec2d v);
 FM_INLINE double FM_CALL lengthSquared(vec2d v); 
 FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d min, vec2d max); 
 FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t);
-// TODO: Add comparison functions, lerp 
+
+FM_INLINE bool FM_CALL operator==(vec2d a, vec2d b); 
+FM_INLINE bool FM_CALL operator!=(vec2d a, vec2d b); 
+FM_INLINE vec2d FM_CALL equalsMask(vec2d a, vec2d b);
+FM_INLINE vec2d FM_CALL greaterMask(vec2d a, vec2d b);
+FM_INLINE vec2d FM_CALL greaterOrEqualMask(vec2d a, vec2d b);
+FM_INLINE vec2d FM_CALL lesserMask(vec2d a, vec2d b);
+FM_INLINE vec2d FM_CALL lesserOrEqualMask(vec2d a, vec2d b);
 
 struct vec2i
 {
@@ -210,9 +224,14 @@ FM_INLINE int FM_CALL sumOfElements(vec2i v);
 FM_INLINE int FM_CALL length(vec2i v);
 FM_INLINE int FM_CALL lengthSquared(vec2i v); 
 FM_INLINE vec2i FM_CALL clamp(vec2i v, vec2i min, vec2i max); 
+FM_INLINE bool FM_CALL operator==(vec2i a, vec2i b); 
+FM_INLINE bool FM_CALL operator!=(vec2i a, vec2i b); 
+FM_INLINE vec2i FM_CALL equalsMask(vec2i a, vec2i b);
+FM_INLINE vec2i FM_CALL greaterMask(vec2i a, vec2i b);
+FM_INLINE vec2i FM_CALL greaterOrEqualMask(vec2i a, vec2i b);
+FM_INLINE vec2i FM_CALL lesserMask(vec2i a, vec2i b);
+FM_INLINE vec2i FM_CALL lesserOrEqualMask(vec2i a, vec2i b);
 // TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
-// TODO: Add more operators
-
 
 struct vec2u
 {
@@ -260,8 +279,15 @@ FM_INLINE unsigned FM_CALL sumOfElements(vec2u v);
 FM_INLINE unsigned FM_CALL length(vec2u v);
 FM_INLINE unsigned FM_CALL lengthSquared(vec2u v); 
 FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u min, vec2u max); 
+FM_INLINE bool FM_CALL operator==(vec2u a, vec2u b); 
+FM_INLINE bool FM_CALL operator!=(vec2u a, vec2u b); 
+FM_INLINE vec2u FM_CALL equalsMask(vec2u a, vec2u b);
+FM_INLINE vec2u FM_CALL greaterMask(vec2u a, vec2u b);
+FM_INLINE vec2u FM_CALL greaterOrEqualMask(vec2u a, vec2u b);
+FM_INLINE vec2u FM_CALL lesserMask(vec2u a, vec2u b);
+FM_INLINE vec2u FM_CALL lesserOrEqualMask(vec2u a, vec2u b);
+
 // TODO: Add hadamardDiv() and operator/
-// TODO: Add more operators
 
 struct vec3
 {
@@ -434,8 +460,13 @@ FM_INLINE float FM_CALL length(vec3 v);
 FM_INLINE float FM_CALL lengthSquared(vec3 v); 
 FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 min, vec3 max); 
 FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t);
-// TODO: Add comparison functions, lerp and clamp  
-
+FM_INLINE bool FM_CALL operator==(vec3 a, vec3 b); 
+FM_INLINE bool FM_CALL operator!=(vec3 a, vec3 b); 
+FM_INLINE vec3 FM_CALL equalsMask(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL greaterMask(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL greaterOrEqualMask(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL lesserMask(vec3 a, vec3 b);
+FM_INLINE vec3 FM_CALL lesserOrEqualMask(vec3 a, vec3 b);
 
 struct vec4
 {
@@ -486,8 +517,13 @@ FM_INLINE float FM_CALL length(vec4 v);
 FM_INLINE float FM_CALL lengthSquared(vec4 v); 
 FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 min, vec4 max); 
 FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t);
-// TODO: Add comparison functions, lerp and clamp  
-
+FM_INLINE bool FM_CALL operator==(vec4 a, vec4 b); 
+FM_INLINE bool FM_CALL operator!=(vec4 a, vec4 b); 
+FM_INLINE vec4 FM_CALL equalsMask(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL greaterMask(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL greaterOrEqualMask(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b);
+FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b);
 
 }
 
@@ -509,23 +545,21 @@ namespace fm {
 // fast math internal helper functions //
 /////////////////////////////////////////
 namespace internal {
-
-FM_INLINE __m128 insertFloatY(__m128 m, float a) {
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
-	return _mm_move_ss(temp, m);
-}
-FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
-	return _mm_move_ss(temp, m);
-}
-FM_INLINE __m128 insertFloatW(__m128 m, float a) {
-	__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
-	temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
-	return _mm_move_ss(temp, m);
-}
-
+	FM_INLINE __m128 insertFloatY(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
+		return _mm_move_ss(temp, m);
+	}
+	FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
+		return _mm_move_ss(temp, m);
+	}
+	FM_INLINE __m128 insertFloatW(__m128 m, float a) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
+		return _mm_move_ss(temp, m);
+	}
 }
 
 ////////////////////////////
@@ -683,6 +717,34 @@ FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 minV, vec2 maxV) {
 FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t) {
 	return a + (b-a)*t;
 }
+FM_INLINE bool FM_CALL operator==(vec2 a, vec2 b) {
+	vec2 eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y();
+} 
+FM_INLINE bool FM_CALL operator!=(vec2 a, vec2 b) {
+	vec2 eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y());
+}
+FM_INLINE vec2 FM_CALL equalsMask(vec2 a, vec2 b) {
+	a.m = _mm_cmpeq_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2 FM_CALL greaterMask(vec2 a, vec2 b) {
+	a.m = _mm_cmpgt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2 FM_CALL greaterOrEqualMask(vec2 a, vec2 b) {
+	a.m = _mm_cmpge_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2 FM_CALL lesserMask(vec2 a, vec2 b) {
+	a.m = _mm_cmplt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2 FM_CALL lesserOrEqualMask(vec2 a, vec2 b) {
+	a.m = _mm_cmple_ps(a.m, b.m);
+	return a;
+}
 
 ////////////////
 // vec2d impl //
@@ -801,7 +863,35 @@ FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d minV, vec2d maxV) {
 } 
 FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t) {
 	return a + (b-a)*t;
+}
+FM_INLINE bool FM_CALL operator==(vec2d a, vec2d b) {
+	vec2d eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y();
 } 
+FM_INLINE bool FM_CALL operator!=(vec2d a, vec2d b) {
+	vec2d eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y());
+}
+FM_INLINE vec2d FM_CALL equalsMask(vec2d a, vec2d b) {
+	a.m = _mm_cmpeq_pd(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2d FM_CALL greaterMask(vec2d a, vec2d b) {
+	a.m = _mm_cmpgt_pd(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2d FM_CALL greaterOrEqualMask(vec2d a, vec2d b) {
+	a.m = _mm_cmpge_pd(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2d FM_CALL lesserMask(vec2d a, vec2d b) {
+	a.m = _mm_cmplt_pd(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2d FM_CALL lesserOrEqualMask(vec2d a, vec2d b) {
+	a.m = _mm_cmple_pd(a.m, b.m);
+	return a;
+}
 
 ////////////////
 // vec2i impl //
@@ -871,6 +961,38 @@ FM_INLINE int FM_CALL lengthSquared(vec2i v) {
 	int x = v.x();
 	int y = v.y();
 	return x*x + y*y;
+}
+FM_INLINE bool FM_CALL operator==(vec2i a, vec2i b) {
+	vec2i eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y();
+} 
+FM_INLINE bool FM_CALL operator!=(vec2i a, vec2i b) {
+	vec2i eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y());
+} 
+FM_INLINE vec2i FM_CALL equalsMask(vec2i a, vec2i b) {
+	a.m = _mm_cmpeq_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2i FM_CALL greaterMask(vec2i a, vec2i b) {
+	a.m = _mm_cmpgt_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2i FM_CALL greaterOrEqualMask(vec2i a, vec2i b) {
+	__m128i gt = _mm_cmpgt_epi32(a.m, b.m);
+	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
+	a.m = _mm_or_si128(gt, eq);
+	return a;
+}
+FM_INLINE vec2i FM_CALL lesserMask(vec2i a, vec2i b) {
+	a.m = _mm_cmplt_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2i FM_CALL lesserOrEqualMask(vec2i a, vec2i b) {
+	__m128i lt = _mm_cmplt_epi32(a.m, b.m);
+	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
+	a.m = _mm_or_si128(lt, eq);
+	return a;
 }
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2i::setX(int x) {
@@ -1033,6 +1155,39 @@ FM_INLINE unsigned FM_CALL lengthSquared(vec2u v) {
 FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u minV, vec2u maxV) {
 	return min(max(v, minV), maxV);
 } 
+FM_INLINE bool FM_CALL operator==(vec2u a, vec2u b) {
+	vec2u eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y();
+} 
+FM_INLINE bool FM_CALL operator!=(vec2u a, vec2u b) {
+	vec2u eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y());
+} 
+FM_INLINE vec2u FM_CALL equalsMask(vec2u a, vec2u b) {
+	a.m = _mm_cmpeq_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2u FM_CALL greaterMask(vec2u a, vec2u b) {
+	a.m = _mm_cmpgt_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2u FM_CALL greaterOrEqualMask(vec2u a, vec2u b) {
+	__m128i gt = _mm_cmpgt_epi32(a.m, b.m);
+	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
+	a.m = _mm_or_si128(gt, eq);
+	return a;
+}
+FM_INLINE vec2u FM_CALL lesserMask(vec2u a, vec2u b) {
+	a.m = _mm_cmplt_epi32(a.m, b.m);
+	return a;
+}
+FM_INLINE vec2u FM_CALL lesserOrEqualMask(vec2u a, vec2u b) {
+	__m128i lt = _mm_cmplt_epi32(a.m, b.m);
+	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
+	a.m = _mm_or_si128(lt, eq);
+	return a;
+}
+
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2u::setX(unsigned x) {
 	m = _mm_insert_epi32(m, (int)x, 0);
@@ -1339,6 +1494,34 @@ FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 minV, vec3 maxV) {
 FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t) {
 	return a + (b-a)*t;
 } 
+FM_INLINE bool FM_CALL operator==(vec3 a, vec3 b) {
+	vec3 eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y() && eqMask.z();
+} 
+FM_INLINE bool FM_CALL operator!=(vec3 a, vec3 b) {
+	vec3 eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y() && eqMask.z());
+}
+FM_INLINE vec3 FM_CALL equalsMask(vec3 a, vec3 b) {
+	a.m = _mm_cmpeq_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL greaterMask(vec3 a, vec3 b) {
+	a.m = _mm_cmpgt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL greaterOrEqualMask(vec3 a, vec3 b) {
+	a.m = _mm_cmpge_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL lesserMask(vec3 a, vec3 b) {
+	a.m = _mm_cmplt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec3 FM_CALL lesserOrEqualMask(vec3 a, vec3 b) {
+	a.m = _mm_cmple_ps(a.m, b.m);
+	return a;
+}
 
 ///////////////
 // vec4 impl //
@@ -1460,6 +1643,34 @@ FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 minV, vec4 maxV) {
 FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t) {
 	return a + (b-a)*t;
 } 
+FM_INLINE bool FM_CALL operator==(vec4 a, vec4 b) {
+	vec4 eqMask = equalsMask(a, b);
+	return eqMask.x() && eqMask.y() && eqMask.z();
+} 
+FM_INLINE bool FM_CALL operator!=(vec4 a, vec4 b) {
+	vec4 eqMask = equalsMask(a, b);
+	return !(eqMask.x() && eqMask.y() && eqMask.z());
+}
+FM_INLINE vec4 FM_CALL equalsMask(vec4 a, vec4 b) {
+	a.m = _mm_cmpeq_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL greaterMask(vec4 a, vec4 b) {
+	a.m = _mm_cmpgt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL greaterOrEqualMask(vec4 a, vec4 b) {
+	a.m = _mm_cmpge_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b) {
+	a.m = _mm_cmplt_ps(a.m, b.m);
+	return a;
+}
+FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b) {
+	a.m = _mm_cmple_ps(a.m, b.m);
+	return a;
+}
 
 } // !namespace fm
 

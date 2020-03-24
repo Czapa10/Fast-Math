@@ -9,6 +9,8 @@
 
 using namespace fm;
 
+using b32 = int;
+
 TEST_CASE("vec2 constructors and getters") 
 {
 	vec2 a(-3.f, 4.5f);
@@ -160,6 +162,36 @@ TEST_CASE("vec2 operations")
 	CHECK(lerpRes.y() == 2.f);
 }
 
+TEST_CASE("vec2 comparisons")
+{
+	vec2 a(5.f, 5.f);
+	vec2 b(3.f, 5.f);
+	vec2 c(-2.f, 6.f);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	vec2 eqMask = equalsMask(a, a);
+	CHECK((eqMask.x() && eqMask.y()));
+	eqMask = equalsMask(a, b);
+	CHECK((!eqMask.x() && eqMask.y()));
+
+	vec2 gtMask = greaterMask(a, b);
+	CHECK((gtMask.x() && !gtMask.y()));
+
+	vec2 geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && geMask.y()));
+	geMask = greaterOrEqualMask(c, a);
+	CHECK((!geMask.x() && geMask.y()));
+
+	vec2 ltMask = lesserMask(c, b);
+	CHECK((ltMask.x() && !ltMask.y()));
+
+	vec2 leMask = lesserOrEqualMask(b, a);
+	CHECK((leMask.x() && leMask.y()));
+	leMask = lesserOrEqualMask(c, b);
+	CHECK((leMask.x() && !leMask.y()));
+}
 
 TEST_CASE("vec2d constructors and getters") 
 {
@@ -305,15 +337,46 @@ TEST_CASE("vec2d operations")
 	CHECK(clampRes.x() == 0.0);
 	CHECK(clampRes.y() == 7.0);
 
-	vec2 c(0.0, 0.0);
-	vec2 d(2.0, 4.0);
-	vec2 lerpRes = lerp(c, d, 0.5f);
+	vec2d c(0.0, 0.0);
+	vec2d d(2.0, 4.0);
+	vec2d lerpRes = lerp(c, d, 0.5f);
 	CHECK(lerpRes.x() == 1.0);
 	CHECK(lerpRes.y() == 2.0);
 
 	lerpRes = lerp(d, c, 0.5);
 	CHECK(lerpRes.x() == 1.0);
 	CHECK(lerpRes.y() == 2.0);
+}
+
+TEST_CASE("vec2d comparisons")
+{
+	vec2d a(5.0, 5.0);
+	vec2d b(3.0, 5.0);
+	vec2d c(-2.0, 6.0);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	vec2d eqMask = equalsMask(a, a);
+	CHECK((eqMask.x() && eqMask.y()));
+	eqMask = equalsMask(a, b);
+	CHECK((!eqMask.x() && eqMask.y()));
+
+	vec2d gtMask = greaterMask(a, b);
+	CHECK((gtMask.x() && !gtMask.y()));
+
+	vec2d geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && geMask.y()));
+	geMask = greaterOrEqualMask(c, a);
+	CHECK((!geMask.x() && geMask.y()));
+
+	vec2d ltMask = lesserMask(c, b);
+	CHECK((ltMask.x() && !ltMask.y()));
+
+	vec2d leMask = lesserOrEqualMask(b, a);
+	CHECK((leMask.x() && leMask.y()));
+	leMask = lesserOrEqualMask(c, b);
+	CHECK((leMask.x() && !leMask.y()));
 }
 
 TEST_CASE("vec2i constructors and getters") 
@@ -444,6 +507,38 @@ TEST_CASE("vec2i operations")
 	CHECK(clampBRes.y() == 2);
 }
 
+TEST_CASE("vec2i comparisons")
+{
+	vec2i a(5, 5);
+	vec2i b(3, 5);
+	vec2i c(-2, 6);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	vec2i eqMask = equalsMask(a, a);
+	CHECK((eqMask.x() && eqMask.y()));
+	eqMask = equalsMask(a, b);
+	CHECK((!eqMask.x() && eqMask.y()));
+
+	vec2i gtMask = greaterMask(a, b);
+	CHECK((gtMask.x() && !gtMask.y()));
+
+	vec2i geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && geMask.y()));
+	geMask = greaterOrEqualMask(c, a);
+	CHECK((!geMask.x() && geMask.y()));
+
+	vec2i ltMask = lesserMask(c, b);
+	CHECK(ltMask.x());
+	CHECK(!ltMask.y());
+
+	vec2i leMask = lesserOrEqualMask(b, a);
+	CHECK((leMask.x() && leMask.y()));
+	leMask = lesserOrEqualMask(c, b);
+	CHECK((leMask.x() && !leMask.y()));
+}
+
 TEST_CASE("vec2u constructors and getters") 
 {
 	vec2u a(3, 4);
@@ -566,3 +661,37 @@ TEST_CASE("vec2u operations")
 	CHECK(clampBRes.x() == 2);
 	CHECK(clampBRes.y() == 3);
 }
+
+TEST_CASE("vec2u comparisons")
+{
+	vec2u a(5, 5);
+	vec2u b(3, 5);
+	vec2u c(-2, 6);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	vec2u eqMask = equalsMask(a, a);
+	CHECK((eqMask.x() && eqMask.y()));
+	eqMask = equalsMask(a, b);
+	CHECK((!eqMask.x() && eqMask.y()));
+
+	vec2u gtMask = greaterMask(a, b);
+	CHECK((gtMask.x() && !gtMask.y()));
+
+	vec2u geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && geMask.y()));
+	geMask = greaterOrEqualMask(c, a);
+	CHECK((!geMask.x() && geMask.y()));
+
+	vec2u ltMask = lesserMask(c, b);
+	CHECK(ltMask.x());
+	CHECK(!ltMask.y());
+
+	vec2u leMask = lesserOrEqualMask(b, a);
+	CHECK((leMask.x() && leMask.y()));
+	leMask = lesserOrEqualMask(c, b);
+	CHECK((leMask.x() && !leMask.y()));
+}
+
+

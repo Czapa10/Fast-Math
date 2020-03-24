@@ -1,5 +1,5 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
+#define DOCTEST_CONFIG_SUPER_FAST_CHECKS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -626,3 +626,28 @@ TEST_CASE("vec3 operations")
 	CHECK(lerpRes.y() == 3.5f);
 	CHECK(lerpRes.z() == 4.5f);
 }
+
+TEST_CASE("vec3 comparisons")
+{
+	vec3 a(1.f, 2.f, 4.f);
+	vec3 b(1.f, 3.f, -5.f);
+
+	CHECK(a == a);
+	CHECK(a != b);
+
+	auto eqMask = equalsMask(a, b);
+	CHECK((eqMask.x() && !eqMask.y() && !eqMask.z()));
+
+	auto gtMask = greaterMask(a, b);
+	CHECK((!gtMask.x() && !gtMask.y() && gtMask.z()));
+
+	auto geMask = greaterOrEqualMask(a, b);
+	CHECK((geMask.x() && !geMask.y() && geMask.z()));
+
+	auto ltMask = lesserMask(a, b);
+	CHECK((!ltMask.x() && ltMask.y() && !ltMask.z()));
+
+	auto leMask = lesserOrEqualMask(a, b);
+	CHECK((leMask.x() && leMask.y() && !leMask.z()));
+}
+
