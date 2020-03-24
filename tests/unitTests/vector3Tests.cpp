@@ -23,7 +23,7 @@ TEST_CASE("vec3 constructors and getters")
 	CHECK(a.b() == -3.f);
 
 	float storage[3];
-	a.storeTo(storage);
+	store(storage, a);
 	CHECK(storage[0] == 1.f);
 	CHECK(storage[1] == 5.f);
 	CHECK(storage[2] == -3.f);

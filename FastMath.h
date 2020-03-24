@@ -59,8 +59,6 @@ struct vec2
 	FM_INLINE explicit vec2(__m128 m);
 	FM_INLINE vec2();
 
-	FM_INLINE void FM_CALL storeTo(float* mem);
-
 	FM_INLINE void FM_CALL setX(float x);
 	FM_INLINE void FM_CALL setY(float y); 
 
@@ -84,6 +82,7 @@ struct vec2
 	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
 #endif
 };
+FM_INLINE void FM_CALL store(float* mem, vec2 v);
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
 FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b);
@@ -104,7 +103,6 @@ FM_INLINE float FM_CALL lengthSquared(vec2 v);
 FM_INLINE vec2 FM_CALL normalize(vec2 v);
 FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 min, vec2 max);
 FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t);
-
 FM_INLINE bool FM_CALL operator==(vec2 a, vec2 b); 
 FM_INLINE bool FM_CALL operator!=(vec2 a, vec2 b); 
 FM_INLINE vec2 FM_CALL equalsMask(vec2 a, vec2 b);
@@ -122,9 +120,6 @@ struct vec2d
 	FM_INLINE explicit vec2d(double a);
 	FM_INLINE explicit vec2d(__m128d m);
 	FM_INLINE vec2d();
-
-	FM_INLINE void FM_CALL storeTo(double* mem);
-	FM_INLINE void FM_CALL storeTo16ByteAligned(double* mem);
 
 	FM_INLINE void FM_CALL setX(double x);
 	FM_INLINE void FM_CALL setY(double y);
@@ -147,6 +142,8 @@ struct vec2d
 	FM_INLINE vec2d FM_CALL uu() const { return xx(); }
 	FM_INLINE vec2d FM_CALL vv() const { return yy(); }
 };
+FM_INLINE void FM_CALL store(double* mem, vec2d v);
+FM_INLINE void FM_CALL store16ByteAligned(double* mem, vec2d v);
 FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
 FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b);
@@ -204,11 +201,10 @@ struct vec2i
 	FM_INLINE vec2i FM_CALL uu() const { return xx(); }
 	FM_INLINE vec2i FM_CALL vv() const { return yy(); }
 
-	FM_INLINE void FM_CALL storeTo(int* mem); 
-
 	FM_INLINE void FM_CALL setX(int x);
 	FM_INLINE void FM_CALL setY(int y);
 };
+FM_INLINE void FM_CALL store(int* mem, vec2i v); 
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b); 
 FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b);
@@ -246,8 +242,6 @@ struct vec2u
 	FM_INLINE void FM_CALL setX(unsigned x);
 	FM_INLINE void FM_CALL setY(unsigned y);
 
-	FM_INLINE void FM_CALL storeTo(unsigned* mem);
-
 	FM_INLINE unsigned FM_CALL x() const;
 	FM_INLINE unsigned FM_CALL u() const { return x(); }
 	FM_INLINE unsigned FM_CALL left() const { return x(); }
@@ -266,6 +260,7 @@ struct vec2u
 	FM_INLINE vec2u FM_CALL uu() const { return xx(); }
 	FM_INLINE vec2u FM_CALL vv() const { return yy(); }
 };
+FM_INLINE void FM_CALL store(unsigned* mem, vec2u v);
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
 FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b);
@@ -302,8 +297,6 @@ struct vec3
 	FM_INLINE void FM_CALL setX(float x);
 	FM_INLINE void FM_CALL setY(float y);
 	FM_INLINE void FM_CALL setZ(float z);
-
-	FM_INLINE void FM_CALL storeTo(float* mem); 
 
 	FM_INLINE float FM_CALL x() const;
 	FM_INLINE float FM_CALL u() const { return x(); }
@@ -439,6 +432,7 @@ struct vec3
 	FM_INLINE vec3 FM_CALL bbb() const { return zzz(); }
 #endif
 };
+FM_INLINE void FM_CALL store(float* mem, vec3 v); 
 FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b); 
 FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b);
 FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b);
@@ -632,16 +626,16 @@ FM_INLINE vec2 FM_CALL vec2::xx() const {
 FM_INLINE vec2 FM_CALL vec2::yy() const {
 	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
-FM_INLINE void FM_CALL vec2::storeTo(float* mem) {
-	mem[0] = x();
-	mem[1] = y(); 
-} 
 FM_INLINE void FM_CALL vec2::setX(float x) {
 	m = _mm_move_ss(m, _mm_set_ss(x)); 
 }
 FM_INLINE void FM_CALL vec2::setY(float y) { 
 	m = internal::insertFloatY(m, y);
 }  
+FM_INLINE void FM_CALL store(float* mem, vec2 v) {
+	mem[0] = v.x();
+	mem[1] = v.y(); 
+} 
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b) {
 	a.m = _mm_add_ps(a.m, b.m);
 	return a; 
@@ -778,11 +772,11 @@ FM_INLINE vec2d FM_CALL vec2d::xx() const {
 FM_INLINE vec2d FM_CALL vec2d::yy() const {
 	return vec2d(_mm_unpackhi_pd(m, m));
 }
-FM_INLINE void FM_CALL vec2d::storeTo(double* mem) { 
-	_mm_storeu_pd(mem, m); 
+FM_INLINE void FM_CALL store(double* mem, vec2d v) { 
+	_mm_storeu_pd(mem, v.m); 
 } 
-FM_INLINE void FM_CALL vec2d::storeTo16ByteAligned(double* mem) {
-	_mm_store_pd(mem, m); 
+FM_INLINE void FM_CALL store16ByteAligned(double* mem, vec2d v) {
+	_mm_store_pd(mem, v.m); 
 }
 FM_INLINE void FM_CALL vec2d::setX(double x) {
 	m = _mm_move_sd(m, _mm_set_sd(x)); 
@@ -925,9 +919,9 @@ FM_INLINE vec2i FM_CALL vec2i::xx() const {
 FM_INLINE vec2i FM_CALL vec2i::yy() const {
 	return vec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
 }
-FM_INLINE void FM_CALL vec2i::storeTo(int* mem) {
-	mem[0] = x();
-	mem[1] = y();
+FM_INLINE void FM_CALL store(int* mem, vec2i v) {
+	mem[0] = v.x();
+	mem[1] = v.y();
 } 
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b) {
 	a.m = _mm_add_epi32(a.m, b.m);
@@ -1119,9 +1113,9 @@ FM_INLINE vec2u FM_CALL vec2u::xx() const {
 FM_INLINE vec2u FM_CALL vec2u::yy() const { 
 	return vec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
 }
-FM_INLINE void FM_CALL vec2u::storeTo(unsigned* mem) {
-	mem[0] = x();
-	mem[1] = y();
+FM_INLINE void FM_CALL store(unsigned* mem, vec2u v) {
+	mem[0] = v.x();
+	mem[1] = v.y();
 } 
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b) {
 	a.m = _mm_add_epi32(a.m, b.m);
@@ -1291,10 +1285,10 @@ FM_INLINE void FM_CALL vec3::setY(float y) {
 FM_INLINE void FM_CALL vec3::setZ(float z) {
 	m = internal::insertFloatZ(m, z);
 }
-FM_INLINE void FM_CALL vec3::storeTo(float* mem) {
-	mem[0] = x();		
-	mem[1] = y();		
-	mem[2] = z();		
+FM_INLINE void FM_CALL store(float* mem, vec3 v) {
+	mem[0] = v.x();
+	mem[1] = v.y();
+	mem[2] = v.z();
 }
 FM_INLINE float FM_CALL vec3::x() const {
 	return _mm_cvtss_f32(m);
@@ -1540,12 +1534,6 @@ FM_INLINE vec4::vec4(__m128 m)
 FM_INLINE vec4::vec4() {
 	m = _mm_setzero_ps();
 }
-FM_INLINE void FM_CALL vec4::storeTo(float* mem) {
-	_mm_storeu_ps(mem, m);
-}
-FM_INLINE void FM_CALL vec4::storeTo16ByteAligned(float* mem) {
-	_mm_store_ps(mem, m);
-}
 FM_INLINE void FM_CALL vec4::setX(float x) {
 	m = _mm_move_ss(m, _mm_set_ss(x));
 }
@@ -1569,6 +1557,12 @@ FM_INLINE float FM_CALL vec4::z() const {
 }
 FM_INLINE float FM_CALL vec4::w() const {
 	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
+}
+FM_INLINE void FM_CALL store(float* mem, vec4 v) {
+	_mm_storeu_ps(mem, v.m);
+}
+FM_INLINE void FM_CALL store16ByteAligned(float* mem, vec4 v) {
+	_mm_store_ps(mem, v.m);
 }
 FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b) {
 	a.m = _mm_add_ps(a.m, b.m);

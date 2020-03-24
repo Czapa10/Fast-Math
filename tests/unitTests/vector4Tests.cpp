@@ -22,12 +22,12 @@ TEST_CASE("vec4 constructors and getters")
 	CHECK(a.a() == 4.f);
 
 	float storage[4];
-	a.storeTo(storage);
+	store(storage, a);
 	CHECK(storage[0] == 1.f);
 	CHECK(storage[1] == 2.f);
 	CHECK(storage[2] == 3.f);
 	CHECK(storage[3] == 4.f);
-	a.storeTo(storage);
+	store(storage, a);
 	CHECK(storage[0] == 1.f);
 	CHECK(storage[1] == 2.f);
 	CHECK(storage[2] == 3.f);

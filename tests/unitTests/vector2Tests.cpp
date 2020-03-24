@@ -26,7 +26,7 @@ TEST_CASE("vec2 constructors and getters")
 	CHECK(a.height() == 4.5f);
 
 	float arr[2];
-	a.storeTo(arr);
+	store(arr, a);
 	CHECK(arr[0] == -3.f);
 	CHECK(arr[1] == 4.5f);
 
@@ -223,10 +223,10 @@ TEST_CASE("vec2d constructors and getters")
 	CHECK(a.vv().v() == 4.0);
 
 	double arr[2];
-	a.storeTo16ByteAligned(arr);
+	store16ByteAligned(arr, a);
 	CHECK(arr[0] == -3.0);
 	CHECK(arr[1] == 4.0);
-	a.storeTo(arr);
+	store(arr, a);
 	CHECK(arr[0] == -3.0);
 	CHECK(arr[1] == 4.0);
 
@@ -409,7 +409,7 @@ TEST_CASE("vec2i constructors and getters")
 	CHECK(a.vv().v() == 4);
 
 	int arr[2];
-	a.storeTo(arr);
+	store(arr, a);
 	CHECK(arr[0] == -3);
 	CHECK(arr[1] == 4);
 
@@ -572,7 +572,7 @@ TEST_CASE("vec2u constructors and getters")
 	CHECK(b.y() == 1);
 
 	unsigned arr[2];
-	a.storeTo(arr);
+	store(arr, a);
 	CHECK(arr[0] == 3);
 	CHECK(arr[1] == 4);
 
