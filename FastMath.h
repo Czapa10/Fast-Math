@@ -519,6 +519,24 @@ FM_INLINE vec4 FM_CALL greaterOrEqualMask(vec4 a, vec4 b);
 FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b);
 FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b);
 
+struct mat4
+{
+	__m128 columns[4];
+
+	FM_INLINE mat4() : mat4(1.f) {}
+	FM_INLINE explicit mat4(float* mem);
+	FM_INLINE explicit mat4(float diagonal);
+	FM_INLINE mat4(float diagonalX, float diagonalY, float diagonalZ, float diagonalW); 
+	FM_INLINE explicit mat4(vec4 diagonal);
+	FM_INLINE mat4(vec4 col1, vec4 col2, vec4 col3, vec4 col4);
+	FM_INLINE mat4(float e11, float e21, float e31, float e41,
+	               float e12, float e22, float e32, float e42,
+	               float e13, float e23, float e33, float e43,
+	               float e14, float e24, float e34, float e44);
+};
+FM_INLINE void FM_CALL store(float* mem, mat4 mat);
+FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
+
 }
 
 #endif // FAST_MATH_H
@@ -1664,6 +1682,58 @@ FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b) {
 FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b) {
 	a.m = _mm_cmple_ps(a.m, b.m);
 	return a;
+}
+
+///////////////
+// mat4 impl //
+///////////////
+FM_INLINE mat4::mat4(float* mem) {
+	for(int i = 0; i < 4; ++i)
+		columns[i] = _mm_load_ps(mem + i*4);
+}
+FM_INLINE mat4::mat4(float diag) {
+	columns[0] = _mm_setr_ps(diag, 0.f, 0.f, 0.f);
+	columns[1] = _mm_setr_ps(0.f, diag, 0.f, 0.f);
+	columns[2] = _mm_setr_ps(0.f, 0.f, diag, 0.f);
+	columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, diag);
+}
+FM_INLINE mat4::mat4(float diagX, float diagY, float diagZ, float diagW) {
+	columns[0] = _mm_setr_ps(diagX, 0.f, 0.f, 0.f);
+	columns[1] = _mm_setr_ps(0.f, diagY, 0.f, 0.f);
+	columns[2] = _mm_setr_ps(0.f, 0.f, diagZ, 0.f);
+	columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, diagW);
+}
+FM_INLINE mat4::mat4(vec4 diag) {
+	// TODO: What is going on with diag.x() diag.y()... 
+	float* v = (float*)(&diag);
+	columns[0] = _mm_set_ps(0.f, 0.f, 0.f, v[0]);
+	columns[1] = _mm_set_ps(0.f, 0.f, v[1], 0.f);
+	columns[2] = _mm_set_ps(0.f, v[2], 0.f, 0.f);
+	columns[3] = _mm_set_ps(v[3], 0.f, 0.f, 0.f);
+}
+FM_INLINE mat4::mat4(vec4 col1, vec4 col2, vec4 col3, vec4 col4) {
+	columns[0] = col1.m;
+	columns[1] = col2.m;
+	columns[2] = col3.m;
+	columns[3] = col4.m;
+}
+FM_INLINE mat4::mat4(float e11, float e21, float e31, float e41,
+                     float e12, float e22, float e32, float e42,
+                     float e13, float e23, float e33, float e43,
+                     float e14, float e24, float e34, float e44) 
+{
+	columns[0] = _mm_setr_ps(e11, e21, e31, e41);
+	columns[1] = _mm_setr_ps(e12, e22, e32, e42);
+	columns[2] = _mm_setr_ps(e13, e23, e33, e43);
+	columns[3] = _mm_setr_ps(e14, e24, e34, e44);
+}
+FM_INLINE void FM_CALL store(float* mem, mat4 mat) {
+	for(int i = 0; i < 4; ++i)
+		_mm_storeu_ps(mem + i*4, mat.columns[i]);
+}
+FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat) {
+	for(int i = 0; i < 4; ++i)
+		_mm_store_ps(mem + i*4, mat.columns[i]);
 }
 
 } // !namespace fm
