@@ -11,6 +11,9 @@ using namespace fm;
 
 #define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
 
+#define CHECK_VECTOR4(v, x, y, z, w) \
+	CHECK4(v.x() == x, v.y() == y, v.z() == z, v.w() == w)
+
 #define CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX_ARRAY(arr, a, b, c, d, \
                                                         e, f, g, h, \
 													    i, j, k, l,\
@@ -21,9 +24,9 @@ using namespace fm;
 	CHECK4(arr[12] == m, arr[13] == n, arr[14] == o, arr[15] == p); }\
 
 #define CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(mat, a, b, c, d, \
-                                                    e, f, g, h, \
-													i, j, k, l,\
-													m, n, o, p) { \
+                                                  e, f, g, h, \
+                                                  i, j, k, l,\
+                                                  m, n, o, p) { \
 	float* arr = (float*)(&mat); \
 	CHECK4(arr[0] == a, arr[1] == b, arr[2] == c, arr[3] == d); \
 	CHECK4(arr[4] == e, arr[5] == f, arr[6] == g, arr[7] == h); \
@@ -98,4 +101,77 @@ TEST_CASE("mat4 constructors and accessors")
 		9.f, 10.f, 11.f, 12.f,
 		13.f, 14.f, 15.f, 16.f
 	);
+}
+
+TEST_CASE("mat4 operations")
+{
+	mat4 a(1.f, 2.f, 3.f, 4.f,
+           5.f, 6.f, 7.f, 8.f,
+           9.f, 10.f, 11.f, 12.f,
+           13.f, 14.f, 15.f, 16.f);
+
+	mat4 b(-1.f, -2.f, -3.f, -4.f,
+           5.f, 6.f, 7.f, 8.f,
+           2.f, 2.f, 2.f, 2.f,
+           0.f, 0.f, 0.f, 0.f);
+
+	auto addRes = a + b;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(addRes,
+		0.f, 0.f, 0.f, 0.f,
+		10.f, 12.f, 14.f, 16.f,
+		11.f, 12.f, 13.f, 14.f,
+		13.f, 14.f, 15.f, 16.f
+	);
+
+	auto subRes = a - b;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(subRes,
+		2.f, 4.f, 6.f, 8.f,
+		0.f, 0.f, 0.f, 0.f, 
+		7.f, 8.f, 9.f, 10.f,
+		13.f, 14.f, 15.f, 16.f
+	);
+
+	auto scalarMulRes = a * 2.f;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(scalarMulRes,
+		2.f, 4.f, 6.f, 8.f,
+		10.f, 12.f, 14.f, 16.f,
+		18.f, 20.f, 22.f, 24.f,
+		26.f, 28.f, 30.f, 32.f
+	);
+
+	auto scalarDivRes = a / 2.f;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(scalarDivRes,
+		0.5f, 1.f, 1.5f, 2.f,
+		2.5f, 3.f, 3.5f, 4.f,
+		4.5f, 5.f, 5.5f, 6.f,
+		6.5f, 7.f, 7.5f, 8.f
+	);
+
+	mat4 identity;
+	
+	auto mulByIdentityRes = a * identity;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(mulByIdentityRes,
+		1.f, 2.f, 3.f, 4.f,
+		5.f, 6.f, 7.f, 8.f,
+		9.f, 10.f, 11.f, 12.f,
+		13.f, 14.f, 15.f, 16.f
+	);
+	/*
+	auto mulRes = a * b;
+	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(mulRes,
+		15.f, 16.f, 17.f, 18.f,
+		39.f, 40.f, 41.f, 42.f,
+		63.f, 64.f, 65.f, 66.f,
+		87.f, 88.f, 89.f, 90.f
+	);
+	*/
+
+	/*
+	vec4 v(1.f, 2.f, 3.f, 4.f);
+	auto mulByVecRes = a * v;
+	CHECK(mulByVecRes.x() == 30.f);
+	CHECK(mulByVecRes.y() == 70.f);
+	CHECK(mulByVecRes.z() == 110.f);
+	CHECK(mulByVecRes.w() == 150.f);
+	*/
 }

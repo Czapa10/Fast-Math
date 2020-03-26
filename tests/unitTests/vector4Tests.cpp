@@ -27,7 +27,7 @@ TEST_CASE("vec4 constructors and getters")
 	CHECK(storage[1] == 2.f);
 	CHECK(storage[2] == 3.f);
 	CHECK(storage[3] == 4.f);
-	store(storage, a);
+	store16ByteAligned(storage, a);
 	CHECK(storage[0] == 1.f);
 	CHECK(storage[1] == 2.f);
 	CHECK(storage[2] == 3.f);

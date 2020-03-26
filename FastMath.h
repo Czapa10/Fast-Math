@@ -472,9 +472,6 @@ struct vec4
 	FM_INLINE explicit vec4(__m128 m);
 	FM_INLINE vec4();
 
-	FM_INLINE void FM_CALL storeTo(float* mem);
-	FM_INLINE void FM_CALL storeTo16ByteAligned(float* mem);
-
 	FM_INLINE void FM_CALL setX(float x);
 	FM_INLINE void FM_CALL setY(float y); 
 	FM_INLINE void FM_CALL setZ(float z); 
@@ -490,6 +487,8 @@ struct vec4
 	FM_INLINE float FM_CALL b() const { return z(); }
 	FM_INLINE float FM_CALL a() const { return w(); }
 };
+FM_INLINE void FM_CALL store(float* mem, vec4 v);
+FM_INLINE void FM_CALL store16ByteAligned(float* mem, vec4 v);
 FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b); 
 FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b);
 FM_INLINE vec4& FM_CALL operator+=(vec4& a, vec4 b);
@@ -536,6 +535,12 @@ struct mat4
 };
 FM_INLINE void FM_CALL store(float* mem, mat4 mat);
 FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
+FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b);
+FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b);
+FM_INLINE mat4 FM_CALL operator*(mat4 a, mat4 b);
+FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar);
+FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m);
+FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar);
 
 }
 
@@ -554,24 +559,43 @@ FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
 namespace fm {
 
 /////////////////////////////////////////
-// fast math internal helper functions //
+// fast math priv helper functions //
 /////////////////////////////////////////
-namespace internal {
-	FM_INLINE __m128 insertFloatY(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+namespace priv {
+	FM_INLINE __m128 FM_CALL setX(__m128 m, float x) {
+		return _mm_move_ss(m, _mm_set_ss(x));
+	}
+	FM_INLINE __m128 FM_CALL setY(__m128 m, float y) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(y));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
 		return _mm_move_ss(temp, m);
 	}
-	FM_INLINE __m128 insertFloatZ(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+	FM_INLINE __m128 FM_CALL setZ(__m128 m, float z) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(z));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
 		return _mm_move_ss(temp, m);
 	}
-	FM_INLINE __m128 insertFloatW(__m128 m, float a) {
-		__m128 temp = _mm_move_ss(m, _mm_set_ss(a));
+	FM_INLINE __m128 FM_CALL setW(__m128 m, float w) {
+		__m128 temp = _mm_move_ss(m, _mm_set_ss(w));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
 		return _mm_move_ss(temp, m);
 	}
+	FM_INLINE float FM_CALL getX(__m128 m) {
+		return _mm_cvtss_f32(m);
+	}
+	FM_INLINE float FM_CALL getY(__m128 m) {
+		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 1)));
+	}
+	FM_INLINE float FM_CALL getZ(__m128 m) {
+		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 2)));
+	}
+	FM_INLINE float FM_CALL getW(__m128 m) {
+		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
+	}
+	FM_INLINE float FM_CALL sumOfElements(__m128 m) {
+		return getX(m) + getY(m) + getZ(m) + getW(m);
+	}
+	// TODO: Add FM_CALL here
 }
 
 ////////////////////////////
@@ -630,10 +654,10 @@ FM_INLINE vec2::vec2() {
 	m = _mm_setzero_ps(); 
 } 
 FM_INLINE float FM_CALL vec2::x() const { 
-	return _mm_cvtss_f32(m); 
+	return priv::getX(m); 
 }
 FM_INLINE float FM_CALL vec2::y() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
+	return priv::getY(m); 
 }
 FM_INLINE vec2 FM_CALL vec2::yx() const {
 	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
@@ -645,10 +669,10 @@ FM_INLINE vec2 FM_CALL vec2::yy() const {
 	return vec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
 FM_INLINE void FM_CALL vec2::setX(float x) {
-	m = _mm_move_ss(m, _mm_set_ss(x)); 
+	m = priv::setX(m, x); 
 }
 FM_INLINE void FM_CALL vec2::setY(float y) { 
-	m = internal::insertFloatY(m, y);
+	m = priv::setY(m, y);
 }  
 FM_INLINE void FM_CALL store(float* mem, vec2 v) {
 	mem[0] = v.x();
@@ -1199,7 +1223,6 @@ FM_INLINE vec2u FM_CALL lesserOrEqualMask(vec2u a, vec2u b) {
 	a.m = _mm_or_si128(lt, eq);
 	return a;
 }
-
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2u::setX(unsigned x) {
 	m = _mm_insert_epi32(m, (int)x, 0);
@@ -1295,13 +1318,13 @@ FM_INLINE vec3::vec3() {
 	m = _mm_setzero_ps();
 }
 FM_INLINE void FM_CALL vec3::setX(float x) {
-	m = _mm_move_ss(m, _mm_set_ss(x));
+	m = priv::setX(m, x); 
 }
 FM_INLINE void FM_CALL vec3::setY(float y) {
-	m = internal::insertFloatY(m, y);
+	m = priv::setY(m, y);
 }
 FM_INLINE void FM_CALL vec3::setZ(float z) {
-	m = internal::insertFloatZ(m, z);
+	m = priv::setZ(m, z);
 }
 FM_INLINE void FM_CALL store(float* mem, vec3 v) {
 	mem[0] = v.x();
@@ -1309,13 +1332,13 @@ FM_INLINE void FM_CALL store(float* mem, vec3 v) {
 	mem[2] = v.z();
 }
 FM_INLINE float FM_CALL vec3::x() const {
-	return _mm_cvtss_f32(m);
+	return priv::getX(m); 
 }
 FM_INLINE float FM_CALL vec3::y() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1)));
+	return priv::getY(m); 
 }
 FM_INLINE float FM_CALL vec3::z() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(2, 2, 2, 2)));
+	return priv::getZ(m); 
 }
 #ifndef FM_EXCLUDE_SWIZZLES
 FM_INLINE vec2 FM_CALL vec3::xy() const {
@@ -1553,28 +1576,28 @@ FM_INLINE vec4::vec4() {
 	m = _mm_setzero_ps();
 }
 FM_INLINE void FM_CALL vec4::setX(float x) {
-	m = _mm_move_ss(m, _mm_set_ss(x));
+	m = priv::setX(m, x); 
 }
 FM_INLINE void FM_CALL vec4::setY(float y) {
-	m = internal::insertFloatY(m, y);
+	m = priv::setY(m, y);
 } 
 FM_INLINE void FM_CALL vec4::setZ(float z) {
-	m = internal::insertFloatZ(m, z);
+	m = priv::setZ(m, z);
 } 
 FM_INLINE void FM_CALL vec4::setW(float w) {
-	m = internal::insertFloatW(m, w);
+	m = priv::setW(m, w);
 } 
 FM_INLINE float FM_CALL vec4::x() const {
 	return _mm_cvtss_f32(m);
 }
 FM_INLINE float FM_CALL vec4::y() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 1)));
+	return priv::getY(m); 
 }
 FM_INLINE float FM_CALL vec4::z() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 2)));
+	return priv::getZ(m); 
 }
 FM_INLINE float FM_CALL vec4::w() const {
-	return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
+	return priv::getW(m); 
 }
 FM_INLINE void FM_CALL store(float* mem, vec4 v) {
 	_mm_storeu_ps(mem, v.m);
@@ -1728,12 +1751,88 @@ FM_INLINE mat4::mat4(float e11, float e21, float e31, float e41,
 	columns[3] = _mm_setr_ps(e14, e24, e34, e44);
 }
 FM_INLINE void FM_CALL store(float* mem, mat4 mat) {
-	for(int i = 0; i < 4; ++i)
-		_mm_storeu_ps(mem + i*4, mat.columns[i]);
+	for(int col = 0; col < 4; ++col)
+		_mm_storeu_ps(mem + col*4, mat.columns[col]);
 }
 FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat) {
-	for(int i = 0; i < 4; ++i)
-		_mm_store_ps(mem + i*4, mat.columns[i]);
+	for(int col = 0; col < 4; ++col)
+		_mm_store_ps(mem + col*4, mat.columns[col]);
+}
+FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b) {
+	for(int col = 0; col < 4; ++col)
+		a.columns[col] = _mm_add_ps(a.columns[col], b.columns[col]);
+	return a;
+}
+FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b) {
+	for(int col = 0; col < 4; ++col)
+		a.columns[col] = _mm_sub_ps(a.columns[col], b.columns[col]);
+	return a;
+}
+FM_INLINE mat4 FM_CALL operator*(mat4 a, mat4 b) {
+	__m128 row;
+		
+	row = _mm_setr_ps(priv::getX(a.columns[0]), priv::getX(a.columns[1]),
+	                  priv::getX(a.columns[2]), priv::getX(a.columns[3]));
+	float res11 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
+	float res12 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
+	float res13 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
+	float res14 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+		
+	row = _mm_setr_ps(priv::getY(a.columns[0]), priv::getY(a.columns[1]),
+	                  priv::getY(a.columns[2]), priv::getY(a.columns[3]));
+	float res21 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
+	float res22 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
+	float res23 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
+	float res24 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+		
+	row = _mm_setr_ps(priv::getZ(a.columns[0]), priv::getZ(a.columns[1]),
+	                  priv::getZ(a.columns[2]), priv::getZ(a.columns[3]));
+	float res31 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
+	float res32 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
+	float res33 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
+	float res34 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+		
+	row = _mm_setr_ps(priv::getW(a.columns[0]), priv::getW(a.columns[1]),
+	                  priv::getW(a.columns[2]), priv::getW(a.columns[3]));
+	float res41 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
+	float res42 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
+	float res43 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
+	float res44 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+		
+	return mat4(res11, res21, res31, res41,
+	            res12, res22, res32, res42,
+				res13, res23, res33, res43,
+				res14, res24, res34, res44);
+}
+FM_INLINE vec4 FM_CALL operator*(mat4 m, vec4 v) {
+	__m128 row1 = _mm_setr_ps(priv::getX(m.columns[0]), priv::getX(m.columns[1]),
+	                          priv::getX(m.columns[2]), priv::getX(m.columns[3]));
+	__m128 row2 = _mm_setr_ps(priv::getY(m.columns[0]), priv::getY(m.columns[1]),
+	                          priv::getY(m.columns[2]), priv::getY(m.columns[3]));
+	__m128 row3 = _mm_setr_ps(priv::getZ(m.columns[0]), priv::getZ(m.columns[1]),
+	                          priv::getZ(m.columns[2]), priv::getZ(m.columns[3]));
+	__m128 row4 = _mm_setr_ps(priv::getW(m.columns[0]), priv::getW(m.columns[1]),
+	                          priv::getW(m.columns[2]), priv::getW(m.columns[3]));
+	float resX = priv::sumOfElements(_mm_mul_ps(row1, v.m)); 
+	float resY = priv::sumOfElements(_mm_mul_ps(row2, v.m)); 
+	float resZ = priv::sumOfElements(_mm_mul_ps(row3, v.m)); 
+	float resW = priv::sumOfElements(_mm_mul_ps(row4, v.m));
+	return vec4(resX, resY, resZ, resW);
+}
+FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar) {
+	__m128 scalarM = _mm_set1_ps(scalar);
+	for(int col = 0; col < 4; ++col)
+		m.columns[col] = _mm_mul_ps(m.columns[col], scalarM);
+	return m;
+}
+FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m) {
+	return m * scalar;
+}
+FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar) {
+	__m128 scalarM = _mm_set1_ps(scalar);
+	for(int col = 0; col < 4; ++col)
+		m.columns[col] = _mm_div_ps(m.columns[col], scalarM);
+	return m;
 }
 
 } // !namespace fm
