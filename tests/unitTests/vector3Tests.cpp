@@ -11,7 +11,7 @@ using namespace fm;
 
 TEST_CASE("vec3 constructors and getters")
 {
-	vec3 a(1.f, 5.f, -3.f);
+	vec3 a = makeVec3(1.f, 5.f, -3.f);
 	CHECK(a.x() == 1.f);
 	CHECK(a.u() == 1.f);
 	CHECK(a.r() == 1.f);
@@ -28,18 +28,18 @@ TEST_CASE("vec3 constructors and getters")
 	CHECK(storage[1] == 5.f);
 	CHECK(storage[2] == -3.f);
 
-	vec3 b(2.f);
+	vec3 b = makeVec3(2.f);
 	CHECK(b.x() == 2.f);
 	CHECK(b.y() == 2.f);
 	CHECK(b.z() == 2.f);
 
-	vec3 c;
+	vec3 c = makeZeroVec3();
 	CHECK(c.x() == 0.f);
 	CHECK(c.y() == 0.f);
 	CHECK(c.z() == 0.f);
 
 	float arr[3] = {1.f, 2.f, 3.f};
-	vec3 d(arr);
+	vec3 d = makeVec3FromMemory(arr);
 	REQUIRE(d.x() == 1.f);
 	REQUIRE(d.y() == 2.f);
 	REQUIRE(d.z() == 3.f);
@@ -511,8 +511,8 @@ TEST_CASE("vec3 setters")
 
 TEST_CASE("vec3 operations")
 {
-	vec3 a(2.f, 3.f, 4.f); 	
-	vec3 b(-2.f, 5.f, 1.f); 	
+	vec3 a = makeVec3(2.f, 3.f, 4.f); 	
+	vec3 b = makeVec3(-2.f, 5.f, 1.f); 	
 
 	INFO("a == (" << a.x() << ", " << a.y() << ", " << a.z() << ")");
 	INFO("b == (" << b.x() << ", " << b.y() << ", " << b.z() << ")");
@@ -589,15 +589,15 @@ TEST_CASE("vec3 operations")
 	CHECK(normalizedB.y() == floatCmp(b.y() / sqrt(30)));
 	CHECK(normalizedB.z() == floatCmp(b.z() / sqrt(30)));
 	
-	vec3 c(1.f, 0.f, 0.f);
-	vec3 d(0.f, 1.f, 0.f);
+	vec3 c = makeVec3(1.f, 0.f, 0.f);
+	vec3 d = makeVec3(0.f, 1.f, 0.f);
 	auto crossRes = cross(c, d);
 	CHECK(crossRes.x() == 0.f);
 	CHECK(crossRes.y() == 0.f);
 	CHECK(crossRes.z() == 1.f);
 
-	vec3 e(2,3,4);
-	vec3 f(5,6,7);
+	vec3 e = makeVec3(2,3,4);
+	vec3 f = makeVec3(5,6,7);
 	auto crossRes2 = cross(e, f);
 	CHECK(crossRes2.x() == -3.f);
 	CHECK(crossRes2.y() == 6.f);
@@ -608,15 +608,15 @@ TEST_CASE("vec3 operations")
 	CHECK(length(b) == floatCmp(sqrt(30.f)));
 	CHECK(lengthSquared(b) == 30.f);
 
-	vec3 min(-1.f, 7.f, -5.f);
-	vec3 max(4.f, 8.f, -1.f);
+	vec3 min = makeVec3(-1.f, 7.f, -5.f);
+	vec3 max = makeVec3(4.f, 8.f, -1.f);
 	vec3 clampRes = clamp(b, min, max);
 	CHECK(clampRes.x() == -1.f);
 	CHECK(clampRes.y() == 7.f);
 	CHECK(clampRes.z() == -1.f);
 
-	vec3 g(0.f, 2.f, 3.f);
-	vec3 h(4.f, 5.f, 6.f);
+	vec3 g = makeVec3(0.f, 2.f, 3.f);
+	vec3 h = makeVec3(4.f, 5.f, 6.f);
 	auto lerpRes = lerp(g, h, 0.5f);
 	CHECK(lerpRes.x() == 2.f);
 	CHECK(lerpRes.y() == 3.5f);
@@ -629,8 +629,8 @@ TEST_CASE("vec3 operations")
 
 TEST_CASE("vec3 comparisons")
 {
-	vec3 a(1.f, 2.f, 4.f);
-	vec3 b(1.f, 3.f, -5.f);
+	vec3 a = makeVec3(1.f, 2.f, 4.f);
+	vec3 b = makeVec3(1.f, 3.f, -5.f);
 
 	CHECK(a == a);
 	CHECK(a != b);

@@ -50,23 +50,23 @@ using namespace fm;
 	INFO(arr[8] << ", " << arr[9] << ", " << arr[10] << ", " << arr[11]); \
     INFO(arr[12] << ", " << arr[13] << ", " << arr[14] << ", " << arr[15]); \
 
-TEST_CASE("mat4 constructors and accessors")
+TEST_CASE("mat4 construction and store")
 {
-	mat4 a(3.f);
+	mat4 a = makeDiagonalMat4(3.f);
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(a, 3.f);
 
-	a = mat4(1.f, 2.f, 3.f, 4.f);
+	a = makeDiagonalMat4(1.f, 2.f, 3.f, 4.f); 
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(a, 1.f, 2.f, 3.f, 4.f);
 
-	vec4 diagonal(1.f, 2.f, 3.f, 4.f);
-	a = mat4(diagonal);
+	vec4 diagonal = makeVec4(1.f, 2.f, 3.f, 4.f);
+	a = makeDiagonalMat4(diagonal);
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(a, 1.f, 2.f, 3.f, 4.f);
 
-	vec4 col1(1.f, 2.f, 3.f, 4.f);
-	vec4 col2(5.f, 6.f, 7.f, 8.f);
-	vec4 col3(9.f, 10.f, 11.f, 12.f);
-	vec4 col4(13.f, 14.f, 15.f, 16.f);
-	a = mat4(col1, col2, col3, col4);
+	vec4 col1 = makeVec4(1.f, 2.f, 3.f, 4.f);
+	vec4 col2 = makeVec4(5.f, 6.f, 7.f, 8.f);
+	vec4 col3 = makeVec4(9.f, 10.f, 11.f, 12.f);
+	vec4 col4 = makeVec4(13.f, 14.f, 15.f, 16.f);
+	a = makeMat4FromColumns(col1, col2, col3, col4);
 	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(a,
 		1.f, 2.f, 3.f, 4.f,
 		5.f, 6.f, 7.f, 8.f,
@@ -74,10 +74,11 @@ TEST_CASE("mat4 constructors and accessors")
 		13.f, 14.f, 15.f, 16.f
 	);
 
-	a = mat4(1.f, 2.f, 3.f, 4.f,
-             5.f, 6.f, 7.f, 8.f,
-             9.f, 10.f, 11.f, 12.f,
-             13.f, 14.f, 15.f, 16.f);
+	a = makeMat4FromColumns(
+		1.f, 2.f, 3.f, 4.f,
+        5.f, 6.f, 7.f, 8.f,
+        9.f, 10.f, 11.f, 12.f,
+        13.f, 14.f, 15.f, 16.f);
 	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(a,
 		1.f, 2.f, 3.f, 4.f,
 		5.f, 6.f, 7.f, 8.f,
@@ -105,15 +106,17 @@ TEST_CASE("mat4 constructors and accessors")
 
 TEST_CASE("mat4 operations")
 {
-	mat4 a(1.f, 2.f, 3.f, 4.f,
-           5.f, 6.f, 7.f, 8.f,
-           9.f, 10.f, 11.f, 12.f,
-           13.f, 14.f, 15.f, 16.f);
+	mat4 a = makeMat4FromColumns(
+		1.f, 2.f, 3.f, 4.f,
+        5.f, 6.f, 7.f, 8.f,
+        9.f, 10.f, 11.f, 12.f,
+        13.f, 14.f, 15.f, 16.f);
 
-	mat4 b(-1.f, -2.f, -3.f, -4.f,
-           5.f, 6.f, 7.f, 8.f,
-           2.f, 2.f, 2.f, 2.f,
-           0.f, 0.f, 0.f, 0.f);
+	mat4 b = makeMat4FromColumns(
+		-1.f, -2.f, -3.f, -4.f,
+         5.f, 6.f, 7.f, 8.f,
+         2.f, 2.f, 2.f, 2.f,
+         0.f, 0.f, 0.f, 0.f);
 
 	auto addRes = a + b;
 	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(addRes,
@@ -147,9 +150,7 @@ TEST_CASE("mat4 operations")
 		6.5f, 7.f, 7.5f, 8.f
 	);
 
-	mat4 identity;
-	
-	auto mulByIdentityRes = a * identity;
+	auto mulByIdentityRes = a * makeIdentityMat4();
 	CHECK_ALL_ENTRIES_OF_DIAGONAL_MATRIX(mulByIdentityRes,
 		1.f, 2.f, 3.f, 4.f,
 		5.f, 6.f, 7.f, 8.f,

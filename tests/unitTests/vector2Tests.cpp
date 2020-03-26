@@ -13,7 +13,7 @@ using b32 = int;
 
 TEST_CASE("vec2 constructors and getters") 
 {
-	vec2 a(-3.f, 4.5f);
+	vec2 a = makeVec2(-3.f, 4.5f);
 
 	CHECK(a.x() == -3.f);
  	CHECK(a.u() == -3.f);
@@ -30,16 +30,16 @@ TEST_CASE("vec2 constructors and getters")
 	CHECK(arr[0] == -3.f);
 	CHECK(arr[1] == 4.5f);
 
-	vec2 b(1.f);
+	vec2 b = makeVec2(1.f);
 	CHECK(b.x() == 1.f);
 	CHECK(b.y() == 1.f);
 
-	vec2 c;
+	vec2 c = makeZeroVec2();
 	CHECK(c.x() == 0.f);
 	CHECK(c.y() == 0.f);
 
 	float initArr[] = {-1.f, 2.f};	
-	vec2 d(initArr);
+	vec2 d = makeVec2FromMemory(initArr);
 	CHECK(d.x() == -1.f);
 	CHECK(d.y() == 2.f);
 
@@ -76,8 +76,8 @@ TEST_CASE("vec2 setters")
 
 TEST_CASE("vec2 operations")
 {
-	vec2 a(2.f, 4.f);	
-	vec2 b(-5.f, 3.f);	
+	vec2 a = makeVec2(2.f, 4.f);	
+	vec2 b = makeVec2(-5.f, 3.f);	
 
 	INFO("a == (" << a.x() << ", " << a.y() << ")");
 	INFO("b == (" << b.x() << ", " << b.y() << ")");
@@ -145,14 +145,14 @@ TEST_CASE("vec2 operations")
 	CHECK(length(b) == floatCmp(sqrt(34.f)));
 	CHECK(lengthSquared(b) == 34.f);
 
-	vec2 min(0.f, 0.f);
-	vec2 max(5.f, 2.f);
+	vec2 min = makeVec2(0.f, 0.f);
+	vec2 max = makeVec2(5.f, 2.f);
 	vec2 clampBRes = clamp(b, min, max);
 	CHECK(clampBRes.x() == 0.f);
 	CHECK(clampBRes.y() == 2.f);
 
-	vec2 c(0.f, 0.f);
-	vec2 d(2.f, 4.f);
+	vec2 c = makeVec2(0.f, 0.f);
+	vec2 d = makeVec2(2.f, 4.f);
 	vec2 lerpRes = lerp(c, d, 0.5f);
 	CHECK(lerpRes.x() == 1.f);
 	CHECK(lerpRes.y() == 2.f);
@@ -164,9 +164,9 @@ TEST_CASE("vec2 operations")
 
 TEST_CASE("vec2 comparisons")
 {
-	vec2 a(5.f, 5.f);
-	vec2 b(3.f, 5.f);
-	vec2 c(-2.f, 6.f);
+	vec2 a = makeVec2(5.f, 5.f);
+	vec2 b = makeVec2(3.f, 5.f);
+	vec2 c = makeVec2(-2.f, 6.f);
 
 	CHECK(a == a);
 	CHECK(a != b);
@@ -195,7 +195,7 @@ TEST_CASE("vec2 comparisons")
 
 TEST_CASE("vec2d constructors and getters") 
 {
-	vec2d a(-3.0, 4.0);
+	vec2d a = makeVec2d(-3.0, 4.0);
 
 	CHECK(a.x() == -3.0);
 	CHECK(a.u() == -3.0);
@@ -230,16 +230,16 @@ TEST_CASE("vec2d constructors and getters")
 	CHECK(arr[0] == -3.0);
 	CHECK(arr[1] == 4.0);
 
-	vec2d b(1.0);
+	vec2d b = makeVec2d(1.0);
 	CHECK(b.x() == 1.0); 
 	CHECK(b.y() == 1.0); 
 
-	vec2d c;
+	vec2d c = makeZeroVec2d();
 	CHECK(c.x() == 0.0);
 	CHECK(c.y() == 0.0);
 
 	double initArr[] = {-1.0, 2.0};	
-	vec2d d(initArr);
+	vec2d d = makeVec2dFromMemory(initArr);
 	CHECK(d.x() == -1.0);
 	CHECK(d.y() == 2.0);
 }
@@ -262,8 +262,8 @@ TEST_CASE("vec2d setters")
 
 TEST_CASE("vec2d operations")
 {
-	vec2d a(2.0, 4.0);	
-	vec2d b(-5.0, 3.0);	
+	vec2d a = makeVec2d(2.0, 4.0);	
+	vec2d b = makeVec2d(-5.0, 3.0);	
 
 	INFO("a == (" << a.x() << ", " << a.y() << ")");
 	INFO("b == (" << b.x() << ", " << b.y() << ")");
@@ -331,14 +331,14 @@ TEST_CASE("vec2d operations")
 	CHECK(length(b) == floatCmp(sqrt(34.0)));
 	CHECK(lengthSquared(b) == 34.0);
 
-	vec2d min(0.0, 0.0);
-	vec2d max(5.0, 7.0);
-	vec2d clampRes = clamp(vec2d(-1.0, 8.0), min, max);
+	vec2d min = makeVec2d(0.0, 0.0);
+	vec2d max = makeVec2d(5.0, 7.0);
+	vec2d clampRes = clamp(makeVec2d(-1.0, 8.0), min, max);
 	CHECK(clampRes.x() == 0.0);
 	CHECK(clampRes.y() == 7.0);
 
-	vec2d c(0.0, 0.0);
-	vec2d d(2.0, 4.0);
+	vec2d c = makeVec2d(0.0, 0.0);
+	vec2d d = makeVec2d(2.0, 4.0);
 	vec2d lerpRes = lerp(c, d, 0.5f);
 	CHECK(lerpRes.x() == 1.0);
 	CHECK(lerpRes.y() == 2.0);
@@ -350,9 +350,9 @@ TEST_CASE("vec2d operations")
 
 TEST_CASE("vec2d comparisons")
 {
-	vec2d a(5.0, 5.0);
-	vec2d b(3.0, 5.0);
-	vec2d c(-2.0, 6.0);
+	vec2d a = makeVec2d(5.0, 5.0);
+	vec2d b = makeVec2d(3.0, 5.0);
+	vec2d c = makeVec2d(-2.0, 6.0);
 
 	CHECK(a == a);
 	CHECK(a != b);
@@ -381,7 +381,7 @@ TEST_CASE("vec2d comparisons")
 
 TEST_CASE("vec2i constructors and getters") 
 {
-	vec2i a(-3, 4);
+	vec2i a = makeVec2i(-3, 4);
 
 	CHECK(a.x() == -3);
  	CHECK(a.u() == -3);
@@ -413,16 +413,16 @@ TEST_CASE("vec2i constructors and getters")
 	CHECK(arr[0] == -3);
 	CHECK(arr[1] == 4);
 
-	vec2i b(1);
+	vec2i b = makeVec2i(1);
 	CHECK(b.x() == 1);
 	CHECK(b.y() == 1);
 
-	vec2i c;
+	vec2i c = makeZeroVec2i();
 	CHECK(c.x() == 0);
 	CHECK(c.y() == 0);
 
 	int initArr[] = {-1, 2};	
-	vec2i d(initArr);
+	vec2i d = makeVec2iFromMemory(initArr);
 	CHECK(d.x() == -1);
 	CHECK(d.y() == 2);
 }
@@ -444,8 +444,8 @@ TEST_CASE("vec2i setters")
 
 TEST_CASE("vec2i operations")
 {
-	vec2i a(2, 4);
-	vec2i b(-5, 3);
+	vec2i a = makeVec2i(2, 4);
+	vec2i b = makeVec2i(-5, 3);
 
 	INFO("a == (" << a.x() << ", " << a.y() << ")");
 	INFO("b == (" << b.x() << ", " << b.y() << ")");
@@ -500,8 +500,8 @@ TEST_CASE("vec2i operations")
 	CHECK(length(b) == (int)sqrt(34));
 	CHECK(lengthSquared(b) == 34);
 
-	vec2i min(0, 0);
-	vec2i max(5, 2);
+	vec2i min = makeVec2i(0, 0);
+	vec2i max = makeVec2i(5, 2);
 	vec2i clampBRes = clamp(b, min, max);
 	CHECK(clampBRes.x() == 0);
 	CHECK(clampBRes.y() == 2);
@@ -509,9 +509,9 @@ TEST_CASE("vec2i operations")
 
 TEST_CASE("vec2i comparisons")
 {
-	vec2i a(5, 5);
-	vec2i b(3, 5);
-	vec2i c(-2, 6);
+	vec2i a = makeVec2i(5, 5);
+	vec2i b = makeVec2i(3, 5);
+	vec2i c = makeVec2i(-2, 6);
 
 	CHECK(a == a);
 	CHECK(a != b);
@@ -541,7 +541,7 @@ TEST_CASE("vec2i comparisons")
 
 TEST_CASE("vec2u constructors and getters") 
 {
-	vec2u a(3, 4);
+	vec2u a = makeVec2u(3, 4);
 	CHECK(a.x() == 3);
  	CHECK(a.u() == 3);
  	CHECK(a.left() == 3);
@@ -567,7 +567,7 @@ TEST_CASE("vec2u constructors and getters")
 	CHECK(a.vv().u() == 4);
 	CHECK(a.vv().v() == 4);
 
-	vec2u b(1);
+	vec2u b = makeVec2u(1);
 	CHECK(b.x() == 1);
 	CHECK(b.y() == 1);
 
@@ -576,16 +576,16 @@ TEST_CASE("vec2u constructors and getters")
 	CHECK(arr[0] == 3);
 	CHECK(arr[1] == 4);
 
-	vec2u c(-2, 3);
+	vec2u c = makeVec2u(-2, 3);
 	CHECK(c.x() == -2);
 	CHECK(c.y() == 3);
 
-	vec2u d;
+	vec2u d = makeZeroVec2u();
 	CHECK(d.x() == 0);
 	CHECK(d.y() == 0);
 
 	unsigned initArr[] = {1, 2};	
-	vec2u e(initArr);
+	vec2u e = makeVec2uFromMemory(initArr);
 	CHECK(e.x() == 1);
 	CHECK(e.y() == 2);
 }
@@ -607,8 +607,8 @@ TEST_CASE("vec2u setters")
 
 TEST_CASE("vec2u operations")
 {
-	vec2u a(5, 4);
-	vec2u b(1, 3);
+	vec2u a = makeVec2u(5, 4);
+	vec2u b = makeVec2u(1, 3);
 
 	INFO("a == (" << a.x() << ", " << a.y() << ")");
 	INFO("b == (" << b.x() << ", " << b.y() << ")");
@@ -655,8 +655,8 @@ TEST_CASE("vec2u operations")
 	CHECK(length(b) == (unsigned)sqrt(10));
 	CHECK(lengthSquared(b) == 10);
 
-	vec2u min(2, 0);
-	vec2u max(5, 3);
+	vec2u min = makeVec2u(2, 0);
+	vec2u max = makeVec2u(5, 3);
 	vec2u clampBRes = clamp(b, min, max);
 	CHECK(clampBRes.x() == 2);
 	CHECK(clampBRes.y() == 3);
@@ -664,9 +664,9 @@ TEST_CASE("vec2u operations")
 
 TEST_CASE("vec2u comparisons")
 {
-	vec2u a(5, 5);
-	vec2u b(3, 5);
-	vec2u c(-2, 6);
+	vec2u a = makeVec2u(5, 5);
+	vec2u b = makeVec2u(3, 5);
+	vec2u c = makeVec2u(-2, 6);
 
 	CHECK(a == a);
 	CHECK(a != b);

@@ -11,7 +11,7 @@ using namespace fm;
 
 TEST_CASE("vec4 constructors and getters") 
 {
-	vec4 a(1.f, 2.f, 3.f, 4.f);		
+	vec4 a = makeVec4(1.f, 2.f, 3.f, 4.f);		
 	CHECK(a.x() == 1.f);
 	CHECK(a.r() == 1.f);
 	CHECK(a.y() == 2.f);
@@ -33,7 +33,7 @@ TEST_CASE("vec4 constructors and getters")
 	CHECK(storage[2] == 3.f);
 	CHECK(storage[3] == 4.f);
 
-	vec4 b(5.f);
+	vec4 b = makeVec4(5.f);
 	CHECK(b.x() == 5.f);
 	CHECK(b.y() == 5.f);
 	CHECK(b.z() == 5.f);
@@ -46,7 +46,7 @@ TEST_CASE("vec4 constructors and getters")
 	CHECK(c.w() == 0.f);
 
 	float arr[4] = {1.f, 2.f, 3.f, 4.f};
-	vec4 d(arr);
+	vec4 d = makeVec4(arr);
 	REQUIRE(d.x() == 1.f);
 	REQUIRE(d.y() == 2.f);
 	REQUIRE(d.z() == 3.f);
@@ -77,8 +77,8 @@ TEST_CASE("vec4 setters")
 
 TEST_CASE("vec4 operations")
 {
-	vec4 a(1.f, 3.f, 5.f, -7.f);
-	vec4 b(2.f, 4.f, -6.f, 8.f);
+	vec4 a = makeVec4(1.f, 3.f, 5.f, -7.f);
+	vec4 b = makeVec4(2.f, 4.f, -6.f, 8.f);
 
 	vec4 addRes = a + b;
 	CHECK(addRes.x() == 3.f);
@@ -171,17 +171,17 @@ TEST_CASE("vec4 operations")
 	CHECK(length(b) == floatCmp(sqrt(120.f)));
 	CHECK(lengthSquared(b) == 120.f);
 
-	vec4 c(1.f, 3.f, 5.f, -7.f);
-	vec4 min(2.f, 2.f, 2.f, 2.f);
-	vec4 max(5.f, 5.f, 3.f, 2.f);
+	vec4 c = makeVec4(1.f, 3.f, 5.f, -7.f);
+	vec4 min = makeVec4(2.f, 2.f, 2.f, 2.f);
+	vec4 max = makeVec4(5.f, 5.f, 3.f, 2.f);
 	vec4 clampRes = clamp(c, min, max);
 	CHECK(clampRes.x() == 2.f);
 	CHECK(clampRes.y() == 3.f);
 	CHECK(clampRes.z() == 3.f);
 	CHECK(clampRes.w() == 2.f);
 
-	vec4 g(0.f, 2.f, 3.f, 0.f);
-	vec4 h(4.f, 5.f, 6.f, 100.f);
+	vec4 g = makeVec4(0.f, 2.f, 3.f, 0.f);
+	vec4 h = makeVec4(4.f, 5.f, 6.f, 100.f);
 	auto lerpRes = lerp(g, h, 0.5f);
 	CHECK(lerpRes.x() == 2.f);
 	CHECK(lerpRes.y() == 3.5f);
@@ -196,8 +196,8 @@ TEST_CASE("vec4 operations")
 
 TEST_CASE("vec4 comparisons")
 {
-	vec4 a(1.f, 2.f, 4.f, 5.f);
-	vec4 b(1.f, 3.f, -5.f, 5.f);
+	vec4 a = makeVec4(1.f, 2.f, 4.f, 5.f);
+	vec4 b = makeVec4(1.f, 3.f, -5.f, 5.f);
 
 	CHECK(a == a);
 	CHECK(a != b);
