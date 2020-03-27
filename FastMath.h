@@ -563,9 +563,22 @@ FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
 FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b);
 FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b);
 FM_INLINE mat4 FM_CALL operator*(mat4 a, mat4 b);
+FM_INLINE vec4 FM_CALL operator*(mat4 m, vec4 v);
 FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar);
 FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m);
 FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar);
+FM_INLINE mat4 FM_CALL transpose(mat4 m);
+/* TODO:
+determinant
+inverse
+swap_col(mat4 mat, unsigned col1, unsigned col2)
+swap_row(mat4 mat, unsigned row1, unsigned row2)
+frustum()
+ortho()
+lookAt()
+perspective()
+project()
+*/
 
 }
 
@@ -1969,6 +1982,10 @@ FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar) {
 	__m128 scalarM = _mm_set1_ps(scalar);
 	for(int col = 0; col < 4; ++col)
 		m.columns[col] = _mm_div_ps(m.columns[col], scalarM);
+	return m;
+}
+FM_INLINE mat4 FM_CALL transpose(mat4 m) {
+	_MM_TRANSPOSE4_PS(m.columns[0], m.columns[1], m.columns[2], m.columns[3]);
 	return m;
 }
 

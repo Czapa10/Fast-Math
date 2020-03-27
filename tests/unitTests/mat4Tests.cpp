@@ -194,4 +194,12 @@ TEST_CASE("mat4 operations")
 	CHECK(mulByVecRes.y() == 70.f);
 	CHECK(mulByVecRes.z() == 110.f);
 	CHECK(mulByVecRes.w() == 150.f);
+
+	mat4 transposedA = transpose(a);
+	CHECK_ALL_MATRIX_ENTRIES(transposedA,
+		1.f, 5.f, 9.f,  13.f,
+		2.f, 6.f, 10.f, 14.f,
+		3.f, 7.f, 11.f, 15.f,
+		4.f, 8.f, 12.f, 16.f
+	);
 }
