@@ -545,10 +545,17 @@ FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diag);
 FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diagX, float diagY, float diagZ, float diagW); 
 FM_INLINE mat4 FM_CALL makeDiagonalMat4(vec4 diag); 
 FM_INLINE mat4 FM_CALL makeMat4FromColumns(vec4 col1, vec4 col2, vec4 col3, vec4 col4); 
-FM_INLINE mat4 FM_CALL makeMat4FromColumns(float e11, float e21, float e31, float e41,
-                                   float e12, float e22, float e32, float e42,
-                                   float e13, float e23, float e33, float e43,
-                                   float e14, float e24, float e34, float e44);
+FM_INLINE mat4 FM_CALL makeMat4FromColumns(
+	float e11, float e21, float e31, float e41,
+    float e12, float e22, float e32, float e42,
+    float e13, float e23, float e33, float e43,
+    float e14, float e24, float e34, float e44);
+FM_INLINE mat4 FM_CALL makeMat4FromRows(vec4 row1, vec4 row2, vec4 row3, vec4 row4); 
+FM_INLINE mat4 FM_CALL makeMat4FromRows(
+	float e11, float e12, float e13, float e14,
+    float e21, float e22, float e23, float e24,
+    float e31, float e32, float e33, float e34,
+    float e41, float e42, float e43, float e44);
 
 FM_INLINE void FM_CALL store(float* mem, mat4 mat);
 FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
@@ -1850,6 +1857,27 @@ FM_INLINE mat4 FM_CALL makeMat4FromColumns(
     float e12, float e22, float e32, float e42,
     float e13, float e23, float e33, float e43,
     float e14, float e24, float e34, float e44) 
+{
+	mat4 res;
+	res.columns[0] = _mm_setr_ps(e11, e21, e31, e41);
+	res.columns[1] = _mm_setr_ps(e12, e22, e32, e42);
+	res.columns[2] = _mm_setr_ps(e13, e23, e33, e43);
+	res.columns[3] = _mm_setr_ps(e14, e24, e34, e44);
+	return res;
+}
+FM_INLINE mat4 FM_CALL makeMat4FromRows(vec4 row1, vec4 row2, vec4 row3, vec4 row4) {
+	mat4 res;
+	res.columns[0] = _mm_setr_ps(row1.x(), row2.x(), row3.x(), row4.x());
+	res.columns[1] = _mm_setr_ps(row1.y(), row2.y(), row3.y(), row4.y());
+	res.columns[2] = _mm_setr_ps(row1.z(), row2.z(), row3.z(), row4.z());
+	res.columns[3] = _mm_setr_ps(row1.w(), row2.w(), row3.w(), row4.w());
+	return res;
+}
+FM_INLINE mat4 FM_CALL makeMat4FromRows(
+	float e11, float e12, float e13, float e14,
+    float e21, float e22, float e23, float e24,
+    float e31, float e32, float e33, float e34,
+    float e41, float e42, float e43, float e44)
 {
 	mat4 res;
 	res.columns[0] = _mm_setr_ps(e11, e21, e31, e41);
