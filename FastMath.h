@@ -536,6 +536,17 @@ FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b);
 struct mat4
 {
 	__m128 columns[4];
+
+	FM_INLINE vec4 FM_CALL getColumn(unsigned index);
+	vec4 FM_CALL getRow(unsigned index);
+
+	FM_INLINE void FM_CALL setColumn(unsigned index, vec4 col);
+	FM_INLINE void FM_CALL setColumn(unsigned index, float x, float y, float z, float w);
+	void FM_CALL setRow(unsigned index, vec4 row);
+	FM_INLINE void FM_CALL setRow(unsigned index, float x, float y, float z, float w);
+
+	FM_INLINE void FM_CALL swapColumns(unsigned col1Index, unsigned col2Index); 
+	FM_INLINE void FM_CALL swapRows(unsigned row1Index, unsigned row2Index); 
 };
 
 FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem); 
@@ -568,8 +579,10 @@ FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar);
 FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m);
 FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar);
 FM_INLINE mat4 FM_CALL transpose(mat4 m);
+FM_INLINE float FM_CALL determinant(mat4 m);
+FM_INLINE mat4 FM_CALL swapColumns(mat4 m, unsigned col1Index, unsigned col2Index);
+FM_INLINE mat4 FM_CALL swapRows(mat4 m, unsigned row1Index, unsigned row2Index);
 /* TODO:
-determinant
 inverse
 swap_col(mat4 mat, unsigned col1, unsigned col2)
 swap_row(mat4 mat, unsigned row1, unsigned row2)
@@ -1814,6 +1827,99 @@ FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b) {
 ///////////////
 // mat4 impl //
 ///////////////
+FM_INLINE vec4 FM_CALL mat4::getColumn(unsigned index) {
+	return makeVec4(columns[index]);
+}
+vec4 FM_CALL mat4::getRow(unsigned index) {
+	vec4 row;
+	switch(index)
+	{
+		case 0: {
+			row = makeVec4(
+				priv::getX(columns[0]), priv::getX(columns[1]),
+				priv::getX(columns[2]), priv::getX(columns[3]));
+		} break;
+
+		case 1: {
+			row = makeVec4(
+				priv::getY(columns[0]), priv::getY(columns[1]),
+				priv::getY(columns[2]), priv::getY(columns[3]));
+		} break;
+
+		case 2: {
+			row = makeVec4(
+				priv::getZ(columns[0]), priv::getZ(columns[1]),
+				priv::getZ(columns[2]), priv::getZ(columns[3]));
+		} break;
+	
+		case 3: {
+			row = makeVec4(
+				priv::getW(columns[0]), priv::getW(columns[1]),
+				priv::getW(columns[2]), priv::getW(columns[3]));
+		} break;
+	
+		default: {
+			// TODO assert
+		}
+	}
+	return row;
+}
+FM_INLINE void FM_CALL mat4::setColumn(unsigned index, vec4 col) {
+	columns[index] = col.m;
+}
+FM_INLINE void FM_CALL mat4::setColumn(unsigned index, float x, float y, float z, float w) {
+	columns[index] = _mm_set_ps(w, z, y, x);
+}
+void FM_CALL mat4::setRow(unsigned index, vec4 row) {
+	switch(index)
+	{
+		case 0: {
+				columns[0] = priv::setX(columns[0], row.x());
+				columns[1] = priv::setX(columns[1], row.y());
+				columns[2] = priv::setX(columns[2], row.z());
+				columns[3] = priv::setX(columns[3], row.w());
+		} break;
+	
+		case 1: {
+				columns[0] = priv::setY(columns[0], row.x());
+				columns[1] = priv::setY(columns[1], row.y());
+				columns[2] = priv::setY(columns[2], row.z());
+				columns[3] = priv::setY(columns[3], row.w());
+		} break;
+	
+		case 2: {
+				columns[0] = priv::setZ(columns[0], row.x());
+				columns[1] = priv::setZ(columns[1], row.y());
+				columns[2] = priv::setZ(columns[2], row.z());
+				columns[3] = priv::setZ(columns[3], row.w());
+		} break;
+	
+		case 3: {
+				columns[0] = priv::setW(columns[0], row.x());
+				columns[1] = priv::setW(columns[1], row.y());
+				columns[2] = priv::setW(columns[2], row.z());
+				columns[3] = priv::setW(columns[3], row.w());
+		} break;
+	
+		default: {
+			// TODO assert
+		}
+	}	
+}
+FM_INLINE void FM_CALL mat4::setRow(unsigned index, float x, float y, float z, float w) {
+	setRow(index, makeVec4(x, y, z, w));
+}
+FM_INLINE void FM_CALL mat4::swapColumns(unsigned col1Index, unsigned col2Index) {
+	__m128 temp = columns[col1Index];
+	columns[col1Index] = columns[col2Index];
+	columns[col2Index] = temp;
+}
+FM_INLINE void FM_CALL mat4::swapRows(unsigned row1Index, unsigned row2Index) {
+	vec4 row1 = getRow(row1Index);
+	vec4 row2 = getRow(row2Index);
+	setRow(row2Index, row1);
+	setRow(row1Index, row2);
+}
 FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem) {
 	mat4 res;
 	for(int i = 0; i < 4; ++i)
@@ -1987,6 +2093,10 @@ FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar) {
 FM_INLINE mat4 FM_CALL transpose(mat4 m) {
 	_MM_TRANSPOSE4_PS(m.columns[0], m.columns[1], m.columns[2], m.columns[3]);
 	return m;
+}
+FM_INLINE float FM_CALL determinant(mat4 m) {
+	// TODO
+	return 0.f;
 }
 
 } // !namespace fm

@@ -11,8 +11,8 @@ using namespace fm;
 
 #define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
 
-#define CHECK_VECTOR4(v, x, y, z, w) \
-	CHECK4(v.x() == x, v.y() == y, v.z() == z, v.w() == w)
+#define CHECK_VECTOR4(v, _x, _y, _z, _w) \
+	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w);
 
 #define CHECK_ALL_MATRIX_ARRAY_ENTRIES(arr, a, b, c, d, \
                                             e, f, g, h, \
@@ -47,7 +47,7 @@ using namespace fm;
 	INFO(arr[2] << ", " << arr[6] << ", " << arr[10] << ", " << arr[14]); \
     INFO(arr[3] << ", " << arr[7] << ", " << arr[11] << ", " << arr[15]); \
 
-TEST_CASE("mat4 construction and store")
+TEST_CASE("mat4 construction and getters")
 {
 	mat4 a = makeDiagonalMat4(3.f);
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(a, 3.f);
@@ -83,6 +83,24 @@ TEST_CASE("mat4 construction and store")
 		9.f, 10.f, 11.f, 12.f,
 		13.f, 14.f, 15.f, 16.f
 	);
+
+	vec4 colRes0 = a.getColumn(0);
+	vec4 colRes1 = a.getColumn(1);
+	vec4 colRes2 = a.getColumn(2);
+	vec4 colRes3 = a.getColumn(3);
+	CHECK_VECTOR4(colRes0, 1.f, 5.f, 9.f, 13.f);
+	CHECK_VECTOR4(colRes1, 2.f, 6.f, 10.f, 14.f);
+	CHECK_VECTOR4(colRes2, 3.f, 7.f, 11.f, 15.f);
+	CHECK_VECTOR4(colRes3, 4.f, 8.f, 12.f, 16.f);
+
+	vec4 rowRes0 = a.getRow(0);
+	vec4 rowRes1 = a.getRow(1);
+	vec4 rowRes2 = a.getRow(2);
+	vec4 rowRes3 = a.getRow(3);
+	CHECK_VECTOR4(rowRes0, 1.f, 2.f, 3.f, 4.f);
+	CHECK_VECTOR4(rowRes1, 5.f, 6.f, 7.f, 8.f);
+	CHECK_VECTOR4(rowRes2, 9.f, 10.f, 11.f, 12.f);
+	CHECK_VECTOR4(rowRes3, 13.f, 14.f, 15.f, 16.f);
 
 	vec4 col1 = makeVec4(1.f, 2.f, 3.f, 4.f);
 	vec4 col2 = makeVec4(5.f, 6.f, 7.f, 8.f);
@@ -123,6 +141,50 @@ TEST_CASE("mat4 construction and store")
 		2.f, 6.f, 10.f, 14.f,
 		3.f, 7.f, 11.f, 15.f,
 		4.f, 8.f, 12.f, 16.f
+	);
+}
+
+TEST_CASE("mat4 setters and swaps")
+{
+	mat4 m = makeZeroMat4();
+
+	m.setRow(0, makeVec4(1.f, 2.f, 3.f, 4.f));
+	m.setRow(1, 1.f, 2.f, 3.f, 4.f);
+
+	PRINT_MAT4(m);
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		1.f, 2.f, 3.f, 4.f,
+		1.f, 2.f, 3.f, 4.f,
+		0.f, 0.f, 0.f, 0.f, 
+		0.f, 0.f, 0.f, 0.f
+	);
+
+	m.setColumn(2, makeVec4(1.f, 2.f, 3.f, 4.f));
+	m.setColumn(3, 5.f, 6.f, 7.f, 8.f);
+
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		1.f, 2.f, 1.f, 5.f,
+		1.f, 2.f, 2.f, 6.f,
+		0.f, 0.f, 3.f, 7.f, 
+		0.f, 0.f, 4.f, 8.f
+	);
+
+	m.swapRows(0, 1);
+
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		1.f, 2.f, 2.f, 6.f,
+		1.f, 2.f, 1.f, 5.f,
+		0.f, 0.f, 3.f, 7.f, 
+		0.f, 0.f, 4.f, 8.f
+	);
+
+	m.swapColumns(2, 3);
+
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		1.f, 2.f, 6.f, 2.f, 
+		1.f, 2.f, 5.f, 1.f, 
+		0.f, 0.f, 7.f, 3.f, 
+		0.f, 0.f, 8.f, 4.f 
 	);
 }
 
@@ -190,10 +252,7 @@ TEST_CASE("mat4 operations")
 
 	vec4 v = makeVec4(1.f, 2.f, 3.f, 4.f);
 	auto mulByVecRes = a * v;
-	CHECK(mulByVecRes.x() == 30.f);
-	CHECK(mulByVecRes.y() == 70.f);
-	CHECK(mulByVecRes.z() == 110.f);
-	CHECK(mulByVecRes.w() == 150.f);
+	CHECK_VECTOR4(mulByVecRes, 30.f, 70.f, 110.f, 150.f);
 
 	mat4 transposedA = transpose(a);
 	CHECK_ALL_MATRIX_ENTRIES(transposedA,
