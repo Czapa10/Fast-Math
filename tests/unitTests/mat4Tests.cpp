@@ -9,11 +9,6 @@
 
 using namespace fm;
 
-#define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
-
-#define CHECK_VECTOR4(v, _x, _y, _z, _w) \
-	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w);
-
 #define CHECK_ALL_MATRIX_ARRAY_ENTRIES(arr, a, b, c, d, \
                                             e, f, g, h, \
                                             i, j, k, l,\
@@ -102,6 +97,9 @@ TEST_CASE("mat4 construction and getters")
 	CHECK_VECTOR4(rowRes2, 9.f, 10.f, 11.f, 12.f);
 	CHECK_VECTOR4(rowRes3, 13.f, 14.f, 15.f, 16.f);
 
+	vec4 mainDiagRes = a.getMainDiagonal();
+	CHECK_VECTOR4(mainDiagRes, 1.f, 6.f, 11.f, 16.f);
+
 	vec4 col1 = makeVec4(1.f, 2.f, 3.f, 4.f);
 	vec4 col2 = makeVec4(5.f, 6.f, 7.f, 8.f);
 	vec4 col3 = makeVec4(9.f, 10.f, 11.f, 12.f);
@@ -186,6 +184,24 @@ TEST_CASE("mat4 setters and swaps")
 		0.f, 0.f, 7.f, 3.f, 
 		0.f, 0.f, 8.f, 4.f 
 	);
+
+	m.setMainDiagonal(8.f, 9.f, 10.f, 11.f);
+
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		8.f, 2.f, 6.f, 2.f, 
+		1.f, 9.f, 5.f, 1.f, 
+		0.f, 0.f, 10.f, 3.f, 
+		0.f, 0.f, 8.f, 11.f 
+	);
+
+	m.setMainDiagonal(makeVec4(0.f, 2.f, 5.f, 1.f));
+
+	CHECK_ALL_MATRIX_ENTRIES(m,
+		0.f, 2.f, 6.f, 2.f, 
+		1.f, 2.f, 5.f, 1.f, 
+		0.f, 0.f, 5.f, 3.f, 
+		0.f, 0.f, 8.f, 1.f 
+	);
 }
 
 TEST_CASE("mat4 operations")
@@ -261,4 +277,90 @@ TEST_CASE("mat4 operations")
 		3.f, 7.f, 11.f, 15.f,
 		4.f, 8.f, 12.f, 16.f
 	);
+}
+
+TEST_CASE("mat4 transformations")
+{
+	vec4 v0 = makeVec4ForTransformation(0.f);
+	vec4 v1 = makeVec4ForTransformation(1.f);
+	vec4 res;
+	mat4 trans, scal, rot;
+
+	// translate
+	trans = makeTranslationMat4(1.f, 2.f, 3.f);
+	res = trans * v0;
+	CHECK_VECTOR4(res, 1.f, 2.f, 3.f, 1.f);
+
+	trans = makeTranslationMat4(makeVec3(1.f, 2.f, 3.f));
+	res = trans * v0;
+	CHECK_VECTOR4(res, 1.f, 2.f, 3.f, 1.f);
+
+	trans = translate(trans, -5.f, -3.f, 0.f);
+	res = trans * v0;
+	CHECK_VECTOR4(res, -4.f, -1.f, 3.f, 1.f);
+
+	trans = translate(trans, makeVec3(5.f, 3.f, 0.f));
+	res = trans * v0;
+	CHECK_VECTOR4(res, 1.f, 2.f, 3.f, 1.f);
+
+	// scale
+	scal = makeScaleMat4(5.f);
+	res = scal * v1;
+	CHECK_VECTOR4(res, 5.f, 5.f, 5.f, 1.f);
+
+	scal = makeScaleMat4(5.f, 4.f, 3.f);
+	res = scal * v1;
+	CHECK_VECTOR4(res, 5.f, 4.f, 3.f, 1.f);
+
+	scal = scale(scal, 2.f);
+	res = scal * v1;
+	CHECK_VECTOR4(res, 10.f, 8.f, 6.f, 1.f);
+
+	scal = scale(scal, 0.5f, 0.25f, 1.f);
+	res = scal * v1;
+	CHECK_VECTOR4(res, 5.f, 2.f, 6.f, 1.f);
+
+	scal = scale(scal, makeVec3(-1.f, 2.f, 3.f));
+	res = scal * v1;
+	CHECK_VECTOR4(res, -5.f, 4.f, 18.f, 1.f);
+
+	// rotate
+	rot = makeRotationMat4Degrees(90.f, 1.f, 0.f, 0.f);
+	PRINT_MAT4(rot);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, -1.f, 1.f, 1.f);
+
+	rot = makeRotationMat4Degrees(90.f, makeVec3(1.f, 0.f, 0.f)); 
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, -1.f, 1.f, 1.f);
+
+	rot = makeRotationAroundXAxisMat4Degrees(90.f);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, -1.f, 1.f, 1.f);
+
+
+	rot = makeRotationMat4Degrees(90.f, 0.f, 1.f, 0.f);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, 1.f, -1.f, 1.f);
+
+	rot = makeRotationMat4Degrees(90.f, makeVec3(0.f, 1.f, 0.f)); 
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, 1.f, -1.f, 1.f);
+
+	rot = makeRotationAroundYAxisMat4Degrees(90.f);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, 1.f, 1.f, -1.f, 1.f);
+
+
+	rot = makeRotationMat4Degrees(90.f, 0.f, 0.f, 1.f);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, -1.f, 1.f, 1.f, 1.f);
+
+	rot = makeRotationMat4Degrees(90.f, makeVec3(0.f, 0.f, 1.f)); 
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, -1.f, 1.f, 1.f, 1.f);
+
+	rot = makeRotationAroundZAxisMat4Degrees(90.f);
+	res = rot * v1;
+	CHECK_VECTOR4_APPROX(res, -1.f, 1.f, 1.f, 1.f);
 }

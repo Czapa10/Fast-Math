@@ -26,4 +26,6 @@ TEST_CASE("utility functions")
 	CHECK(5.0 == fm::abs(-5.0));
 	CHECK(5 == fm::abs(5));
 	CHECK(5 == fm::abs(-5));
+
+	// TODO: Add radiansToDegrees() and degreesToRadians()
 }

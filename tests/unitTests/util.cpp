@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cmath>
+#include "doctest.h"
 
 static long long vElements;
 static char binaryOutput[128];
@@ -24,5 +25,24 @@ static char binaryOutput[128];
 	INFO(name << " (binary): " << std::string(binaryOutput)); 
 
 #define floatCmp(x) doctest::Approx(x).epsilon(0.01)
+
+#define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
+
+#define CHECK_VECTOR4(v, _x, _y, _z, _w) \
+	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w);
+
+#define CHECK_VECTOR4_APPROX(v, _x, _y, _z, _w) \
+	CHECK4(v.x() == floatCmp(_x), v.y() == floatCmp(_y), v.z() == floatCmp(_z), v.w() == floatCmp(_w));
+
+#define CHECK_VECTOR4_1(v, a) \
+	CHECK4(v.x() == a, v.y() == a, v.z() == a, v.w() == a);
+
+#define CHECK_VECTOR4_ARRAY(arr, _x, _y, _z, _w) \
+	CHECK4(arr[0] == _x, arr[1] == _y, arr[2] == _z, arr[3] == _w);
+
+#define CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(v, _x, _y, _z, _w) \
+	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w); \
+	CHECK4(v.r() == _x, v.g() == _y, v.b() == _z, v.a() == _w);
+
 
 #endif // TESTS_UTIL

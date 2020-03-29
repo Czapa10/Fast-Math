@@ -34,6 +34,9 @@ like this:
 #define FM_INLINE __forceinline
 #define FM_CALL __vectorcall
 
+#define FM_PI32 3.14159265359f
+#define FM_PI64 3.14159265358979323846
+
 namespace fm {
 
 FM_INLINE float min(float a, float b);
@@ -48,6 +51,11 @@ FM_INLINE unsigned max(unsigned a, unsigned b);
 FM_INLINE float abs(float a); 
 FM_INLINE double abs(double a); 
 FM_INLINE int abs(int a);
+
+FM_INLINE float radiansToDegrees(float radians);
+FM_INLINE double radiansToDegrees(double radians);
+FM_INLINE float degreesToRadians(float degrees);
+FM_INLINE double degreesToRadians(double degrees);
 
 struct vec2
 {
@@ -494,6 +502,9 @@ struct vec4
 	FM_INLINE float FM_CALL a() const { return w(); }
 };
 FM_INLINE vec4 FM_CALL makeVec4FromMemory(const float* v); 
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(float a); 
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(float x, float y, float z);
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(vec3 v);
 FM_INLINE vec4 FM_CALL makeVec4(float x, float y, float z, float w);
 FM_INLINE vec4 FM_CALL makeVec4(float a);
 FM_INLINE vec4 FM_CALL makeVec4(__m128 m);
@@ -538,15 +549,18 @@ struct mat4
 	__m128 columns[4];
 
 	FM_INLINE vec4 FM_CALL getColumn(unsigned index);
-	vec4 FM_CALL getRow(unsigned index);
-
 	FM_INLINE void FM_CALL setColumn(unsigned index, vec4 col);
 	FM_INLINE void FM_CALL setColumn(unsigned index, float x, float y, float z, float w);
+	FM_INLINE void FM_CALL swapColumns(unsigned col1Index, unsigned col2Index); 
+
+	vec4 FM_CALL getRow(unsigned index);
 	void FM_CALL setRow(unsigned index, vec4 row);
 	FM_INLINE void FM_CALL setRow(unsigned index, float x, float y, float z, float w);
-
-	FM_INLINE void FM_CALL swapColumns(unsigned col1Index, unsigned col2Index); 
 	FM_INLINE void FM_CALL swapRows(unsigned row1Index, unsigned row2Index); 
+
+	FM_INLINE vec4 FM_CALL getMainDiagonal();
+	FM_INLINE void FM_CALL setMainDiagonal(float x, float y, float z, float w); 
+	FM_INLINE void FM_CALL setMainDiagonal(vec4 v);
 };
 
 FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem); 
@@ -579,18 +593,53 @@ FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar);
 FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m);
 FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar);
 FM_INLINE mat4 FM_CALL transpose(mat4 m);
-FM_INLINE float FM_CALL determinant(mat4 m);
 FM_INLINE mat4 FM_CALL swapColumns(mat4 m, unsigned col1Index, unsigned col2Index);
 FM_INLINE mat4 FM_CALL swapRows(mat4 m, unsigned row1Index, unsigned row2Index);
+
+FM_INLINE mat4 FM_CALL makeTranslationMat4(float x, float y, float z); 
+FM_INLINE mat4 FM_CALL makeTranslationMat4(vec3 translation);
+FM_INLINE mat4 FM_CALL translate(mat4 m, float x, float y, float z); 
+FM_INLINE mat4 FM_CALL translate(mat4 m, vec3 translation);
+
+FM_INLINE mat4 FM_CALL makeScaleMat4(float scalar); 
+FM_INLINE mat4 FM_CALL makeScaleMat4(float scalarX, float scalarY, float scalarZ); 
+FM_INLINE mat4 FM_CALL makeScaleMat4(vec3 scalar);
+FM_INLINE mat4 FM_CALL scale(mat4 m, float scalar); 
+FM_INLINE mat4 FM_CALL scale(mat4 m, float x, float y, float z); 
+FM_INLINE mat4 FM_CALL scale(mat4 m, vec3 scalar);
+
+FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, float axisX, float axisY, float axisZ); 
+FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, vec3 axis);
+FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Degrees(float degrees);
+FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Degrees(float degrees);
+FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Degrees(float degrees);
+FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, float axisX, float axisY, float axisZ); 
+FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, vec3 axis);
+FM_INLINE mat4 FM_CALL rotateAroundXAxisDegrees(mat4 m, float degrees);
+FM_INLINE mat4 FM_CALL rotateAroundYAxisDegrees(mat4 m, float degrees);
+FM_INLINE mat4 FM_CALL rotateAroundZAxisDegrees(mat4 m, float degrees);
+FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, float axisX, float axisY, float axisZ); 
+FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, vec3 axis);
+FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Radians(float radians);
+FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Radians(float radians);
+FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Radians(float radians);
+FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, float axisX, float axisY, float axisZ); 
+FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, vec3 axis);
+FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians);
+FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians);
+FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians);
+
 /* TODO:
-inverse
-swap_col(mat4 mat, unsigned col1, unsigned col2)
-swap_row(mat4 mat, unsigned row1, unsigned row2)
-frustum()
+shear
+reflect
+matrix hadamard
 ortho()
-lookAt()
 perspective()
+lookAt()
+frustum()
 project()
+determinant
+inverse
 */
 
 }
@@ -646,7 +695,6 @@ namespace priv {
 	FM_INLINE float FM_CALL sumOfElements(__m128 m) {
 		return getX(m) + getY(m) + getZ(m) + getW(m);
 	}
-	// TODO: Add FM_CALL here
 }
 
 ////////////////////////////
@@ -684,6 +732,18 @@ FM_INLINE double abs(double a) {
 }
 FM_INLINE int abs(int a) {
 	return a < 0 ? -a : a;
+}
+FM_INLINE float radiansToDegrees(float radians) {
+	return radians * 180.f / FM_PI32;
+}
+FM_INLINE double radiansToDegrees(double radians) {
+	return radians * 180.f / FM_PI64;
+}
+FM_INLINE float degreesToRadians(float degrees) {
+	return degrees * FM_PI32 / 180.f;
+}
+FM_INLINE double degreesToRadians(double degrees) {
+	return degrees * FM_PI64 / 180.f;
 }
 // TODO: Do faster implementations of these 
 
@@ -1672,6 +1732,23 @@ FM_INLINE vec4 FM_CALL makeVec4FromMemory(const float* v) {
 	res.m = _mm_set_ps(v[3], v[2], v[1], v[0]);	
 	return res;
 } 
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(float a) {
+	vec4 res;
+	res.m = _mm_set_ps(1.f, a, a, a);
+	return res;
+}
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(float x, float y, float z) {
+	vec4 res;
+	res.m = _mm_set_ps(1.f, z, y, x);
+	return res;
+}
+FM_INLINE vec4 FM_CALL makeVec4ForTransformation(vec3 v) {
+	vec4 res;
+	v.m = _mm_shuffle_ps(v.m, v.m, _MM_SHUFFLE(2, 1, 0, 0));
+	res.m = _mm_move_ss(v.m, _mm_set_ss(1.f));
+	res.m = _mm_shuffle_ps(res.m, res.m, _MM_SHUFFLE(0, 3, 2, 1));
+	return res;
+}
 FM_INLINE vec4 FM_CALL makeVec4(float x, float y, float z, float w) {
 	vec4 res;
 	res.m = _mm_set_ps(w, z, y, x);
@@ -1687,7 +1764,7 @@ FM_INLINE vec4 FM_CALL makeVec4(__m128 m) {
 	res.m = m;
 	return res;
 } 
-FM_INLINE vec4 FM_CALL makeVec4() {
+FM_INLINE vec4 FM_CALL makeZeroVec4() {
 	vec4 res;
 	res.m = _mm_setzero_ps();
 	return res;
@@ -1830,6 +1907,17 @@ FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b) {
 FM_INLINE vec4 FM_CALL mat4::getColumn(unsigned index) {
 	return makeVec4(columns[index]);
 }
+FM_INLINE void FM_CALL mat4::setColumn(unsigned index, vec4 col) {
+	columns[index] = col.m;
+}
+FM_INLINE void FM_CALL mat4::setColumn(unsigned index, float x, float y, float z, float w) {
+	columns[index] = _mm_set_ps(w, z, y, x);
+}
+FM_INLINE void FM_CALL mat4::swapColumns(unsigned col1Index, unsigned col2Index) {
+	__m128 temp = columns[col1Index];
+	columns[col1Index] = columns[col2Index];
+	columns[col2Index] = temp;
+}
 vec4 FM_CALL mat4::getRow(unsigned index) {
 	vec4 row;
 	switch(index)
@@ -1839,13 +1927,13 @@ vec4 FM_CALL mat4::getRow(unsigned index) {
 				priv::getX(columns[0]), priv::getX(columns[1]),
 				priv::getX(columns[2]), priv::getX(columns[3]));
 		} break;
-
+		
 		case 1: {
 			row = makeVec4(
 				priv::getY(columns[0]), priv::getY(columns[1]),
 				priv::getY(columns[2]), priv::getY(columns[3]));
 		} break;
-
+	
 		case 2: {
 			row = makeVec4(
 				priv::getZ(columns[0]), priv::getZ(columns[1]),
@@ -1863,12 +1951,6 @@ vec4 FM_CALL mat4::getRow(unsigned index) {
 		}
 	}
 	return row;
-}
-FM_INLINE void FM_CALL mat4::setColumn(unsigned index, vec4 col) {
-	columns[index] = col.m;
-}
-FM_INLINE void FM_CALL mat4::setColumn(unsigned index, float x, float y, float z, float w) {
-	columns[index] = _mm_set_ps(w, z, y, x);
 }
 void FM_CALL mat4::setRow(unsigned index, vec4 row) {
 	switch(index)
@@ -1909,16 +1991,28 @@ void FM_CALL mat4::setRow(unsigned index, vec4 row) {
 FM_INLINE void FM_CALL mat4::setRow(unsigned index, float x, float y, float z, float w) {
 	setRow(index, makeVec4(x, y, z, w));
 }
-FM_INLINE void FM_CALL mat4::swapColumns(unsigned col1Index, unsigned col2Index) {
-	__m128 temp = columns[col1Index];
-	columns[col1Index] = columns[col2Index];
-	columns[col2Index] = temp;
-}
 FM_INLINE void FM_CALL mat4::swapRows(unsigned row1Index, unsigned row2Index) {
 	vec4 row1 = getRow(row1Index);
 	vec4 row2 = getRow(row2Index);
 	setRow(row2Index, row1);
 	setRow(row1Index, row2);
+}
+FM_INLINE vec4 FM_CALL mat4::getMainDiagonal() {
+	vec4 res;
+	res.setX(priv::getX(columns[0]));
+	res.setY(priv::getY(columns[1]));
+	res.setZ(priv::getZ(columns[2]));
+	res.setW(priv::getW(columns[3]));
+	return res;
+}
+FM_INLINE void FM_CALL mat4::setMainDiagonal(float x, float y, float z, float w) {
+	columns[0] = priv::setX(columns[0], x);
+	columns[1] = priv::setY(columns[1], y);
+	columns[2] = priv::setZ(columns[2], z);
+	columns[3] = priv::setW(columns[3], w);
+}
+FM_INLINE void FM_CALL mat4::setMainDiagonal(vec4 v) {
+	setMainDiagonal(v.x(), v.y(), v.z(), v.w());
 }
 FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem) {
 	mat4 res;
@@ -2094,9 +2188,157 @@ FM_INLINE mat4 FM_CALL transpose(mat4 m) {
 	_MM_TRANSPOSE4_PS(m.columns[0], m.columns[1], m.columns[2], m.columns[3]);
 	return m;
 }
-FM_INLINE float FM_CALL determinant(mat4 m) {
-	// TODO
-	return 0.f;
+FM_INLINE mat4 FM_CALL makeTranslationMat4(float x, float y, float z) {
+	return makeMat4FromRows(
+		1.f, 0.f, 0.f, x,
+		0.f, 1.f, 0.f, y,
+		0.f, 0.f, 1.f, z,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeTranslationMat4(vec3 translation) {
+	return makeMat4FromRows(
+		1.f, 0.f, 0.f, translation.x(),
+		0.f, 1.f, 0.f, translation.y(),
+		0.f, 0.f, 1.f, translation.z(),
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL translate(mat4 m, float x, float y, float z) {
+	m.columns[3] = _mm_add_ps(m.columns[3], _mm_set_ps(0.f, z, y, x));
+	return m;
+}
+FM_INLINE mat4 FM_CALL translate(mat4 m, vec3 translation) {
+	m.columns[3] = _mm_add_ps(m.columns[3], translation.m);
+	return m;
+}
+FM_INLINE mat4 FM_CALL makeScaleMat4(float scalar) {
+	return makeDiagonalMat4(scalar, scalar, scalar, 1.f);
+} 
+FM_INLINE mat4 FM_CALL makeScaleMat4(float scalarX, float scalarY, float scalarZ) {
+	return makeDiagonalMat4(scalarX, scalarY, scalarZ, 1.f);
+} 
+FM_INLINE mat4 FM_CALL makeScaleMat4(vec3 scalar) {
+	return makeDiagonalMat4(scalar.x(), scalar.y(), scalar.z(), 1.f); 
+}
+FM_INLINE mat4 FM_CALL scale(mat4 m, float scalar) {
+	return scale(m, scalar, scalar, scalar);
+}
+FM_INLINE mat4 FM_CALL scale(mat4 m, float x, float y, float z) {
+	vec4 mainDiag = m.getMainDiagonal();
+	vec4 scalarVec = makeVec4(x, y, z, 1.f);
+	mainDiag = hadamardMul(mainDiag, scalarVec);
+	m.setMainDiagonal(mainDiag);
+	return m;
+}
+FM_INLINE mat4 FM_CALL scale(mat4 m, vec3 scalar) {
+	// TODO: Try to optimize this 
+	return scale(m, scalar.x(), scalar.y(), scalar.z());
+}
+FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, float axisX, float axisY, float axisZ) {
+	float r = degreesToRadians(degrees);
+	return makeRotationMat4Radians(r, axisX, axisY, axisZ);
+} 
+FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, vec3 axis) {
+	float r = degreesToRadians(degrees);
+	return makeRotationMat4Radians(r, axis);
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Degrees(float degrees) {
+	float r = degreesToRadians(degrees);
+	return makeRotationAroundXAxisMat4Radians(r);
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Degrees(float degrees) {
+	float r = degreesToRadians(degrees);
+	return makeRotationAroundYAxisMat4Radians(r);
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Degrees(float degrees) {
+	float r = degreesToRadians(degrees);
+	return makeRotationAroundZAxisMat4Radians(r);
+}
+FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, float axisX, float axisY, float axisZ) {
+	float r = degreesToRadians(degrees);
+	return rotateRadians(m, r, axisX, axisY, axisZ);
+} 
+FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, vec3 axis) {
+	float r = degreesToRadians(degrees);
+	return rotateRadians(m, r, axis);
+}
+FM_INLINE mat4 FM_CALL rotateAroundXAxisDegrees(mat4 m, float degrees) {
+	float r = degreesToRadians(degrees);
+	return rotateAroundXAxisRadians(m, r);
+}
+FM_INLINE mat4 FM_CALL rotateAroundYAxisDegrees(mat4 m, float degrees) {
+	float r = degreesToRadians(degrees);
+	return rotateAroundYAxisRadians(m, r);
+}
+FM_INLINE mat4 FM_CALL rotateAroundZAxisDegrees(mat4 m, float degrees) {
+	float r = degreesToRadians(degrees);
+	return rotateAroundZAxisRadians(m, r);
+}
+FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, float axisX, float axisY, float axisZ) {
+	vec3 normalized = normalize(makeVec3(axisX, axisY, axisZ));
+	axisX = normalized.x();
+	axisY = normalized.y();
+	axisZ = normalized.z();
+	float sinTheta = sin(radians);
+	float cosTheta = cos(radians);
+	float cosVal = 1.f - cosTheta;
+	return makeMat4FromColumns(
+		(axisX * axisX * cosVal) + cosTheta,
+		(axisX * axisY * cosVal) + (axisZ * sinTheta),
+		(axisX * axisZ * cosVal) - (axisY * sinTheta),
+		0.f,
+		(axisY * axisX * cosVal) - (axisZ * sinTheta),
+		(axisY * axisY * cosVal) + cosTheta,
+		(axisY * axisZ * cosVal) + (axisX * sinTheta),
+		0.f,
+		(axisZ * axisX * cosVal) + (axisY * sinTheta),
+		(axisZ * axisY * cosVal) - (axisX * sinTheta),
+		(axisZ * axisZ * cosVal) + cosTheta,
+		0.f,
+		0.f, 0.f, 0.f, 1.f);
+} 
+FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, vec3 axis) {
+	return makeRotationMat4Radians(radians, axis.x(), axis.y(), axis.z());
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Radians(float r) {
+	return makeMat4FromRows(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, cos(r), -sin(r), 0.f,
+		0.f, sin(r), cos(r), 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Radians(float r) {
+	return makeMat4FromRows(
+		cos(r), 0.f, sin(r), 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		-sin(r), 0.f, cos(r), 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Radians(float r) {
+	return makeMat4FromRows(
+		cos(r), -sin(r), 0.f, 0.f,
+		sin(r), cos(r), 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, float axisX, float axisY, float axisZ) {
+	mat4 rotMat = makeRotationMat4Radians(radians, axisX, axisY, axisZ);
+	return m * rotMat;
+}
+FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, vec3 axis) {
+	mat4 rotMat = makeRotationMat4Radians(radians, axis);
+	return m * rotMat;
+}
+FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians) {
+	mat4 rotMat = makeRotationAroundXAxisMat4Radians(radians);
+	return m * rotMat;	
+}
+FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians) {
+	mat4 rotMat = makeRotationAroundYAxisMat4Radians(radians);
+	return m * rotMat;
+}
+FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians) {
+	mat4 rotMat = makeRotationAroundZAxisMat4Radians(radians);
+	return m * rotMat;
 }
 
 } // !namespace fm
