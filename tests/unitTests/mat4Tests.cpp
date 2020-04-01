@@ -364,3 +364,24 @@ TEST_CASE("mat4 transformations")
 	res = rot * v1;
 	CHECK_VECTOR4_APPROX(res, -1.f, 1.f, 1.f, 1.f);
 }
+
+TEST_CASE("mat4 orthographic projection")
+{
+	mat4 ortho = makeOrthographicMat4(-10.f, 10.f, -5.f, 5.f, 0.f, -10.f);
+	vec4 v = makeVec4(5.f, 5.f, -5.f, 1.f);
+	vec4 res = ortho * v;
+	CHECK_VECTOR4_APPROX(res, 0.5f, 1.f, -2.f, 1.f);
+}
+
+TEST_CASE("mat4 perspective projection")
+{
+	mat4 persp = makePerspectiveMat4(90.0f, 2.0f, 5.0f, 15.0f);
+
+	vec4 v = makeVec4(5.0f, 5.0f, -15.0f, 1.f);
+	vec4 res = persp * v; 
+	CHECK_VECTOR4(res, 2.5f, 5.f, 15.f, 15.f);
+
+	v = makeVec4(5.0f, 5.0f, -5.0f, 1.f);
+	res = persp * v; 
+	CHECK_VECTOR4(res, 2.5f, 5.f, -5.f, 5.f);
+}

@@ -629,12 +629,13 @@ FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians);
 FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians);
 FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians);
 
+mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float near, float far);
+mat4 makePerspectiveMat4(float fov, float aspectRatio, float near, float far);
+
 /* TODO:
 shear
 reflect
 matrix hadamard
-ortho()
-perspective()
 lookAt()
 frustum()
 project()
@@ -2339,6 +2340,31 @@ FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians) {
 FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians) {
 	mat4 rotMat = makeRotationAroundZAxisMat4Radians(radians);
 	return m * rotMat;
+}
+mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float nearValue, float farValue) {
+	float rl = right - left;
+	float tb = top - bottom;
+	float fn = farValue - nearValue; 
+		
+	return makeMat4FromRows(
+		2.f / rl, 0.f, 0.f, -((right + left) / rl),
+		0.f, 2.f / tb, 0.f, -((top + bottom) / tb),
+		0.f, 0.f, -2.f / fn, -((farValue + nearValue) / fn),
+		0.f, 0.f, 0.f, 1.f
+	);
+}
+mat4 makePerspectiveMat4(float fov, float aspectRatio, float nearValue, float farValue)
+{
+	float cotangent = 1.f / tanf(fov * FM_PI32 / 360.f);
+	float nf = nearValue - farValue;
+		
+	return makeMat4FromRows(
+		cotangent / aspectRatio, 0.f, 0.f, 0.f,
+		0.f, cotangent, 0.f, 0.f,
+		0.f, 0.f, 
+		(nearValue + farValue) / nf,
+		(2 * nearValue * farValue) / nf,
+		0.f, 0.f, -1.f, 0.f);
 }
 
 } // !namespace fm
