@@ -28,6 +28,24 @@ static char binaryOutput[128];
 
 #define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
 
+#define LOG_VECTOR2(v) \
+	INFO("a == (" << v.x() << ", " << v.y() << ")");
+
+#define CHECK_VECTOR2(v, _x, _y) \
+	CHECK(v.x() == _x); CHECK(v.y() == _y);
+
+#define CHECK_VECTOR2_APPROX(v, _x, _y) \
+	CHECK(v.x() == floatCmp(_x)); CHECK(v.y() == floatCmp(_y));
+
+#define CHECK_VECTOR2_ARRAY(arr, _x, _y) \
+	CHECK(arr[0] == _x); CHECK(arr[1] == _y);
+
+#define CHECK_VECTOR2_ALL_ALIASES(_v, _x, _y) \
+	CHECK(_v.x() == _x); CHECK(_v.y() == _y); \
+	CHECK(_v.u() == _x); CHECK(_v.v() == _y); \
+	CHECK(_v.left() == _x); CHECK(_v.top() == _y); \
+	CHECK(_v.width() == _x); CHECK(_v.height() == _y);
+
 #define CHECK_VECTOR4(v, _x, _y, _z, _w) \
 	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w);
 
