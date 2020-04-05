@@ -9,8 +9,6 @@
 
 using namespace fm;
 
-using b32 = int;
-
 TEST_CASE("vec2 constructors and getters") 
 {
 	vec2 a = makeVec2(-3.f, 4.5f);
@@ -344,7 +342,7 @@ TEST_CASE("vec2i constructors and getters")
 	CHECK(a.vv().u() == 4);
 	CHECK(a.vv().v() == 4);
 
-	int arr[2];
+	int32 arr[2];
 	store(arr, a);
 	CHECK_VECTOR2_ARRAY(arr, -3, 4);
 
@@ -354,12 +352,12 @@ TEST_CASE("vec2i constructors and getters")
 	vec2i c = makeZeroVec2i();
 	CHECK_VECTOR2(c, 0, 0);
 
-	int initArr[] = {-1, 2};	
+	int32 initArr[] = {-1, 2};	
 	vec2i d = makeVec2iFromMemory(initArr);
 	CHECK_VECTOR2(d, -1, 2);
 
-	int* px = ptr(d);
-	int* py = ptrY(d);
+	int32* px = ptr(d);
+	int32* py = ptrY(d);
 	CHECK(*px == -1);
 	CHECK(*py == 2);
 }
@@ -421,7 +419,7 @@ TEST_CASE("vec2i operations")
 	CHECK_VECTOR2(absoluteB, 5, 3);
 
 	CHECK(sumOfElements(b) == -2);
-	CHECK(length(b) == (int)sqrt(34));
+	CHECK(length(b) == (int32)sqrt(34));
 	CHECK(lengthSquared(b) == 34);
 
 	vec2i min = makeVec2i(0, 0);
@@ -486,7 +484,7 @@ TEST_CASE("vec2u constructors and getters")
 	vec2u b = makeVec2u(1);
 	CHECK_VECTOR2(b, 1, 1);
 
-	unsigned arr[2];
+	uint32 arr[2];
 	store(arr, a);
 	CHECK_VECTOR2_ARRAY(arr, 3, 4);
 
@@ -496,12 +494,12 @@ TEST_CASE("vec2u constructors and getters")
 	vec2u d = makeZeroVec2u();
 	CHECK_VECTOR2(d, 0, 0);
 
-	unsigned initArr[] = {1, 2};	
+	uint32 initArr[] = {1, 2};	
 	vec2u e = makeVec2uFromMemory(initArr);
 	CHECK_VECTOR2(e, 1, 2);
 
-	unsigned* px = ptr(e);
-	unsigned* py = ptrY(e);
+	uint32* px = ptr(e);
+	uint32* py = ptrY(e);
 	CHECK(*px == 1);
 	CHECK(*py == 2);
 }
@@ -557,7 +555,7 @@ TEST_CASE("vec2u operations")
 	CHECK_VECTOR2(maxRes, 5, 4);
 
 	CHECK(sumOfElements(b) == 4);
-	CHECK(length(b) == (unsigned)sqrt(10));
+	CHECK(length(b) == (uint32)sqrt(10));
 	CHECK(lengthSquared(b) == 10);
 
 	vec2u min = makeVec2u(2, 0);

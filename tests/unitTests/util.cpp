@@ -5,6 +5,10 @@
 #include <cmath>
 #include "doctest.h"
 
+using uint32 = uint32_t;
+using int32 = int32_t;
+using bool32 = int;
+
 static long long vElements;
 static char binaryOutput[128];
 
