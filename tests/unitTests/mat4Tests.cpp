@@ -140,6 +140,9 @@ TEST_CASE("mat4 construction and getters")
 		3.f, 7.f, 11.f, 15.f,
 		4.f, 8.f, 12.f, 16.f
 	);
+
+	float* p = ptr(a);
+	CHECK(*p == 1.f);
 }
 
 TEST_CASE("mat4 setters and swaps")

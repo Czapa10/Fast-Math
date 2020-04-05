@@ -94,6 +94,9 @@ FM_INLINE vec2 FM_CALL makeZeroVec2();
 
 FM_INLINE void FM_CALL store(float* mem, vec2 v);
 
+FM_INLINE float* ptr(const vec2& v) { return (float*)(&v); }
+FM_INLINE float* ptrY(const vec2& v) { return (float*)(&v) + 1; }
+
 FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
 FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
 FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b);
@@ -158,6 +161,9 @@ FM_INLINE vec2d FM_CALL makeZeroVec2d();
 FM_INLINE void FM_CALL store(double* mem, vec2d v);
 FM_INLINE void FM_CALL store16ByteAligned(double* mem, vec2d v);
 
+FM_INLINE double* ptr(const vec2d& v) { return (double*)(&v); }
+FM_INLINE double* ptrY(const vec2d& v) { return (double*)(&v) + 1; }
+
 FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
 FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
 FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b);
@@ -220,6 +226,9 @@ FM_INLINE vec2i FM_CALL makeZeroVec2i();
 
 FM_INLINE void FM_CALL store(int32_t* mem, vec2i v); 
 
+FM_INLINE int32_t* ptr(const vec2i& v) { return (int32_t*)(&v); }
+FM_INLINE int32_t* ptrY(const vec2i& v) { return (int32_t*)(&v) + 1; }
+
 FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b);
 FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b); 
 FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b);
@@ -278,6 +287,9 @@ FM_INLINE vec2u FM_CALL makeVec2u(__m128i m);
 FM_INLINE vec2u FM_CALL makeZeroVec2u();
 
 FM_INLINE void FM_CALL store(uint32_t* mem, vec2u v);
+
+FM_INLINE uint32_t* ptr(const vec2u& v) { return (uint32_t*)(&v); }
+FM_INLINE uint32_t* ptrY(const vec2u& v) { return (uint32_t*)(&v) + 1; }
 
 FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
 FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
@@ -452,6 +464,10 @@ FM_INLINE vec3 FM_CALL makeZeroVec3();
 
 FM_INLINE void FM_CALL store(float* mem, vec3 v); 
 
+FM_INLINE float* ptr(const vec3& v) { return (float*)(&v); }
+FM_INLINE float* ptrY(const vec3& v) { return (float*)(&v) + 1; }
+FM_INLINE float* ptrZ(const vec3& v) { return (float*)(&v) + 2; }
+
 FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b); 
 FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b);
 FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b);
@@ -510,6 +526,11 @@ FM_INLINE vec4 FM_CALL makeZeroVec4();
 
 FM_INLINE void FM_CALL store(float* mem, vec4 v);
 FM_INLINE void FM_CALL store16ByteAligned(float* mem, vec4 v);
+
+FM_INLINE float* ptr(const vec4& v) { return (float*)(&v); }
+FM_INLINE float* ptrY(const vec4& v) { return (float*)(&v) + 1; }
+FM_INLINE float* ptrZ(const vec4& v) { return (float*)(&v) + 2; }
+FM_INLINE float* ptrW(const vec4& v) { return (float*)(&v) + 3; }
 
 FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b); 
 FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b);
@@ -582,6 +603,8 @@ FM_INLINE mat4 FM_CALL makeMat4FromRows(
 
 FM_INLINE void FM_CALL store(float* mem, mat4 mat);
 FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
+
+FM_INLINE float* ptr(const mat4& v) { return (float*)(&v); }
 
 FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b);
 FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b);

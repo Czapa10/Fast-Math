@@ -44,6 +44,13 @@ TEST_CASE("vec3 constructors and getters")
 	REQUIRE(d.y() == 2.f);
 	REQUIRE(d.z() == 3.f);
 
+	float* px = ptr(d);
+	float* py = ptrY(d);
+	float* pz = ptrZ(d);
+	CHECK(*px == 1.f);
+	CHECK(*py == 2.f);
+	CHECK(*pz == 3.f);
+
 	vec2 e;
 
 	e = d.xy();

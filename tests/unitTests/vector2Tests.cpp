@@ -44,6 +44,11 @@ TEST_CASE("vec2 constructors and getters")
 	CHECK(a.yy().y() == 4.5f);
 	CHECK(a.vv().u() == 4.5f);
 	CHECK(a.vv().v() == 4.5f);
+
+	float* px = ptr(d);
+	float* py = ptrY(d);
+	CHECK(*px == -1.f);
+	CHECK(*py == 2.f);
 }
 
 TEST_CASE("vec2 setters")
@@ -197,6 +202,11 @@ TEST_CASE("vec2d constructors and getters")
 	double initArr[] = {-1.0, 2.0};	
 	vec2d d = makeVec2dFromMemory(initArr);
 	CHECK_VECTOR2(d, -1.0, 2.0);
+
+	double* px = ptr(d);
+	double* py = ptrY(d);
+	CHECK(*px == -1.0);
+	CHECK(*py == 2.0);
 }
 
 TEST_CASE("vec2d setters")
@@ -347,6 +357,11 @@ TEST_CASE("vec2i constructors and getters")
 	int initArr[] = {-1, 2};	
 	vec2i d = makeVec2iFromMemory(initArr);
 	CHECK_VECTOR2(d, -1, 2);
+
+	int* px = ptr(d);
+	int* py = ptrY(d);
+	CHECK(*px == -1);
+	CHECK(*py == 2);
 }
 
 TEST_CASE("vec2i setters")
@@ -484,6 +499,11 @@ TEST_CASE("vec2u constructors and getters")
 	unsigned initArr[] = {1, 2};	
 	vec2u e = makeVec2uFromMemory(initArr);
 	CHECK_VECTOR2(e, 1, 2);
+
+	unsigned* px = ptr(e);
+	unsigned* py = ptrY(e);
+	CHECK(*px == 1);
+	CHECK(*py == 2);
 }
 
 TEST_CASE("vec2u setters")
