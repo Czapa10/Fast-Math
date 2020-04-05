@@ -35,12 +35,12 @@ using namespace fm;
 #define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(mat, d) \
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(mat, d, d, d, d)
 
-#define PRINT_MAT4(mat) \
+#define PRINT_MAT4(mat) { \
 	float* arr = (float*)(&mat); \
 	INFO(arr[0] << ", " << arr[4] << ", " << arr[8] << ", " << arr[12]); \
     INFO(arr[1] << ", " << arr[5] << ", " << arr[9] << ", " << arr[13]); \
 	INFO(arr[2] << ", " << arr[6] << ", " << arr[10] << ", " << arr[14]); \
-    INFO(arr[3] << ", " << arr[7] << ", " << arr[11] << ", " << arr[15]); \
+    INFO(arr[3] << ", " << arr[7] << ", " << arr[11] << ", " << arr[15]); } \
 
 TEST_CASE("mat4 construction and getters")
 {
@@ -281,8 +281,8 @@ TEST_CASE("mat4 operations")
 
 TEST_CASE("mat4 transformations")
 {
-	vec4 v0 = makeVec4ForTransformation(0.f);
-	vec4 v1 = makeVec4ForTransformation(1.f);
+	vec4 v0 = makeVec4(0.f, 0.f, 0.f, 1.f);
+	vec4 v1 = makeVec4(1.f);
 	vec4 res;
 	mat4 trans, scal, rot;
 
@@ -322,6 +322,8 @@ TEST_CASE("mat4 transformations")
 
 	scal = scale(scal, makeVec3(-1.f, 2.f, 3.f));
 	res = scal * v1;
+	PRINT_MAT4(scal);
+	CHECK_VECTOR4(scal.getMainDiagonal(), -5.f, 4.f, 18.f, 1.f);
 	CHECK_VECTOR4(res, -5.f, 4.f, 18.f, 1.f);
 
 	// rotate

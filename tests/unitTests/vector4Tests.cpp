@@ -30,11 +30,8 @@ TEST_CASE("vec4 constructors and getters")
 	vec4 d = makeVec4FromMemory(arr);
 	CHECK_VECTOR4(d, 1.f, 2.f, 3.f, 4.f);
 
-	vec4 e = makeVec4ForTransformation(1.f, 2.f, 3.f);
-	CHECK_VECTOR4(e, 1.f, 2.f, 3.f, 1.f);
-
-	e = makeVec4ForTransformation(makeVec3(1.f, 2.f, 3.f));
-	CHECK_VECTOR4(e, 1.f, 2.f, 3.f, 1.f);
+	vec4 e = makeVec4(makeVec3(1.f, 2.f, 3.f), 4.f);
+	CHECK_VECTOR4(e, 1.f, 2.f, 3.f, 4.f);
 }
 
 TEST_CASE("vec4 setters")
