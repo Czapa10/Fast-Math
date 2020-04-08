@@ -650,6 +650,15 @@ FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians);
 FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians);
 FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians);
 
+FM_INLINE mat4 FM_CALL makeShearXAxisMat4(float y, float z); 
+FM_INLINE mat4 FM_CALL makeShearYAxisMat4(float x, float z);
+FM_INLINE mat4 FM_CALL makeShearZAxisMat4(float x, float y);
+FM_INLINE mat4 FM_CALL makeShearMat4(float xy, float xz, float yx, float yz, float zx, float zy);
+FM_INLINE mat4 FM_CALL shearXAxis(mat4 m, float y, float z); 
+FM_INLINE mat4 FM_CALL shearYAxis(mat4 m, float x, float z); 
+FM_INLINE mat4 FM_CALL shearZAxis(mat4 m, float x, float y); 
+FM_INLINE mat4 FM_CALL shear(mat4 m, float xy, float xz, float yx, float yz, float zx, float zy);
+
 mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float near, float far);
 mat4 makePerspectiveMat4(float fov, float aspectRatio, float near, float far);
 
@@ -2356,6 +2365,50 @@ FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians) {
 	mat4 rotMat = makeRotationAroundZAxisMat4Radians(radians);
 	return m * rotMat;
 }
+FM_INLINE mat4 FM_CALL makeShearXAxisMat4(float y, float z) {
+	return makeMat4FromRows(
+		1.f, 0.f, 0.f, 0.f,
+		y,   1.f, 0.f, 0.f,
+		z,   0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeShearYAxisMat4(float x, float z) {
+	return makeMat4FromRows(
+		1.f, x,   0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, z,   1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeShearZAxisMat4(float x, float y) {
+	return makeMat4FromRows(
+		1.f, 0.f, x,   0.f,
+		0.f, 1.f, y,   0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL makeShearMat4(float xy, float xz, float yx, float yz, float zx, float zy) {
+	return makeMat4FromRows(
+		1.f, yx, zx, 0.f,
+		xy, 1.f, zy, 0.f,
+		xz, yz, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f);
+}
+FM_INLINE mat4 FM_CALL shearXAxisMat4(mat4 m, float y, float z) {
+	mat4 shearMat = makeShearXAxisMat4(y, z);
+	return m * shearMat;
+}
+FM_INLINE mat4 FM_CALL shearYAxisMat4(mat4 m, float x, float z) {
+	mat4 shearMat = makeShearYAxisMat4(x, z);
+	return m * shearMat;
+} 
+FM_INLINE mat4 FM_CALL shearZAxisMat4(mat4 m, float x, float y) {
+	mat4 shearMat = makeShearZAxisMat4(x, y);
+	return m * shearMat;
+} 
+FM_INLINE mat4 FM_CALL shearMat4(mat4 m, float xy, float xz, float yx, float yz, float zx, float zy) {
+	mat4 shearMat = makeShearMat4(xy, xz, yx, yz, zx, zy);
+	return m * shearMat;
+}
 mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float nearValue, float farValue) {
 	float rl = right - left;
 	float tb = top - bottom;
@@ -2365,8 +2418,7 @@ mat4 makeOrthographicMat4(float left, float right, float bottom, float top, floa
 		2.f / rl, 0.f, 0.f, -((right + left) / rl),
 		0.f, 2.f / tb, 0.f, -((top + bottom) / tb),
 		0.f, 0.f, -2.f / fn, -((farValue + nearValue) / fn),
-		0.f, 0.f, 0.f, 1.f
-	);
+		0.f, 0.f, 0.f, 1.f);
 }
 mat4 makePerspectiveMat4(float fov, float aspectRatio, float nearValue, float farValue)
 {
