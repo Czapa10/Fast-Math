@@ -1,7 +1,7 @@
 /*
 FAST MATH
 C++ single header math libary
-https://github.com/Czapa10/Fast-Math
+https://githuB.com/Czapa10/Fast-Math
 
 Written by Grzegorz "Czapa" Bednorz
 
@@ -30,7 +30,7 @@ like this:
 #include <emmintrin.h>
 #include <stdint.h>
 
-// TODO: make FM_INLINE work on all compilers
+// TODO:  FM_INLINE work on all compilers
 
 #define FM_INLINE __forceinline
 #define FM_CALL __vectorcall
@@ -40,637 +40,638 @@ like this:
 
 namespace fm {
 
-FM_INLINE float min(float a, float b);
-FM_INLINE float max(float a, float b);
-FM_INLINE double min(double a, double b);
-FM_INLINE double max(double a, double b);
-FM_INLINE int32_t min(int32_t a, int32_t b);
-FM_INLINE int32_t max(int32_t a, int32_t b);
-FM_INLINE uint32_t min(uint32_t a, uint32_t b);
-FM_INLINE uint32_t max(uint32_t a, uint32_t b);
+FM_INLINE float Min(float, float);
+FM_INLINE float Max(float, float);
+FM_INLINE double Min(double, double);
+FM_INLINE double Max(double, double);
+FM_INLINE int32_t Min(int32_t, int32_t);
+FM_INLINE int32_t Max(int32_t, int32_t);
+FM_INLINE uint32_t Min(uint32_t, uint32_t);
+FM_INLINE uint32_t Max(uint32_t, uint32_t);
 
-FM_INLINE float abs(float a); 
-FM_INLINE double abs(double a); 
-FM_INLINE int32_t abs(int32_t a);
+FM_INLINE float Abs(float); 
+FM_INLINE double Abs(double); 
+FM_INLINE int32_t Abs(int32_t);
 
-FM_INLINE float radiansToDegrees(float radians);
-FM_INLINE double radiansToDegrees(double radians);
-FM_INLINE float degreesToRadians(float degrees);
-FM_INLINE double degreesToRadians(double degrees);
+FM_INLINE float RadiansToDegrees(float Radians);
+FM_INLINE double RadiansToDegrees(double Radians);
+FM_INLINE float DegreesToRadians(float Degrees);
+FM_INLINE double DegreesToRadians(double Degrees);
 
-struct vec2
+struct v2
 {
-	__m128 m;
+	__m128 M;
 
-	FM_INLINE void FM_CALL setX(float x);
-	FM_INLINE void FM_CALL setY(float y); 
+	FM_INLINE void FM_CALL SetX(float);
+	FM_INLINE void FM_CALL SetY(float); 
 
-	FM_INLINE float FM_CALL x() const;
-	FM_INLINE float FM_CALL u() const { return x(); }
-	FM_INLINE float FM_CALL left() const { return x(); }
-	FM_INLINE float FM_CALL width() const { return x(); }
+	FM_INLINE float FM_CALL X() const;
+	FM_INLINE float FM_CALL U() const { return X(); }
+	FM_INLINE float FM_CALL Left() const { return X(); }
+	FM_INLINE float FM_CALL Width() const { return X(); }
 
-	FM_INLINE float FM_CALL y() const;
-	FM_INLINE float FM_CALL v() const { return y(); }
-	FM_INLINE float FM_CALL top() const { return y(); }
-	FM_INLINE float FM_CALL height() const { return y(); }
+	FM_INLINE float FM_CALL Y() const;
+	FM_INLINE float FM_CALL V() const { return Y(); }
+	FM_INLINE float FM_CALL Top() const { return Y(); }
+	FM_INLINE float FM_CALL Height() const { return Y(); }
 
-	FM_INLINE vec2 FM_CALL yx() const;
-	FM_INLINE vec2 FM_CALL xx() const;
-	FM_INLINE vec2 FM_CALL yy() const;
+	FM_INLINE v2 FM_CALL YX() const;
+	FM_INLINE v2 FM_CALL XX() const;
+	FM_INLINE v2 FM_CALL YY() const;
 
 #ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
-	FM_INLINE vec2 FM_CALL vu() const { return yx(); }
-	FM_INLINE vec2 FM_CALL uu() const { return xx(); }
-	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
+	FM_INLINE v2 FM_CALL VU() const { return YX(); }
+	FM_INLINE v2 FM_CALL UU() const { return XX(); }
+	FM_INLINE v2 FM_CALL VV() const { return YY(); }
 #endif
 };
 
-FM_INLINE vec2 FM_CALL makeVec2FromMemory(const float* v); 
-FM_INLINE vec2 FM_CALL makeVec2(float x, float y);
-FM_INLINE vec2 FM_CALL makeVec2(float a);
-FM_INLINE vec2 FM_CALL makeVec2(__m128 m);
-FM_INLINE vec2 FM_CALL makeZeroVec2();
+FM_INLINE v2 FM_CALL V2FromMemory(const float*); 
+FM_INLINE v2 FM_CALL V2(float X, float Y);
+FM_INLINE v2 FM_CALL V2(float XY);
+FM_INLINE v2 FM_CALL V2(__m128);
+FM_INLINE v2 FM_CALL V2();
 
-FM_INLINE void FM_CALL store(float* mem, vec2 v);
+FM_INLINE void FM_CALL Store(float* Mem, v2 V);
 
-FM_INLINE float* ptr(const vec2& v) { return (float*)(&v); }
-FM_INLINE float* ptrY(const vec2& v) { return (float*)(&v) + 1; }
+FM_INLINE float* Ptr(const v2& V) { return (float*)(&V); }
+FM_INLINE float* PtrY(const v2& V) { return (float*)(&V) + 1; }
 
-FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b);
-FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b);
-FM_INLINE vec2& FM_CALL operator-=(vec2& a, vec2 b);
-FM_INLINE vec2 FM_CALL hadamardMul(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL hadamardDiv(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar);
-FM_INLINE vec2 FM_CALL operator*(float scalar, vec2 v);
-FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar); 
-FM_INLINE vec2 FM_CALL operator-(vec2 v); 
-FM_INLINE float FM_CALL dot(vec2 a, vec2 b); 
-FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b); 
-FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b); 
-FM_INLINE vec2 FM_CALL abs(vec2 v); 
-FM_INLINE float FM_CALL sumOfElements(vec2 v);
-FM_INLINE float FM_CALL length(vec2 v);
-FM_INLINE float FM_CALL lengthSquared(vec2 v); 
-FM_INLINE vec2 FM_CALL normalize(vec2 v);
-FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 min, vec2 max);
-FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t);
+FM_INLINE v2 FM_CALL operator+(v2, v2);
+FM_INLINE v2 FM_CALL operator-(v2, v2);
+FM_INLINE v2& FM_CALL operator+=(v2&, v2);
+FM_INLINE v2& FM_CALL operator-=(v2&, v2);
+FM_INLINE v2 FM_CALL HadamardMul(v2, v2);
+FM_INLINE v2 FM_CALL HadamardDiv(v2, v2);
+FM_INLINE v2 FM_CALL operator*(v2 V, float Scalar);
+FM_INLINE v2 FM_CALL operator*(float Scalar, v2 V);
+FM_INLINE v2 FM_CALL operator/(v2 V, float Scalar); 
+FM_INLINE v2 FM_CALL operator-(v2); 
+FM_INLINE float FM_CALL Dot(v2, v2); 
+FM_INLINE v2 FM_CALL Min(v2, v2); 
+FM_INLINE v2 FM_CALL Max(v2, v2); 
+FM_INLINE v2 FM_CALL Abs(v2); 
+FM_INLINE float FM_CALL SumOfElements(v2);
+FM_INLINE float FM_CALL Length(v2);
+FM_INLINE float FM_CALL LengthSquared(v2); 
+FM_INLINE v2 FM_CALL Normalize(v2);
+FM_INLINE v2 FM_CALL Clamp(v2 V, v2 Min, v2 Max);
+FM_INLINE v2 FM_CALL Lerp(v2 A, v2 B, float T);
 
-FM_INLINE bool FM_CALL operator==(vec2 a, vec2 b); 
-FM_INLINE bool FM_CALL operator!=(vec2 a, vec2 b); 
-FM_INLINE vec2 FM_CALL equalsMask(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL greaterMask(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL greaterOrEqualMask(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL lesserMask(vec2 a, vec2 b);
-FM_INLINE vec2 FM_CALL lesserOrEqualMask(vec2 a, vec2 b);
+FM_INLINE bool FM_CALL operator==(v2, v2); 
+FM_INLINE bool FM_CALL operator!=(v2, v2); 
+FM_INLINE v2 FM_CALL EqualsMask(v2, v2);
+FM_INLINE v2 FM_CALL GreaterMask(v2, v2);
+FM_INLINE v2 FM_CALL GreaterOrEqualMask(v2, v2);
+FM_INLINE v2 FM_CALL LesserMask(v2, v2);
+FM_INLINE v2 FM_CALL LesserOrEqualMask(v2, v2);
 
-struct vec2d
+struct v2d
 {
-	__m128d m;
+	__m128d M;
 
-	FM_INLINE void FM_CALL setX(double x);
-	FM_INLINE void FM_CALL setY(double y);
+	FM_INLINE void FM_CALL SetX(double X);
+	FM_INLINE void FM_CALL SetY(double Y);
 
-	FM_INLINE double FM_CALL x() const;
-	FM_INLINE double FM_CALL u() const { return x(); }
-	FM_INLINE double FM_CALL left() const { return x(); }
-	FM_INLINE double FM_CALL width() const { return x(); }
+	FM_INLINE double FM_CALL X() const;
+	FM_INLINE double FM_CALL U() const { return X(); }
+	FM_INLINE double FM_CALL Left() const { return X(); }
+	FM_INLINE double FM_CALL Width() const { return X(); }
 
-	FM_INLINE double FM_CALL y() const;
-	FM_INLINE double FM_CALL v() const { return y(); }
-	FM_INLINE double FM_CALL height() const { return y(); }
-	FM_INLINE double FM_CALL top() const { return y(); }
+	FM_INLINE double FM_CALL Y() const;
+	FM_INLINE double FM_CALL V() const { return Y(); }
+	FM_INLINE double FM_CALL Height() const { return Y(); }
+	FM_INLINE double FM_CALL Top() const { return Y(); }
 
-	FM_INLINE vec2d FM_CALL yx() const;
-	FM_INLINE vec2d FM_CALL xx() const;
-	FM_INLINE vec2d FM_CALL yy() const;
+	FM_INLINE v2d FM_CALL YX() const;
+	FM_INLINE v2d FM_CALL XX() const;
+	FM_INLINE v2d FM_CALL YY() const;
 
-	FM_INLINE vec2d FM_CALL vu() const { return yx(); }
-	FM_INLINE vec2d FM_CALL uu() const { return xx(); }
-	FM_INLINE vec2d FM_CALL vv() const { return yy(); }
+	FM_INLINE v2d FM_CALL VU() const { return YX(); }
+	FM_INLINE v2d FM_CALL UU() const { return XX(); }
+	FM_INLINE v2d FM_CALL VV() const { return YY(); }
 };
 
-FM_INLINE vec2d FM_CALL makeVec2dFromMemory(const double* v);
-FM_INLINE vec2d FM_CALL makeVec2d(double x, double y);
-FM_INLINE vec2d FM_CALL makeVec2d(double a);
-FM_INLINE vec2d FM_CALL makeVec2d (__m128d m);
-FM_INLINE vec2d FM_CALL makeZeroVec2d();
+FM_INLINE v2d FM_CALL V2dFromMemory(const double*);
+FM_INLINE v2d FM_CALL V2d(double X, double Y);
+FM_INLINE v2d FM_CALL V2d(double XY);
+FM_INLINE v2d FM_CALL V2d (__m128d);
+FM_INLINE v2d FM_CALL V2d();
 
-FM_INLINE void FM_CALL store(double* mem, vec2d v);
-FM_INLINE void FM_CALL store16ByteAligned(double* mem, vec2d v);
+FM_INLINE void FM_CALL Store(double* Mem, v2d V);
+FM_INLINE void FM_CALL Store16ByteAligned(double* Mem, v2d V);
 
-FM_INLINE double* ptr(const vec2d& v) { return (double*)(&v); }
-FM_INLINE double* ptrY(const vec2d& v) { return (double*)(&v) + 1; }
+FM_INLINE double* Ptr(const v2d& V) { return (double*)(&V); }
+FM_INLINE double* PtrY(const v2d& V) { return (double*)(&V) + 1; }
 
-FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b);
-FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b);
-FM_INLINE vec2d& FM_CALL operator-=(vec2d& a, vec2d b);
-FM_INLINE vec2d FM_CALL hadamardMul(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL hadamardDiv(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar);
-FM_INLINE vec2d FM_CALL operator*(double scalar, vec2d v);
-FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar);
-FM_INLINE vec2d FM_CALL operator-(vec2d v); 
-FM_INLINE double FM_CALL dot(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL normalize(vec2d v);
-FM_INLINE vec2d FM_CALL abs(vec2d v);
-FM_INLINE double FM_CALL sumOfElements(vec2d v);
-FM_INLINE double FM_CALL length(vec2d v);
-FM_INLINE double FM_CALL lengthSquared(vec2d v); 
-FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d min, vec2d max); 
-FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t);
+FM_INLINE v2d FM_CALL operator+(v2d, v2d); 
+FM_INLINE v2d FM_CALL operator-(v2d, v2d);
+FM_INLINE v2d& FM_CALL operator+=(v2d&, v2d);
+FM_INLINE v2d& FM_CALL operator-=(v2d&, v2d);
+FM_INLINE v2d FM_CALL HadamardMul(v2d, v2d);
+FM_INLINE v2d FM_CALL HadamardDiv(v2d, v2d);
+FM_INLINE v2d FM_CALL operator*(v2d V, double Scalar);
+FM_INLINE v2d FM_CALL operator*(double Scalar, v2d V);
+FM_INLINE v2d FM_CALL operator/(v2d V, double Scalar);
+FM_INLINE v2d FM_CALL operator-(v2d); 
+FM_INLINE double FM_CALL Dot(v2d, v2d); 
+FM_INLINE v2d FM_CALL Min(v2d, v2d); 
+FM_INLINE v2d FM_CALL Max(v2d, v2d); 
+FM_INLINE v2d FM_CALL Normalize(v2d);
+FM_INLINE v2d FM_CALL Abs(v2d);
+FM_INLINE double FM_CALL SumOfElements(v2d);
+FM_INLINE double FM_CALL Length(v2d);
+FM_INLINE double FM_CALL LengthSquared(v2d); 
+FM_INLINE v2d FM_CALL Clamp(v2d V, v2d Min, v2d Max); 
+FM_INLINE v2d FM_CALL Lerp(v2d A, v2d B, double T);
 
-FM_INLINE bool FM_CALL operator==(vec2d a, vec2d b); 
-FM_INLINE bool FM_CALL operator!=(vec2d a, vec2d b); 
-FM_INLINE vec2d FM_CALL equalsMask(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL greaterMask(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL greaterOrEqualMask(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL lesserMask(vec2d a, vec2d b);
-FM_INLINE vec2d FM_CALL lesserOrEqualMask(vec2d a, vec2d b);
+FM_INLINE bool FM_CALL operator==(v2d, v2d); 
+FM_INLINE bool FM_CALL operator!=(v2d, v2d); 
+FM_INLINE v2d FM_CALL EqualsMask(v2d, v2d);
+FM_INLINE v2d FM_CALL GreaterMask(v2d, v2d);
+FM_INLINE v2d FM_CALL GreaterOrEqualMask(v2d, v2d);
+FM_INLINE v2d FM_CALL LesserMask(v2d, v2d);
+FM_INLINE v2d FM_CALL LesserOrEqualMask(v2d, v2d);
 
-struct vec2i
+struct v2i
 {
-	__m128i m;
+	__m128i M;
 
-	FM_INLINE int32_t FM_CALL x() const;
-	FM_INLINE int32_t FM_CALL u() const { return x(); }
-	FM_INLINE int32_t FM_CALL left() const { return x(); }
-	FM_INLINE int32_t FM_CALL width() const { return x(); }
+	FM_INLINE int32_t FM_CALL X() const;
+	FM_INLINE int32_t FM_CALL U() const { return X(); }
+	FM_INLINE int32_t FM_CALL Left() const { return X(); }
+	FM_INLINE int32_t FM_CALL Width() const { return X(); }
 
-	FM_INLINE int32_t FM_CALL y() const;
-	FM_INLINE int32_t FM_CALL v() const { return y(); }
-	FM_INLINE int32_t FM_CALL top() const { return y(); }
-	FM_INLINE int32_t FM_CALL height() const { return y(); }
+	FM_INLINE int32_t FM_CALL Y() const;
+	FM_INLINE int32_t FM_CALL V() const { return Y(); }
+	FM_INLINE int32_t FM_CALL Top() const { return Y(); }
+	FM_INLINE int32_t FM_CALL Height() const { return Y(); }
 
-	FM_INLINE vec2i FM_CALL yx() const;
-	FM_INLINE vec2i FM_CALL xx() const;
-	FM_INLINE vec2i FM_CALL yy() const;
+	FM_INLINE v2i FM_CALL YX() const;
+	FM_INLINE v2i FM_CALL XX() const;
+	FM_INLINE v2i FM_CALL YY() const;
 
-	FM_INLINE vec2i FM_CALL vu() const { return yx(); }
-	FM_INLINE vec2i FM_CALL uu() const { return xx(); }
-	FM_INLINE vec2i FM_CALL vv() const { return yy(); }
+	FM_INLINE v2i FM_CALL VU() const { return YX(); }
+	FM_INLINE v2i FM_CALL UU() const { return XX(); }
+	FM_INLINE v2i FM_CALL VV() const { return YY(); }
 
-	FM_INLINE void FM_CALL setX(int32_t x);
-	FM_INLINE void FM_CALL setY(int32_t y);
+	FM_INLINE void FM_CALL SetX(int32_t);
+	FM_INLINE void FM_CALL SetY(int32_t);
 };
-FM_INLINE vec2i FM_CALL makeVec2iFromMemory(const int32_t* v);
-FM_INLINE vec2i FM_CALL makeVec2i(int32_t x, int32_t y);
-FM_INLINE vec2i FM_CALL makeVec2i(int32_t a); 
-FM_INLINE vec2i FM_CALL makeVec2i(__m128i m); 
-FM_INLINE vec2i FM_CALL makeZeroVec2i();
+FM_INLINE v2i FM_CALL V2iFromMemory(const int32_t*);
+FM_INLINE v2i FM_CALL V2i(int32_t X, int32_t Y);
+FM_INLINE v2i FM_CALL V2i(int32_t XY); 
+FM_INLINE v2i FM_CALL V2i(__m128i); 
+FM_INLINE v2i FM_CALL V2i();
 
-FM_INLINE void FM_CALL store(int32_t* mem, vec2i v); 
+FM_INLINE void FM_CALL Store(int32_t* Mem, v2i V); 
 
-FM_INLINE int32_t* ptr(const vec2i& v) { return (int32_t*)(&v); }
-FM_INLINE int32_t* ptrY(const vec2i& v) { return (int32_t*)(&v) + 1; }
+FM_INLINE int32_t* Ptr(const v2i& V) { return (int32_t*)(&V); }
+FM_INLINE int32_t* PtrY(const v2i& V) { return (int32_t*)(&V) + 1; }
 
-FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b); 
-FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b);
-FM_INLINE vec2i& FM_CALL operator-=(vec2i& a, vec2i b);
-FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL operator*(vec2i v, int32_t scalar); 
-FM_INLINE vec2i FM_CALL operator*(int32_t scalar, vec2i v);
-FM_INLINE vec2i FM_CALL operator-(vec2i v); 
-FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b); 
-FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b); 
-FM_INLINE vec2i FM_CALL abs(vec2i v); 
-FM_INLINE int32_t FM_CALL sumOfElements(vec2i v);
-FM_INLINE int32_t FM_CALL length(vec2i v);
-FM_INLINE int32_t FM_CALL lengthSquared(vec2i v); 
-FM_INLINE vec2i FM_CALL clamp(vec2i v, vec2i min, vec2i max); 
+FM_INLINE v2i FM_CALL operator+(v2i A, v2i B);
+FM_INLINE v2i FM_CALL operator-(v2i A, v2i B); 
+FM_INLINE v2i& FM_CALL operator+=(v2i& a, v2i B);
+FM_INLINE v2i& FM_CALL operator-=(v2i& a, v2i B);
+FM_INLINE v2i FM_CALL HadamardMul(v2i A, v2i B);
+FM_INLINE v2i FM_CALL operator*(v2i v, int32_t Scalar); 
+FM_INLINE v2i FM_CALL operator*(int32_t Scalar, v2i v);
+FM_INLINE v2i FM_CALL operator-(v2i v); 
+FM_INLINE v2i FM_CALL Min(v2i, v2i); 
+FM_INLINE v2i FM_CALL Max(v2i, v2i); 
+FM_INLINE v2i FM_CALL Abs(v2i); 
+FM_INLINE int32_t FM_CALL SumOfElements(v2i);
+FM_INLINE int32_t FM_CALL Length(v2i);
+FM_INLINE int32_t FM_CALL LengthSquared(v2i); 
+FM_INLINE v2i FM_CALL Clamp(v2i V, v2i Min, v2i Max); 
 
-FM_INLINE bool FM_CALL operator==(vec2i a, vec2i b); 
-FM_INLINE bool FM_CALL operator!=(vec2i a, vec2i b); 
-FM_INLINE vec2i FM_CALL equalsMask(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL greaterMask(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL greaterOrEqualMask(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL lesserMask(vec2i a, vec2i b);
-FM_INLINE vec2i FM_CALL lesserOrEqualMask(vec2i a, vec2i b);
-// TODO: Add hadamardDiv() and operator/ - Maybe I can do that using cast instructions?
+FM_INLINE bool FM_CALL operator==(v2i, v2i); 
+FM_INLINE bool FM_CALL operator!=(v2i, v2i); 
+FM_INLINE v2i FM_CALL EqualsMask(v2i, v2i);
+FM_INLINE v2i FM_CALL GreaterMask(v2i, v2i);
+FM_INLINE v2i FM_CALL GreaterOrEqualMask(v2i, v2i);
+FM_INLINE v2i FM_CALL LesserMask(v2i, v2i);
+FM_INLINE v2i FM_CALL LesserOrEqualMask(v2i, v2i);
+// TODO: Add HadamardDiv() and operator/ - Maybe I can do that using cast instructions?
 
-struct vec2u
+struct v2u
 {
-	__m128i m;
+	__m128i M;
 
-	FM_INLINE void FM_CALL setX(uint32_t x);
-	FM_INLINE void FM_CALL setY(uint32_t y);
+	FM_INLINE void FM_CALL SetX(uint32_t);
+	FM_INLINE void FM_CALL SetY(uint32_t);
 
-	FM_INLINE uint32_t FM_CALL x() const;
-	FM_INLINE uint32_t FM_CALL u() const { return x(); }
-	FM_INLINE uint32_t FM_CALL left() const { return x(); }
-	FM_INLINE uint32_t FM_CALL width() const { return x(); }
+	FM_INLINE uint32_t FM_CALL X() const;
+	FM_INLINE uint32_t FM_CALL U() const { return X(); }
+	FM_INLINE uint32_t FM_CALL Left() const { return X(); }
+	FM_INLINE uint32_t FM_CALL Width() const { return X(); }
 
-	FM_INLINE uint32_t FM_CALL y() const;
-	FM_INLINE uint32_t FM_CALL v() const { return y(); }
-	FM_INLINE uint32_t FM_CALL top() const { return y(); }
-	FM_INLINE uint32_t FM_CALL height() const { return y(); }
+	FM_INLINE uint32_t FM_CALL Y() const;
+	FM_INLINE uint32_t FM_CALL V() const { return Y(); }
+	FM_INLINE uint32_t FM_CALL Top() const { return Y(); }
+	FM_INLINE uint32_t FM_CALL Height() const { return Y(); }
 
-	FM_INLINE vec2u FM_CALL yx() const;
-	FM_INLINE vec2u FM_CALL xx() const;
-	FM_INLINE vec2u FM_CALL yy() const;
+	FM_INLINE v2u FM_CALL YX() const;
+	FM_INLINE v2u FM_CALL XX() const;
+	FM_INLINE v2u FM_CALL YY() const;
 
-	FM_INLINE vec2u FM_CALL vu() const { return yx(); }
-	FM_INLINE vec2u FM_CALL uu() const { return xx(); }
-	FM_INLINE vec2u FM_CALL vv() const { return yy(); }
+	FM_INLINE v2u FM_CALL VU() const { return YX(); }
+	FM_INLINE v2u FM_CALL UU() const { return XX(); }
+	FM_INLINE v2u FM_CALL VV() const { return YY(); }
 };
 
-FM_INLINE vec2u FM_CALL makeVec2uFromMemory(const uint32_t* v); 
-FM_INLINE vec2u FM_CALL makeVec2u(uint32_t x, uint32_t y); 
-FM_INLINE vec2u FM_CALL makeVec2u(uint32_t a);
-FM_INLINE vec2u FM_CALL makeVec2u(__m128i m);
-FM_INLINE vec2u FM_CALL makeZeroVec2u();
+FM_INLINE v2u FM_CALL V2uFromMemory(const uint32_t*); 
+FM_INLINE v2u FM_CALL V2u(uint32_t X, uint32_t Y); 
+FM_INLINE v2u FM_CALL V2u(uint32_t XY);
+FM_INLINE v2u FM_CALL V2u(__m128i);
+FM_INLINE v2u FM_CALL V2u();
 
-FM_INLINE void FM_CALL store(uint32_t* mem, vec2u v);
+FM_INLINE void FM_CALL Store(uint32_t* Mem, v2u V);
 
-FM_INLINE uint32_t* ptr(const vec2u& v) { return (uint32_t*)(&v); }
-FM_INLINE uint32_t* ptrY(const vec2u& v) { return (uint32_t*)(&v) + 1; }
+FM_INLINE uint32_t* Ptr(const v2u& V) { return (uint32_t*)(&V); }
+FM_INLINE uint32_t* PtrY(const v2u& V) { return (uint32_t*)(&V) + 1; }
 
-FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b);
-FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b);
-FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b);
-FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL operator*(vec2u v, uint32_t scalar); 
-FM_INLINE vec2u FM_CALL operator*(uint32_t scalar, vec2u v);
-FM_INLINE vec2u FM_CALL min(vec2u a, vec2u b); 
-FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b); 
-FM_INLINE uint32_t FM_CALL sumOfElements(vec2u v);
-FM_INLINE uint32_t FM_CALL length(vec2u v);
-FM_INLINE uint32_t FM_CALL lengthSquared(vec2u v); 
-FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u min, vec2u max); 
+FM_INLINE v2u FM_CALL operator+(v2u, v2u);
+FM_INLINE v2u FM_CALL operator-(v2u, v2u);
+FM_INLINE v2u& FM_CALL operator+=(v2u&, v2u);
+FM_INLINE v2u& FM_CALL operator-=(v2u&, v2u);
+FM_INLINE v2u FM_CALL HadamardMul(v2u, v2u);
+FM_INLINE v2u FM_CALL operator*(v2u V, uint32_t Scalar); 
+FM_INLINE v2u FM_CALL operator*(uint32_t Scalar, v2u V);
+FM_INLINE v2u FM_CALL Min(v2u, v2u); 
+FM_INLINE v2u FM_CALL Max(v2u, v2u); 
+FM_INLINE uint32_t FM_CALL SumOfElements(v2u);
+FM_INLINE uint32_t FM_CALL Length(v2u);
+FM_INLINE uint32_t FM_CALL LengthSquared(v2u); 
+FM_INLINE v2u FM_CALL Clamp(v2u v, v2u min, v2u Max); 
 
-FM_INLINE bool FM_CALL operator==(vec2u a, vec2u b); 
-FM_INLINE bool FM_CALL operator!=(vec2u a, vec2u b); 
-FM_INLINE vec2u FM_CALL equalsMask(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL greaterMask(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL greaterOrEqualMask(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL lesserMask(vec2u a, vec2u b);
-FM_INLINE vec2u FM_CALL lesserOrEqualMask(vec2u a, vec2u b);
-// TODO: Add hadamardDiv() and operator/
+FM_INLINE bool FM_CALL operator==(v2u, v2u); 
+FM_INLINE bool FM_CALL operator!=(v2u, v2u); 
+FM_INLINE v2u FM_CALL EqualsMask(v2u, v2u);
+FM_INLINE v2u FM_CALL GreaterMask(v2u, v2u);
+FM_INLINE v2u FM_CALL GreaterOrEqualMask(v2u, v2u);
+FM_INLINE v2u FM_CALL LesserMask(v2u, v2u);
+FM_INLINE v2u FM_CALL LesserOrEqualMask(v2u, v2u);
+// TODO: Add HadamardDiv() and operator/
 
-struct vec3
+struct v3
 {
-	__m128 m;
+	__m128 M;
 
-	FM_INLINE void FM_CALL setX(float x);
-	FM_INLINE void FM_CALL setY(float y);
-	FM_INLINE void FM_CALL setZ(float z);
+	FM_INLINE void FM_CALL SetX(float X);
+	FM_INLINE void FM_CALL SetY(float Y);
+	FM_INLINE void FM_CALL SetZ(float Z);
 
-	FM_INLINE float FM_CALL x() const;
-	FM_INLINE float FM_CALL u() const { return x(); }
-	FM_INLINE float FM_CALL r() const { return x(); }
+	FM_INLINE float FM_CALL X() const;
+	FM_INLINE float FM_CALL U() const { return X(); }
+	FM_INLINE float FM_CALL R() const { return X(); }
 
-	FM_INLINE float FM_CALL y() const;
-	FM_INLINE float FM_CALL v() const { return y(); }
-	FM_INLINE float FM_CALL g() const { return y(); }
+	FM_INLINE float FM_CALL Y() const;
+	FM_INLINE float FM_CALL V() const { return Y(); }
+	FM_INLINE float FM_CALL G() const { return Y(); }
 
-	FM_INLINE float FM_CALL z() const;
-	FM_INLINE float FM_CALL w() const { return z(); }
-	FM_INLINE float FM_CALL b() const { return z(); }
+	FM_INLINE float FM_CALL Z() const;
+	FM_INLINE float FM_CALL W() const { return Z(); }
+	FM_INLINE float FM_CALL B() const { return Z(); }
 
-	FM_INLINE vec2 FM_CALL xy() const;
-	FM_INLINE vec2 FM_CALL yx() const;
-	FM_INLINE vec2 FM_CALL yz() const;
-	FM_INLINE vec2 FM_CALL zy() const;
-	FM_INLINE vec2 FM_CALL xz() const;
-	FM_INLINE vec2 FM_CALL zx() const;
-	FM_INLINE vec2 FM_CALL xx() const;
-	FM_INLINE vec2 FM_CALL yy() const;
-	FM_INLINE vec2 FM_CALL zz() const;
+	FM_INLINE v2 FM_CALL XY() const;
+	FM_INLINE v2 FM_CALL YX() const;
+	FM_INLINE v2 FM_CALL YZ() const;
+	FM_INLINE v2 FM_CALL ZY() const;
+	FM_INLINE v2 FM_CALL XZ() const;
+	FM_INLINE v2 FM_CALL ZX() const;
+	FM_INLINE v2 FM_CALL XX() const;
+	FM_INLINE v2 FM_CALL YY() const;
+	FM_INLINE v2 FM_CALL ZZ() const;
 
 #ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
-	FM_INLINE vec2 FM_CALL uv() const { return xy(); }
-	FM_INLINE vec2 FM_CALL vu() const { return yx(); }
-	FM_INLINE vec2 FM_CALL vw() const { return yz(); }
-	FM_INLINE vec2 FM_CALL wv() const { return zy(); }
-	FM_INLINE vec2 FM_CALL uw() const { return xz(); }
-	FM_INLINE vec2 FM_CALL wu() const { return zx(); }
-	FM_INLINE vec2 FM_CALL uu() const { return xx(); }
-	FM_INLINE vec2 FM_CALL vv() const { return yy(); }
-	FM_INLINE vec2 FM_CALL ww() const { return zz(); }
+	FM_INLINE v2 FM_CALL UV() const { return XY(); }
+	FM_INLINE v2 FM_CALL VU() const { return YX(); }
+	FM_INLINE v2 FM_CALL VW() const { return YZ(); }
+	FM_INLINE v2 FM_CALL WV() const { return ZY(); }
+	FM_INLINE v2 FM_CALL UW() const { return XZ(); }
+	FM_INLINE v2 FM_CALL WU() const { return ZX(); }
+	FM_INLINE v2 FM_CALL UU() const { return XX(); }
+	FM_INLINE v2 FM_CALL VV() const { return YY(); }
+	FM_INLINE v2 FM_CALL WW() const { return ZZ(); }
 #endif
 
 #ifndef FM_EXCLUDE_COLOR_SWIZZLES
-	FM_INLINE vec2 FM_CALL rg() const { return xy(); }
-	FM_INLINE vec2 FM_CALL gr() const { return yx(); }
-	FM_INLINE vec2 FM_CALL gb() const { return yz(); }
-	FM_INLINE vec2 FM_CALL bg() const { return zy(); }
-	FM_INLINE vec2 FM_CALL rb() const { return xz(); }
-	FM_INLINE vec2 FM_CALL br() const { return zx(); }
-	FM_INLINE vec2 FM_CALL rr() const { return xx(); }
-	FM_INLINE vec2 FM_CALL gg() const { return yy(); }
-	FM_INLINE vec2 FM_CALL bb() const { return zz(); }
+	FM_INLINE v2 FM_CALL RG() const { return XY(); }
+	FM_INLINE v2 FM_CALL GR() const { return YX(); }
+	FM_INLINE v2 FM_CALL GB() const { return YZ(); }
+	FM_INLINE v2 FM_CALL BG() const { return ZY(); }
+	FM_INLINE v2 FM_CALL RB() const { return XZ(); }
+	FM_INLINE v2 FM_CALL BR() const { return ZX(); }
+	FM_INLINE v2 FM_CALL RR() const { return XX(); }
+	FM_INLINE v2 FM_CALL GG() const { return YY(); }
+	FM_INLINE v2 FM_CALL BB() const { return ZZ(); }
 #endif
 
-	FM_INLINE vec3 FM_CALL xyz() const;
-	FM_INLINE vec3 FM_CALL yzx() const;
-	FM_INLINE vec3 FM_CALL zxy() const;
-	FM_INLINE vec3 FM_CALL zyx() const;
-	FM_INLINE vec3 FM_CALL xzy() const;
-	FM_INLINE vec3 FM_CALL yxz() const;
-	FM_INLINE vec3 FM_CALL xxy() const;
-	FM_INLINE vec3 FM_CALL xxz() const;
-	FM_INLINE vec3 FM_CALL yyx() const;
-	FM_INLINE vec3 FM_CALL yyz() const;
-	FM_INLINE vec3 FM_CALL zzx() const;
-	FM_INLINE vec3 FM_CALL zzy() const;
-	FM_INLINE vec3 FM_CALL yxx() const;
-	FM_INLINE vec3 FM_CALL zxx() const;
-	FM_INLINE vec3 FM_CALL xyy() const;
-	FM_INLINE vec3 FM_CALL zyy() const;
-	FM_INLINE vec3 FM_CALL xzz() const;
-	FM_INLINE vec3 FM_CALL yzz() const;
-	FM_INLINE vec3 FM_CALL xyx() const;
-	FM_INLINE vec3 FM_CALL xzx() const;
-	FM_INLINE vec3 FM_CALL yxy() const;
-	FM_INLINE vec3 FM_CALL yzy() const;
-	FM_INLINE vec3 FM_CALL zxz() const;
-	FM_INLINE vec3 FM_CALL zyz() const;
-	FM_INLINE vec3 FM_CALL xxx() const;
-	FM_INLINE vec3 FM_CALL yyy() const;
-	FM_INLINE vec3 FM_CALL zzz() const;
+	FM_INLINE v3 FM_CALL XYZ() const;
+	FM_INLINE v3 FM_CALL YZX() const;
+	FM_INLINE v3 FM_CALL ZXY() const;
+	FM_INLINE v3 FM_CALL ZYX() const;
+	FM_INLINE v3 FM_CALL XZY() const;
+	FM_INLINE v3 FM_CALL YXZ() const;
+	FM_INLINE v3 FM_CALL XXY() const;
+	FM_INLINE v3 FM_CALL XXZ() const;
+	FM_INLINE v3 FM_CALL YYX() const;
+	FM_INLINE v3 FM_CALL YYZ() const;
+	FM_INLINE v3 FM_CALL ZZX() const;
+	FM_INLINE v3 FM_CALL ZZY() const;
+	FM_INLINE v3 FM_CALL YXX() const;
+	FM_INLINE v3 FM_CALL ZXX() const;
+	FM_INLINE v3 FM_CALL XYY() const;
+	FM_INLINE v3 FM_CALL ZYY() const;
+	FM_INLINE v3 FM_CALL XZZ() const;
+	FM_INLINE v3 FM_CALL YZZ() const;
+	FM_INLINE v3 FM_CALL XYX() const;
+	FM_INLINE v3 FM_CALL XZX() const;
+	FM_INLINE v3 FM_CALL YXY() const;
+	FM_INLINE v3 FM_CALL YZY() const;
+	FM_INLINE v3 FM_CALL ZXZ() const;
+	FM_INLINE v3 FM_CALL ZYZ() const;
+	FM_INLINE v3 FM_CALL XXX() const;
+	FM_INLINE v3 FM_CALL YYY() const;
+	FM_INLINE v3 FM_CALL ZZZ() const;
 
 #ifndef FM_EXCLUDE_TEX_COORD_SWIZZLES
-	FM_INLINE vec3 FM_CALL uvw() const { return xyz(); }
-	FM_INLINE vec3 FM_CALL vwu() const { return yzx(); }
-	FM_INLINE vec3 FM_CALL wuv() const { return zxy(); }
-	FM_INLINE vec3 FM_CALL wvu() const { return zyx(); }
-	FM_INLINE vec3 FM_CALL uwv() const { return xzy(); }
-	FM_INLINE vec3 FM_CALL vuw() const { return yxz(); }
-	FM_INLINE vec3 FM_CALL uuv() const { return xxy(); }
-	FM_INLINE vec3 FM_CALL uuw() const { return xxz(); }
-	FM_INLINE vec3 FM_CALL vvu() const { return yyx(); }
-	FM_INLINE vec3 FM_CALL vvw() const { return yyz(); }
-	FM_INLINE vec3 FM_CALL wwu() const { return zzx(); }
-	FM_INLINE vec3 FM_CALL wwv() const { return zzy(); }
-	FM_INLINE vec3 FM_CALL vuu() const { return yxx(); }
-	FM_INLINE vec3 FM_CALL wuu() const { return zxx(); }
-	FM_INLINE vec3 FM_CALL uvv() const { return xyy(); }
-	FM_INLINE vec3 FM_CALL wvv() const { return zyy(); }
-	FM_INLINE vec3 FM_CALL uww() const { return xzz(); }
-	FM_INLINE vec3 FM_CALL vww() const { return yzz(); }
-	FM_INLINE vec3 FM_CALL uvu() const { return xyx(); }
-	FM_INLINE vec3 FM_CALL uwu() const { return xzx(); }
-	FM_INLINE vec3 FM_CALL vuv() const { return yxy(); }
-	FM_INLINE vec3 FM_CALL vwv() const { return yzy(); }
-	FM_INLINE vec3 FM_CALL wuw() const { return zxz(); }
-	FM_INLINE vec3 FM_CALL wvw() const { return zyz(); }
-	FM_INLINE vec3 FM_CALL uuu() const { return xxx(); }
-	FM_INLINE vec3 FM_CALL vvv() const { return yyy(); }
-	FM_INLINE vec3 FM_CALL www() const { return zzz(); }
+	FM_INLINE v3 FM_CALL UVW() const { return XYZ(); }
+	FM_INLINE v3 FM_CALL VWU() const { return YZX(); }
+	FM_INLINE v3 FM_CALL WUV() const { return ZXY(); }
+	FM_INLINE v3 FM_CALL WVU() const { return ZYX(); }
+	FM_INLINE v3 FM_CALL UWV() const { return XZY(); }
+	FM_INLINE v3 FM_CALL VUW() const { return YXZ(); }
+	FM_INLINE v3 FM_CALL UUV() const { return XXY(); }
+	FM_INLINE v3 FM_CALL UUW() const { return XXZ(); }
+	FM_INLINE v3 FM_CALL VVU() const { return YYX(); }
+	FM_INLINE v3 FM_CALL VVW() const { return YYZ(); }
+	FM_INLINE v3 FM_CALL WWU() const { return ZZX(); }
+	FM_INLINE v3 FM_CALL WWV() const { return ZZY(); }
+	FM_INLINE v3 FM_CALL VUU() const { return YXX(); }
+	FM_INLINE v3 FM_CALL WUU() const { return ZXX(); }
+	FM_INLINE v3 FM_CALL UVV() const { return XYY(); }
+	FM_INLINE v3 FM_CALL WVV() const { return ZYY(); }
+	FM_INLINE v3 FM_CALL UWW() const { return XZZ(); }
+	FM_INLINE v3 FM_CALL VWW() const { return YZZ(); }
+	FM_INLINE v3 FM_CALL UVU() const { return XYX(); }
+	FM_INLINE v3 FM_CALL UWU() const { return XZX(); }
+	FM_INLINE v3 FM_CALL VUV() const { return YXY(); }
+	FM_INLINE v3 FM_CALL VWV() const { return YZY(); }
+	FM_INLINE v3 FM_CALL WUW() const { return ZXZ(); }
+	FM_INLINE v3 FM_CALL WVW() const { return ZYZ(); }
+	FM_INLINE v3 FM_CALL UUU() const { return XXX(); }
+	FM_INLINE v3 FM_CALL VVV() const { return YYY(); }
+	FM_INLINE v3 FM_CALL WWW() const { return ZZZ(); }
 #endif
 
 #ifndef FM_EXCLUDE_COLOR_SWIZZLES
-	FM_INLINE vec3 FM_CALL rgb() const { return xyz(); }
-	FM_INLINE vec3 FM_CALL gbr() const { return yzx(); }
-	FM_INLINE vec3 FM_CALL brg() const { return zxy(); }
-	FM_INLINE vec3 FM_CALL bgr() const { return zyx(); }
-	FM_INLINE vec3 FM_CALL rbg() const { return xzy(); }
-	FM_INLINE vec3 FM_CALL grb() const { return yxz(); }
-	FM_INLINE vec3 FM_CALL rrg() const { return xxy(); }
-	FM_INLINE vec3 FM_CALL rrb() const { return xxz(); }
-	FM_INLINE vec3 FM_CALL ggr() const { return yyx(); }
-	FM_INLINE vec3 FM_CALL ggb() const { return yyz(); }
-	FM_INLINE vec3 FM_CALL bbr() const { return zzx(); }
-	FM_INLINE vec3 FM_CALL bbg() const { return zzy(); }
-	FM_INLINE vec3 FM_CALL grr() const { return yxx(); }
-	FM_INLINE vec3 FM_CALL brr() const { return zxx(); }
-	FM_INLINE vec3 FM_CALL rgg() const { return xyy(); }
-	FM_INLINE vec3 FM_CALL bgg() const { return zyy(); }
-	FM_INLINE vec3 FM_CALL rbb() const { return xzz(); }
-	FM_INLINE vec3 FM_CALL gbb() const { return yzz(); }
-	FM_INLINE vec3 FM_CALL rgr() const { return xyx(); }
-	FM_INLINE vec3 FM_CALL rbr() const { return xzx(); }
-	FM_INLINE vec3 FM_CALL grg() const { return yxy(); }
-	FM_INLINE vec3 FM_CALL gbg() const { return yzy(); }
-	FM_INLINE vec3 FM_CALL brb() const { return zxz(); }
-	FM_INLINE vec3 FM_CALL bgb() const { return zyz(); }
-	FM_INLINE vec3 FM_CALL rrr() const { return xxx(); }
-	FM_INLINE vec3 FM_CALL ggg() const { return yyy(); }
-	FM_INLINE vec3 FM_CALL bbb() const { return zzz(); }
+	//FM_INLINE v3 FM_CALL RGB() const { return XYZ(); }
+	FM_INLINE v3 FM_CALL GBR() const { return YZX(); }
+	FM_INLINE v3 FM_CALL BRG() const { return ZXY(); }
+	FM_INLINE v3 FM_CALL BGR() const { return ZYX(); }
+	FM_INLINE v3 FM_CALL RBG() const { return XZY(); }
+	FM_INLINE v3 FM_CALL GRB() const { return YXZ(); }
+	FM_INLINE v3 FM_CALL RRG() const { return XXY(); }
+	FM_INLINE v3 FM_CALL RRB() const { return XXZ(); }
+	FM_INLINE v3 FM_CALL GGR() const { return YYX(); }
+	FM_INLINE v3 FM_CALL GGB() const { return YYZ(); }
+	FM_INLINE v3 FM_CALL BBR() const { return ZZX(); }
+	FM_INLINE v3 FM_CALL BBG() const { return ZZY(); }
+	FM_INLINE v3 FM_CALL GRR() const { return YXX(); }
+	FM_INLINE v3 FM_CALL BRR() const { return ZXX(); }
+	FM_INLINE v3 FM_CALL RGG() const { return XYY(); }
+	FM_INLINE v3 FM_CALL BGG() const { return ZYY(); }
+	FM_INLINE v3 FM_CALL RBB() const { return XZZ(); }
+	FM_INLINE v3 FM_CALL GBB() const { return YZZ(); }
+	FM_INLINE v3 FM_CALL RGR() const { return XYX(); }
+	FM_INLINE v3 FM_CALL RBR() const { return XZX(); }
+	FM_INLINE v3 FM_CALL GRG() const { return YXY(); }
+	FM_INLINE v3 FM_CALL GBG() const { return YZY(); }
+	FM_INLINE v3 FM_CALL BRB() const { return ZXZ(); }
+	FM_INLINE v3 FM_CALL BGB() const { return ZYZ(); }
+	FM_INLINE v3 FM_CALL RRR() const { return XXX(); }
+	FM_INLINE v3 FM_CALL GGG() const { return YYY(); }
+	FM_INLINE v3 FM_CALL BBB() const { return ZZZ(); }
 #endif
 };
-FM_INLINE vec3 FM_CALL makeVec3FromMemory(float* v);
-FM_INLINE vec3 FM_CALL makeVec3(float x, float y, float z);
-FM_INLINE vec3 FM_CALL makeVec3(float a);
-FM_INLINE vec3 FM_CALL makeVec3(__m128 m);
-FM_INLINE vec3 FM_CALL makeZeroVec3();
+FM_INLINE v3 FM_CALL V3FromMemory(float*);
+FM_INLINE v3 FM_CALL V3(float X, float Y, float Z);
+FM_INLINE v3 FM_CALL V3(float XYZ);
+FM_INLINE v3 FM_CALL V3(__m128);
+FM_INLINE v3 FM_CALL V3();
 
-FM_INLINE void FM_CALL store(float* mem, vec3 v); 
+FM_INLINE void FM_CALL Store(float* Mem, v3 V); 
 
-FM_INLINE float* ptr(const vec3& v) { return (float*)(&v); }
-FM_INLINE float* ptrY(const vec3& v) { return (float*)(&v) + 1; }
-FM_INLINE float* ptrZ(const vec3& v) { return (float*)(&v) + 2; }
+FM_INLINE float* Ptr(const v3& V) { return (float*)(&V); }
+FM_INLINE float* PtrY(const v3& V) { return (float*)(&V) + 1; }
+FM_INLINE float* PtrZ(const v3& V) { return (float*)(&V) + 2; }
 
-FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b); 
-FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b);
-FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b);
-FM_INLINE vec3& FM_CALL operator-=(vec3& a, vec3 b);
-FM_INLINE vec3 FM_CALL hadamardMul(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL hadamardDiv(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL operator*(vec3 v, float  scalar);
-FM_INLINE vec3 FM_CALL operator*(float scalar, vec3 v);
-FM_INLINE vec3 FM_CALL operator/(vec3 v, float scalar);
-FM_INLINE vec3 FM_CALL operator-(vec3 v); 
-FM_INLINE vec3 FM_CALL cross(vec3 a, vec3 b); 
-FM_INLINE float FM_CALL dot(vec3 a, vec3 b); 
-FM_INLINE vec3 FM_CALL min(vec3 a, vec3 b); 
-FM_INLINE vec3 FM_CALL max(vec3 a, vec3 b); 
-FM_INLINE vec3 FM_CALL normalize(vec3 v);
-FM_INLINE vec3 FM_CALL abs(vec3 v);
-FM_INLINE float FM_CALL sumOfElements(vec3 v);
-FM_INLINE float FM_CALL length(vec3 v);
-FM_INLINE float FM_CALL lengthSquared(vec3 v); 
-FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 min, vec3 max); 
-FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t);
+FM_INLINE v3 FM_CALL operator+(v3, v3); 
+FM_INLINE v3 FM_CALL operator-(v3, v3);
+FM_INLINE v3& FM_CALL operator+=(v3&, v3);
+FM_INLINE v3& FM_CALL operator-=(v3&, v3);
+FM_INLINE v3 FM_CALL HadamardMul(v3, v3);
+FM_INLINE v3 FM_CALL HadamardDiv(v3, v3);
+FM_INLINE v3 FM_CALL operator*(v3 V, float  Scalar);
+FM_INLINE v3 FM_CALL operator*(float Scalar, v3 V);
+FM_INLINE v3 FM_CALL operator/(v3 V, float Scalar);
+FM_INLINE v3 FM_CALL operator-(v3); 
+FM_INLINE v3 FM_CALL Cross(v3, v3); 
+FM_INLINE float FM_CALL Dot(v3, v3); 
+FM_INLINE v3 FM_CALL Min(v3, v3); 
+FM_INLINE v3 FM_CALL Max(v3, v3); 
+FM_INLINE v3 FM_CALL Normalize(v3);
+FM_INLINE v3 FM_CALL Abs(v3);
+FM_INLINE float FM_CALL SumOfElements(v3);
+FM_INLINE float FM_CALL Length(v3);
+FM_INLINE float FM_CALL LengthSquared(v3); 
+FM_INLINE v3 FM_CALL Clamp(v3 V, v3 Min, v3 Max); 
+FM_INLINE v3 FM_CALL Lerp(v3 A, v3 B, float T);
 
-FM_INLINE bool FM_CALL operator==(vec3 a, vec3 b); 
-FM_INLINE bool FM_CALL operator!=(vec3 a, vec3 b); 
-FM_INLINE vec3 FM_CALL equalsMask(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL greaterMask(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL greaterOrEqualMask(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL lesserMask(vec3 a, vec3 b);
-FM_INLINE vec3 FM_CALL lesserOrEqualMask(vec3 a, vec3 b);
+FM_INLINE bool FM_CALL operator==(v3, v3); 
+FM_INLINE bool FM_CALL operator!=(v3, v3); 
+FM_INLINE v3 FM_CALL EqualsMask(v3, v3);
+FM_INLINE v3 FM_CALL GreaterMask(v3, v3);
+FM_INLINE v3 FM_CALL GreaterOrEqualMask(v3, v3);
+FM_INLINE v3 FM_CALL LesserMask(v3, v3);
+FM_INLINE v3 FM_CALL LesserOrEqualMask(v3, v3);
 
-struct vec4
+struct v4
 {
-	__m128 m;
+	__m128 M;
 
-	FM_INLINE void FM_CALL setX(float x);
-	FM_INLINE void FM_CALL setY(float y); 
-	FM_INLINE void FM_CALL setZ(float z); 
-	FM_INLINE void FM_CALL setW(float w); 
+	FM_INLINE void FM_CALL SetX(float);
+	FM_INLINE void FM_CALL SetY(float); 
+	FM_INLINE void FM_CALL SetZ(float); 
+	FM_INLINE void FM_CALL SetW(float); 
 
-	FM_INLINE float FM_CALL x() const;
-	FM_INLINE float FM_CALL y() const;
-	FM_INLINE float FM_CALL z() const;
-	FM_INLINE float FM_CALL w() const;
+	FM_INLINE float FM_CALL X() const;
+	FM_INLINE float FM_CALL Y() const;
+	FM_INLINE float FM_CALL Z() const;
+	FM_INLINE float FM_CALL W() const;
 
-	FM_INLINE float FM_CALL r() const { return x(); }
-	FM_INLINE float FM_CALL g() const { return y(); }
-	FM_INLINE float FM_CALL b() const { return z(); }
-	FM_INLINE float FM_CALL a() const { return w(); }
+	FM_INLINE float FM_CALL R() const { return X(); }
+	FM_INLINE float FM_CALL G() const { return Y(); }
+	FM_INLINE float FM_CALL B() const { return Z(); }
+	FM_INLINE float FM_CALL A() const { return W(); }
 };
-FM_INLINE vec4 FM_CALL makeVec4FromMemory(const float* v); 
-FM_INLINE vec4 FM_CALL makeVec4(vec3 v, float w); 
-FM_INLINE vec4 FM_CALL makeVec4(float x, float y, float z, float w);
-FM_INLINE vec4 FM_CALL makeVec4(float a);
-FM_INLINE vec4 FM_CALL makeVec4(__m128 m);
-FM_INLINE vec4 FM_CALL makeZeroVec4();
+FM_INLINE v4 FM_CALL V4FromMemory(const float*); 
+FM_INLINE v4 FM_CALL V4(v3 V, float W); 
+FM_INLINE v4 FM_CALL V4(float X, float Y, float Z, float W);
+FM_INLINE v4 FM_CALL V4(float XYZW);
+FM_INLINE v4 FM_CALL V4(__m128);
+FM_INLINE v4 FM_CALL V4();
 
-FM_INLINE void FM_CALL store(float* mem, vec4 v);
-FM_INLINE void FM_CALL store16ByteAligned(float* mem, vec4 v);
+FM_INLINE void FM_CALL Store(float* Mem, v4 V);
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, v4 V);
 
-FM_INLINE float* ptr(const vec4& v) { return (float*)(&v); }
-FM_INLINE float* ptrY(const vec4& v) { return (float*)(&v) + 1; }
-FM_INLINE float* ptrZ(const vec4& v) { return (float*)(&v) + 2; }
-FM_INLINE float* ptrW(const vec4& v) { return (float*)(&v) + 3; }
+FM_INLINE float* Ptr(const v4& V) { return (float*)(&V); }
+FM_INLINE float* PtrY(const v4& V) { return (float*)(&V) + 1; }
+FM_INLINE float* PtrZ(const v4& V) { return (float*)(&V) + 2; }
+FM_INLINE float* PtrW(const v4& V) { return (float*)(&V) + 3; }
 
-FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b); 
-FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b);
-FM_INLINE vec4& FM_CALL operator+=(vec4& a, vec4 b);
-FM_INLINE vec4& FM_CALL operator-=(vec4& a, vec4 b);
-FM_INLINE vec4 FM_CALL hadamardMul(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL hadamardDiv(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL operator*(vec4 v, float  scalar);
-FM_INLINE vec4 FM_CALL operator*(float scalar, vec4 v);
-FM_INLINE vec4 FM_CALL operator/(vec4 v, float scalar);
-FM_INLINE vec4 FM_CALL operator-(vec4 v); 
-FM_INLINE vec4 FM_CALL cross(vec4 a, vec4 b); 
-FM_INLINE float FM_CALL dot(vec4 a, vec4 b); 
-FM_INLINE vec4 FM_CALL min(vec4 a, vec4 b); 
-FM_INLINE vec4 FM_CALL max(vec4 a, vec4 b); 
-FM_INLINE vec4 FM_CALL normalize(vec4 v);
-FM_INLINE vec4 FM_CALL abs(vec4 v);
-FM_INLINE float FM_CALL sumOfElements(vec4 v);
-FM_INLINE float FM_CALL length(vec4 v);
-FM_INLINE float FM_CALL lengthSquared(vec4 v); 
-FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 min, vec4 max); 
-FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t);
+FM_INLINE v4 FM_CALL operator+(v4, v4); 
+FM_INLINE v4 FM_CALL operator-(v4, v4);
+FM_INLINE v4& FM_CALL operator+=(v4&, v4);
+FM_INLINE v4& FM_CALL operator-=(v4&, v4);
+FM_INLINE v4 FM_CALL HadamardMul(v4, v4);
+FM_INLINE v4 FM_CALL HadamardDiv(v4, v4);
+FM_INLINE v4 FM_CALL operator*(v4 V, float Scalar);
+FM_INLINE v4 FM_CALL operator*(float Scalar, v4 V);
+FM_INLINE v4 FM_CALL operator/(v4 V, float Scalar);
+FM_INLINE v4 FM_CALL operator-(v4); 
+FM_INLINE v4 FM_CALL Cross(v4, v4); 
+FM_INLINE float FM_CALL Dot(v4, v4); 
+FM_INLINE v4 FM_CALL Min(v4, v4); 
+FM_INLINE v4 FM_CALL Max(v4, v4); 
+FM_INLINE v4 FM_CALL Normalize(v4);
+FM_INLINE v4 FM_CALL Abs(v4);
+FM_INLINE float FM_CALL SumOfElements(v4);
+FM_INLINE float FM_CALL Length(v4);
+FM_INLINE float FM_CALL LengthSquared(v4); 
+FM_INLINE v4 FM_CALL Clamp(v4 V, v4 Min, v4 Max); 
+FM_INLINE v4 FM_CALL Lerp(v4 A, v4 B, float T);
 
-FM_INLINE bool FM_CALL operator==(vec4 a, vec4 b); 
-FM_INLINE bool FM_CALL operator!=(vec4 a, vec4 b); 
-FM_INLINE vec4 FM_CALL equalsMask(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL greaterMask(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL greaterOrEqualMask(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b);
-FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b);
+FM_INLINE bool FM_CALL operator==(v4, v4); 
+FM_INLINE bool FM_CALL operator!=(v4, v4); 
+FM_INLINE v4 FM_CALL EqualsMask(v4, v4);
+FM_INLINE v4 FM_CALL GreaterMask(v4, v4);
+FM_INLINE v4 FM_CALL GreaterOrEqualMask(v4, v4);
+FM_INLINE v4 FM_CALL LesserMask(v4, v4);
+FM_INLINE v4 FM_CALL LesserOrEqualMask(v4, v4);
 
 
 struct mat4
 {
-	__m128 columns[4];
+	__m128 Columns[4];
 
-	FM_INLINE vec4 FM_CALL getColumn(uint32_t index);
-	FM_INLINE void FM_CALL setColumn(uint32_t index, vec4 col);
-	FM_INLINE void FM_CALL setColumn(uint32_t index, float x, float y, float z, float w);
-	FM_INLINE void FM_CALL swapColumns(uint32_t col1Index, uint32_t col2Index); 
+	FM_INLINE v4 FM_CALL GetColumn(uint32_t Index);
+	FM_INLINE void FM_CALL SetColumn(uint32_t Index, v4 Col);
+	FM_INLINE void FM_CALL SetColumn(uint32_t Index, float X, float Y, float Z, float W);
+	FM_INLINE void FM_CALL SwapColumns(uint32_t Col1Index, uint32_t Col2Index); 
 
-	vec4 FM_CALL getRow(uint32_t index);
-	void FM_CALL setRow(uint32_t index, vec4 row);
-	FM_INLINE void FM_CALL setRow(uint32_t index, float x, float y, float z, float w);
-	FM_INLINE void FM_CALL swapRows(uint32_t row1Index, uint32_t row2Index); 
+	v4 FM_CALL GetRow(uint32_t Index);
+	void FM_CALL SetRow(uint32_t Index, v4 Row);
+	FM_INLINE void FM_CALL SetRow(uint32_t Index, float X, float Y, float Z, float W);
+	FM_INLINE void FM_CALL SwapRows(uint32_t Row1Index, uint32_t Row2Index); 
 
-	FM_INLINE vec4 FM_CALL getMainDiagonal();
-	FM_INLINE void FM_CALL setMainDiagonal(float x, float y, float z, float w); 
-	FM_INLINE void FM_CALL setMainDiagonal(vec4 v);
+	FM_INLINE v4 FM_CALL GetMainDiagonal();
+	FM_INLINE void FM_CALL SetMainDiagonal(float X, float Y, float Z, float W); 
+	FM_INLINE void FM_CALL SetMainDiagonal(v4);
 };
 
-FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem); 
-FM_INLINE mat4 FM_CALL makeZeroMat4(); 
-FM_INLINE mat4 FM_CALL makeIdentityMat4(); 
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diag); 
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diagX, float diagY, float diagZ, float diagW); 
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(vec4 diag); 
-FM_INLINE mat4 FM_CALL makeMat4FromColumns(vec4 col1, vec4 col2, vec4 col3, vec4 col4); 
-FM_INLINE mat4 FM_CALL makeMat4FromColumns(
-	float e11, float e21, float e31, float e41,
-    float e12, float e22, float e32, float e42,
-    float e13, float e23, float e33, float e43,
-    float e14, float e24, float e34, float e44);
-FM_INLINE mat4 FM_CALL makeMat4FromRows(vec4 row1, vec4 row2, vec4 row3, vec4 row4); 
-FM_INLINE mat4 FM_CALL makeMat4FromRows(
-	float e11, float e12, float e13, float e14,
-    float e21, float e22, float e23, float e24,
-    float e31, float e32, float e33, float e34,
-    float e41, float e42, float e43, float e44);
+FM_INLINE mat4 FM_CALL Mat4FromColumnMajorMemory(float*); 
+// TODO: Mat4FromRowMajorMemory
+FM_INLINE mat4 FM_CALL Mat4(); 
+FM_INLINE mat4 FM_CALL Mat4Identity(); 
+FM_INLINE mat4 FM_CALL Mat4Diagonal(float Diag); 
+FM_INLINE mat4 FM_CALL Mat4Diagonal(float DiagX, float DiagY, float DiagZ, float DiagW); 
+FM_INLINE mat4 FM_CALL Mat4Diagonal(v4 Diag); 
+FM_INLINE mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4); 
+FM_INLINE mat4 FM_CALL Mat4FromColumns(
+	float E11, float E21, float E31, float E41,
+    float E12, float E22, float E32, float E42,
+    float E13, float E23, float E33, float E43,
+    float E14, float E24, float E34, float E44);
+FM_INLINE mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4); 
+FM_INLINE mat4 FM_CALL Mat4FromRows(
+	float E11, float E12, float E13, float E14,
+    float E21, float E22, float E23, float E24,
+    float E31, float E32, float E33, float E34,
+    float E41, float E42, float E43, float E44);
 
-FM_INLINE void FM_CALL store(float* mem, mat4 mat);
-FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat);
+FM_INLINE void FM_CALL Store(float* Mem, mat4);
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, mat4);
 
-FM_INLINE float* ptr(const mat4& v) { return (float*)(&v); }
+FM_INLINE float* ptr(const mat4& V) { return (float*)(&V); }
 
-FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b);
-FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b);
-FM_INLINE mat4 FM_CALL operator*(mat4 a, mat4 b);
-FM_INLINE vec4 FM_CALL operator*(mat4 m, vec4 v);
-FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar);
-FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m);
-FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar);
-FM_INLINE mat4 FM_CALL transpose(mat4 m);
-FM_INLINE mat4 FM_CALL swapColumns(mat4 m, uint32_t col1Index, uint32_t col2Index);
-FM_INLINE mat4 FM_CALL swapRows(mat4 m, uint32_t row1Index, uint32_t row2Index);
+FM_INLINE mat4 FM_CALL operator+(mat4, mat4);
+FM_INLINE mat4 FM_CALL operator-(mat4, mat4);
+FM_INLINE mat4 FM_CALL operator*(mat4, mat4);
+FM_INLINE v4 FM_CALL operator*(mat4, v4);
+FM_INLINE mat4 FM_CALL operator*(mat4, float Scalar);
+FM_INLINE mat4 FM_CALL operator*(float Scalar, mat4);
+FM_INLINE mat4 FM_CALL operator/(mat4, float Scalar);
+FM_INLINE mat4 FM_CALL Transpose(mat4);
+FM_INLINE mat4 FM_CALL SwapColumns(mat4, uint32_t Col1Index, uint32_t Col2Index);
+FM_INLINE mat4 FM_CALL SwapRows(mat4, uint32_t Row1Index, uint32_t Row2Index);
 
-FM_INLINE mat4 FM_CALL makeTranslationMat4(float x, float y, float z); 
-FM_INLINE mat4 FM_CALL makeTranslationMat4(vec3 translation);
-FM_INLINE mat4 FM_CALL translate(mat4 m, float x, float y, float z); 
-FM_INLINE mat4 FM_CALL translate(mat4 m, vec3 translation);
+FM_INLINE mat4 FM_CALL Mat4Translation(float X, float Y, float Z); 
+FM_INLINE mat4 FM_CALL Mat4Translation(v3 Translation);
+FM_INLINE mat4 FM_CALL Translate(mat4, float X, float Y, float Z); 
+FM_INLINE mat4 FM_CALL Translate(mat4, v3 Translation);
 
-FM_INLINE mat4 FM_CALL makeScaleMat4(float scalar); 
-FM_INLINE mat4 FM_CALL makeScaleMat4(float scalarX, float scalarY, float scalarZ); 
-FM_INLINE mat4 FM_CALL makeScaleMat4(vec3 scalar);
-FM_INLINE mat4 FM_CALL scale(mat4 m, float scalar); 
-FM_INLINE mat4 FM_CALL scale(mat4 m, float x, float y, float z); 
-FM_INLINE mat4 FM_CALL scale(mat4 m, vec3 scalar);
+FM_INLINE mat4 FM_CALL Mat4Scale(float Scalar); 
+FM_INLINE mat4 FM_CALL Mat4Scale(float ScalarX, float ScalarY, float ScalarZ); 
+FM_INLINE mat4 FM_CALL Mat4Scale(v3 Scalar);
+FM_INLINE mat4 FM_CALL Scale(mat4, float Scalar); 
+FM_INLINE mat4 FM_CALL Scale(mat4, float X, float Y, float Z); 
+FM_INLINE mat4 FM_CALL Scale(mat4, v3 Scalar);
 
-FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, float axisX, float axisY, float axisZ); 
-FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, vec3 axis);
-FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Degrees(float degrees);
-FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Degrees(float degrees);
-FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Degrees(float degrees);
-FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, float axisX, float axisY, float axisZ); 
-FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, vec3 axis);
-FM_INLINE mat4 FM_CALL rotateAroundXAxisDegrees(mat4 m, float degrees);
-FM_INLINE mat4 FM_CALL rotateAroundYAxisDegrees(mat4 m, float degrees);
-FM_INLINE mat4 FM_CALL rotateAroundZAxisDegrees(mat4 m, float degrees);
-FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, float axisX, float axisY, float axisZ); 
-FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, vec3 axis);
-FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Radians(float radians);
-FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Radians(float radians);
-FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Radians(float radians);
-FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, float axisX, float axisY, float axisZ); 
-FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, vec3 axis);
-FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians);
-FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians);
-FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians);
+FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, v3 Axis);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisDegrees(float Degrees);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisDegrees(float Degrees);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisDegrees(float Degrees);
+FM_INLINE mat4 FM_CALL RotateDegrees(mat4, float Degrees, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE mat4 FM_CALL RotateDegrees(mat4, float Degrees, v3 Axis);
+FM_INLINE mat4 FM_CALL RotateAroundXAxisDegrees(mat4, float Degrees);
+FM_INLINE mat4 FM_CALL RotateAroundYAxisDegrees(mat4, float Degrees);
+FM_INLINE mat4 FM_CALL RotateAroundZAxisDegrees(mat4, float Degrees);
+FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, v3 Axis);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisRadians(float Radians);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisRadians(float Radians);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisRadians(float Radians);
+FM_INLINE mat4 FM_CALL RotateRadians(mat4, float Radians, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE mat4 FM_CALL RotateRadians(mat4, float Radians, v3 Axis);
+FM_INLINE mat4 FM_CALL RotateAroundXAxisRadians(mat4, float Radians);
+FM_INLINE mat4 FM_CALL RotateAroundYAxisRadians(mat4, float Radians);
+FM_INLINE mat4 FM_CALL RotateAroundZAxisRadians(mat4, float Radians);
 
-FM_INLINE mat4 FM_CALL makeShearXAxisMat4(float y, float z); 
-FM_INLINE mat4 FM_CALL makeShearYAxisMat4(float x, float z);
-FM_INLINE mat4 FM_CALL makeShearZAxisMat4(float x, float y);
-FM_INLINE mat4 FM_CALL makeShearMat4(float xy, float xz, float yx, float yz, float zx, float zy);
-FM_INLINE mat4 FM_CALL shearXAxis(mat4 m, float y, float z); 
-FM_INLINE mat4 FM_CALL shearYAxis(mat4 m, float x, float z); 
-FM_INLINE mat4 FM_CALL shearZAxis(mat4 m, float x, float y); 
-FM_INLINE mat4 FM_CALL shear(mat4 m, float xy, float xz, float yx, float yz, float zx, float zy);
+FM_INLINE mat4 FM_CALL Mat4ShearXAxis(float Y, float Z); 
+FM_INLINE mat4 FM_CALL Mat4ShearYAxis(float X, float Z);
+FM_INLINE mat4 FM_CALL Mat4ShearZAxis(float X, float Y);
+FM_INLINE mat4 FM_CALL Mat4Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+FM_INLINE mat4 FM_CALL ShearXAxis(mat4, float Y, float Z); 
+FM_INLINE mat4 FM_CALL ShearYAxis(mat4, float X, float Z); 
+FM_INLINE mat4 FM_CALL ShearZAxis(mat4, float X, float Y); 
+FM_INLINE mat4 FM_CALL Shear(mat4, float XY, float XZ, float YX, float YZ, float ZX, float ZY);
 
-mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float near, float far);
-mat4 makePerspectiveMat4(float fov, float aspectRatio, float near, float far);
+mat4 Mat4Orthographic(float Left, float Right, float bottom, float Top, float near, float Far);
+mat4 Mat4Perspective(float FOV, float AspectRatio, float near, float Far);
 
 /* TODO:
-shear
 reflect
-matrix hadamard
+matrix Hadamard
 lookAt()
 frustum()
 project()
 determinant
 inverse
+operator == and !=
 */
 
 }
@@ -701,1736 +702,1735 @@ namespace fm {
 // fast math int32_ternal helper functions //
 /////////////////////////////////////////
 namespace priv {
-	FM_INLINE __m128 FM_CALL setX(__m128 m, float x) {
+	FM_INLINE __m128 FM_CALL SetX(__m128 m, float x) {
 		return _mm_move_ss(m, _mm_set_ss(x));
 	}
-	FM_INLINE __m128 FM_CALL setY(__m128 m, float y) {
+	FM_INLINE __m128 FM_CALL SetY(__m128 m, float y) {
 		__m128 temp = _mm_move_ss(m, _mm_set_ss(y));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 2, 0, 0));
 		return _mm_move_ss(temp, m);
 	}
-	FM_INLINE __m128 FM_CALL setZ(__m128 m, float z) {
+	FM_INLINE __m128 FM_CALL SetZ(__m128 m, float z) {
 		__m128 temp = _mm_move_ss(m, _mm_set_ss(z));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(3, 0, 1, 0));
 		return _mm_move_ss(temp, m);
 	}
-	FM_INLINE __m128 FM_CALL setW(__m128 m, float w) {
+	FM_INLINE __m128 FM_CALL SetW(__m128 m, float w) {
 		__m128 temp = _mm_move_ss(m, _mm_set_ss(w));
 		temp = _mm_shuffle_ps(temp, temp, _MM_SHUFFLE(0, 2, 1, 0));
 		return _mm_move_ss(temp, m);
 	}
-	FM_INLINE float FM_CALL getX(__m128 m) {
+	FM_INLINE float FM_CALL GetX(__m128 m) {
 		return _mm_cvtss_f32(m);
 	}
-	FM_INLINE float FM_CALL getY(__m128 m) {
+	FM_INLINE float FM_CALL GetY(__m128 m) {
 		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 1)));
 	}
-	FM_INLINE float FM_CALL getZ(__m128 m) {
+	FM_INLINE float FM_CALL GetZ(__m128 m) {
 		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 2)));
 	}
-	FM_INLINE float FM_CALL getW(__m128 m) {
+	FM_INLINE float FM_CALL GetW(__m128 m) {
 		return _mm_cvtss_f32(_mm_shuffle_ps(m, m, _MM_SHUFFLE(3, 2, 1, 3)));
 	}
-	FM_INLINE float FM_CALL sumOfElements(__m128 m) {
-		return getX(m) + getY(m) + getZ(m) + getW(m);
+	FM_INLINE float FM_CALL SumOfElements(__m128 m) {
+		return GetX(m) + GetY(m) + GetZ(m) + GetW(m);
 	}
 }
 
 ////////////////////////////
 // utility functions impl //
 ////////////////////////////
-FM_INLINE float min(float a, float b) {
-	return a < b ? a : b; 
+FM_INLINE float Min(float A, float B) {
+	return A < B ? A : B; 
 }
-FM_INLINE float max(float a, float b) {
-	return a > b ? a : b;
+FM_INLINE float Max(float A, float B) {
+	return A > B ? A : B;
 }
-FM_INLINE double min(double a, double b) {
-	return a < b ? a : b; 
+FM_INLINE double Min(double A, double B) {
+	return A < B ? A : B; 
 }
-FM_INLINE double max(double a, double b) {
-	return a > b ? a : b;
+FM_INLINE double Max(double A, double B) {
+	return A > B ? A : B;
 }
-FM_INLINE int32_t min(int32_t a, int32_t b) {
-	return a < b ? a : b; 
+FM_INLINE int32_t Min(int32_t A, int32_t B) {
+	return A < B ? A : B; 
 }
-FM_INLINE int32_t max(int32_t a, int32_t b) {
-	return a > b ? a : b;
+FM_INLINE int32_t Max(int32_t A, int32_t B) {
+	return A > B ? A : B;
 }
-FM_INLINE uint32_t min(uint32_t a, uint32_t b) {
-	return a < b ? a : b; 
+FM_INLINE uint32_t Min(uint32_t A, uint32_t B) {
+	return A < B ? A : B; 
 }
-FM_INLINE uint32_t max(uint32_t a, uint32_t b) {
-	return a > b ? a : b;
+FM_INLINE uint32_t Max(uint32_t A, uint32_t B) {
+	return A > B ? A : B;
 }
-FM_INLINE float abs(float a) {
-	return a < 0 ? -a : a;
+FM_INLINE float Abs(float A) {
+	return A < 0 ? -A : A;
 }
-FM_INLINE double abs(double a) {
-	return a < 0 ? -a : a;
+FM_INLINE double Abs(double A) {
+	return A < 0 ? -A : A;
 }
-FM_INLINE int32_t abs(int32_t a) {
-	return a < 0 ? -a : a;
+FM_INLINE int32_t Abs(int32_t A) {
+	return A < 0 ? -A : A;
 }
-FM_INLINE float radiansToDegrees(float radians) {
-	return radians * 180.f / FM_PI32;
+FM_INLINE float RadiansToDegrees(float Radians) {
+	return Radians * 180.f / FM_PI32;
 }
-FM_INLINE double radiansToDegrees(double radians) {
-	return radians * 180.f / FM_PI64;
+FM_INLINE double RadiansToDegrees(double Radians) {
+	return Radians * 180.f / FM_PI64;
 }
-FM_INLINE float degreesToRadians(float degrees) {
-	return degrees * FM_PI32 / 180.f;
+FM_INLINE float DegreesToRadians(float Degrees) {
+	return Degrees * FM_PI32 / 180.f;
 }
-FM_INLINE double degreesToRadians(double degrees) {
-	return degrees * FM_PI64 / 180.f;
+FM_INLINE double DegreesToRadians(double Degrees) {
+	return Degrees * FM_PI64 / 180.f;
 }
 
-///////////////
-// vec2 impl //
-///////////////
-FM_INLINE vec2 FM_CALL makeVec2FromMemory(const float* v) {
-	vec2 res;
-	res.m = _mm_set_ps(0.f, 0.f, v[1], v[0]); 
-	return res;
+/////////////
+// v2 impl //
+/////////////
+FM_INLINE v2 FM_CALL V2FromMemory(const float* V) {
+	v2 Res;
+	Res.M = _mm_set_ps(0.f, 0.f, V[1], V[0]); 
+	return Res;
 } 
-FM_INLINE vec2 FM_CALL makeVec2(float x, float y) {
-	vec2 res;
-	res.m = _mm_set_ps(0.f, 0.f, y, x); 
-	return res;
+FM_INLINE v2 FM_CALL V2(float X, float Y) {
+	v2 Res;
+	Res.M = _mm_set_ps(0.f, 0.f, Y, X); 
+	return Res;
 }
-FM_INLINE vec2 FM_CALL makeVec2(float a) {
-	vec2 res;
-	res.m = _mm_set1_ps(a); 
-	return res;
+FM_INLINE v2 FM_CALL V2(float XY) {
+	v2 Res;
+	Res.M = _mm_set1_ps(XY); 
+	return Res;
 }
-FM_INLINE vec2 FM_CALL makeVec2 (__m128 m) {
-	vec2 res;
-	res.m = m;
-	return res;
+FM_INLINE v2 FM_CALL V2(__m128 M) {
+	v2 Res;
+	Res.M = M;
+	return Res;
 }
-FM_INLINE vec2 FM_CALL makeZeroVec2() {
-	vec2 res;
-	res.m = _mm_setzero_ps(); 
-	return res;
+FM_INLINE v2 FM_CALL V2() {
+	v2 Res;
+	Res.M = _mm_setzero_ps(); 
+	return Res;
 }
-FM_INLINE float FM_CALL vec2::x() const { 
-	return priv::getX(m); 
+FM_INLINE float FM_CALL v2::X() const { 
+	return priv::GetX(M); 
 }
-FM_INLINE float FM_CALL vec2::y() const {
-	return priv::getY(m); 
+FM_INLINE float FM_CALL v2::Y() const {
+	return priv::GetY(M); 
 }
-FM_INLINE vec2 FM_CALL vec2::yx() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
+FM_INLINE v2 FM_CALL v2::YX() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 1))); 
 }
-FM_INLINE vec2 FM_CALL vec2::xx() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0))); 
+FM_INLINE v2 FM_CALL v2::XX() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 0))); 
 }
-FM_INLINE vec2 FM_CALL vec2::yy() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
+FM_INLINE v2 FM_CALL v2::YY() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
-FM_INLINE void FM_CALL vec2::setX(float x) {
-	m = priv::setX(m, x); 
+FM_INLINE void FM_CALL v2::SetX(float X) {
+	M = priv::SetX(M, X); 
 }
-FM_INLINE void FM_CALL vec2::setY(float y) { 
-	m = priv::setY(m, y);
+FM_INLINE void FM_CALL v2::SetY(float Y) { 
+	M = priv::SetY(M, Y);
 }  
-FM_INLINE void FM_CALL store(float* mem, vec2 v) {
-	mem[0] = v.x();
-	mem[1] = v.y(); 
+FM_INLINE void FM_CALL Store(float* Mem, v2 V) {
+	Mem[0] = V.X();
+	Mem[1] = V.Y();
 } 
-FM_INLINE vec2 FM_CALL operator+(vec2 a, vec2 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a; 
+FM_INLINE v2 FM_CALL operator+(v2 A, v2 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2 FM_CALL operator-(vec2 a, vec2 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a; 
+FM_INLINE v2 FM_CALL operator-(v2 A, v2 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2& FM_CALL operator+=(vec2& a, vec2 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a; 
+FM_INLINE v2& FM_CALL operator+=(v2& A, v2 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2& FM_CALL operator-=(vec2& a, vec2 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a; 
+FM_INLINE v2& FM_CALL operator-=(v2& A, v2 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2 FM_CALL hadamardMul(vec2 a, vec2 b) {
-	a.m = _mm_mul_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL HadamardMul(v2 A, v2 B) {
+	A.M = _mm_mul_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL hadamardDiv(vec2 a, vec2 b) {
-	a.m = _mm_div_ps(a.m, b.m);
-	return a; 
+FM_INLINE v2 FM_CALL HadamardDiv(v2 A, v2 B) {
+	A.M = _mm_div_ps(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2 FM_CALL operator*(vec2 v, float scalar) {
-	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar)); 
-	return v; 
+FM_INLINE v2 FM_CALL operator*(v2 V, float Scalar) {
+	V.M = _mm_mul_ps(V.M, _mm_set1_ps(Scalar)); 
+	return V; 
 }
-FM_INLINE vec2 FM_CALL operator*(float scalar, vec2 v) { 
-	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar));
-	return v; 
+FM_INLINE v2 FM_CALL operator*(float Scalar, v2 V) { 
+	V.M = _mm_mul_ps(V.M, _mm_set1_ps(Scalar));
+	return V; 
 }
-FM_INLINE vec2 FM_CALL operator/(vec2 v, float scalar) {
-	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
-	return v; 
+FM_INLINE v2 FM_CALL operator/(v2 V, float Scalar) {
+	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
+	return V; 
 }
-FM_INLINE vec2 FM_CALL operator-(vec2 v) {
-	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
-	return v;
+FM_INLINE v2 FM_CALL operator-(v2 V) {
+	V.M = _mm_sub_ps(_mm_setzero_ps(), V.M);
+	return V;
 }
-FM_INLINE float FM_CALL dot(vec2 a, vec2 b) {
-	return sumOfElements(hadamardMul(a, b));
+FM_INLINE float FM_CALL Dot(v2 A, v2 B) {
+	return SumOfElements(HadamardMul(A, B));
 }
-FM_INLINE vec2 FM_CALL min(vec2 a, vec2 b) {
-	a.m = _mm_min_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL Min(v2 A, v2 B) {
+	A.M = _mm_min_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL max(vec2 a, vec2 b) {
-	a.m = _mm_max_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL Max(v2 A, v2 B) {
+	A.M = _mm_max_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL abs(vec2 v) {
-	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000)); 
-	v.m = _mm_andnot_ps(signMask, v.m);
-	return v;
+FM_INLINE v2 FM_CALL Abs(v2 V) {
+	__m128 SignMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000)); 
+	V.M = _mm_andnot_ps(SignMask, V.M);
+	return V;
 }
-FM_INLINE float FM_CALL sumOfElements(vec2 v) {
-	return v.x() + v.y();
+FM_INLINE float FM_CALL SumOfElements(v2 V) {
+	return V.X() + V.Y();
 }
-FM_INLINE float FM_CALL length(vec2 v) {
-	return sqrt(dot(v, v));
+FM_INLINE float FM_CALL Length(v2 V) {
+	return sqrt(Dot(V, V));
 }
-FM_INLINE float FM_CALL lengthSquared(vec2 v) {
-	return dot(v, v);
+FM_INLINE float FM_CALL LengthSquared(v2 V) {
+	return Dot(V, V);
 }
-FM_INLINE vec2 FM_CALL normalize(vec2 v) {
-	return v / length(v);
+FM_INLINE v2 FM_CALL Normalize(v2 V) {
+	return V / Length(V);
 }
-FM_INLINE vec2 FM_CALL clamp(vec2 v, vec2 minV, vec2 maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE v2 FM_CALL Clamp(v2 V, v2 MinV, v2 MaxV) {
+	return Min(Max(V, MinV), MaxV);
 }
-FM_INLINE vec2 FM_CALL lerp(vec2 a, vec2 b, float t) {
-	return a + (b-a)*t;
+FM_INLINE v2 FM_CALL Lerp(v2 A, v2 B, float T) {
+	return A + (B-A)*T;
 }
-FM_INLINE bool FM_CALL operator==(vec2 a, vec2 b) {
-	vec2 eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y();
+FM_INLINE bool FM_CALL operator==(v2 A, v2 B) {
+	v2 EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y();
 } 
-FM_INLINE bool FM_CALL operator!=(vec2 a, vec2 b) {
-	vec2 eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y());
+FM_INLINE bool FM_CALL operator!=(v2 A, v2 B) {
+	v2 EqMask = EqualsMask(A, B);
+	return !(EqMask.X() && EqMask.Y());
 }
-FM_INLINE vec2 FM_CALL equalsMask(vec2 a, vec2 b) {
-	a.m = _mm_cmpeq_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL EqualsMask(v2 A, v2 B) {
+	A.M = _mm_cmpeq_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL greaterMask(vec2 a, vec2 b) {
-	a.m = _mm_cmpgt_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL GreaterMask(v2 A, v2 B) {
+	A.M = _mm_cmpgt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL greaterOrEqualMask(vec2 a, vec2 b) {
-	a.m = _mm_cmpge_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL GreaterOrEqualMask(v2 A, v2 B) {
+	A.M = _mm_cmpge_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL lesserMask(vec2 a, vec2 b) {
-	a.m = _mm_cmplt_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL LesserMask(v2 A, v2 B) {
+	A.M = _mm_cmplt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2 FM_CALL lesserOrEqualMask(vec2 a, vec2 b) {
-	a.m = _mm_cmple_ps(a.m, b.m);
-	return a;
+FM_INLINE v2 FM_CALL LesserOrEqualMask(v2 A, v2 B) {
+	A.M = _mm_cmple_ps(A.M, B.M);
+	return A;
+}
+
+//////////////
+// v2d impl //
+//////////////
+FM_INLINE v2d FM_CALL V2dFromMemory(const double* V) {
+	v2d Res;
+	Res.M = _mm_set_pd(V[1], V[0]); 
+	return Res;
+}
+FM_INLINE v2d FM_CALL V2d(double X, double Y) {
+	v2d Res;
+	Res.M = _mm_set_pd(Y, X); 
+	return Res;
+}
+FM_INLINE v2d FM_CALL V2d(double A) {
+	v2d Res;
+	Res.M = _mm_set1_pd(A);
+	return Res;
+}
+FM_INLINE v2d FM_CALL V2d(__m128d M) {
+	v2d Res;
+	Res.M = M;
+	return Res;
+}
+FM_INLINE v2d FM_CALL V2d() {
+	v2d Res;
+	Res.M = _mm_setzero_pd(); 
+	return Res;
+}
+FM_INLINE double FM_CALL v2d::X() const {
+	return _mm_cvtsd_f64(M);
+}
+FM_INLINE double FM_CALL v2d::Y() const { 
+	return _mm_cvtsd_f64(_mm_shuffle_pd(M, M, _MM_SHUFFLE(1, 1, 1, 1))); 
+}
+FM_INLINE v2d FM_CALL v2d::YX() const {
+	return V2d(_mm_shuffle_pd(M, M, _MM_SHUFFLE(0, 0, 0, 1))); 
+}
+FM_INLINE v2d FM_CALL v2d::XX() const {
+	return V2d(_mm_unpacklo_pd(M, M));
+}
+FM_INLINE v2d FM_CALL v2d::YY() const {
+	return V2d(_mm_unpackhi_pd(M, M));
+}
+FM_INLINE void FM_CALL Store(double* Mem, v2d V) { 
+	_mm_storeu_pd(Mem, V.M); 
+} 
+FM_INLINE void FM_CALL Store16ByteAligned(double* Mem, v2d V) {
+	_mm_store_pd(Mem, V.M); 
+}
+FM_INLINE void FM_CALL v2d::SetX(double X) {
+	M = _mm_move_sd(M, _mm_set_sd(X)); 
+}
+FM_INLINE void FM_CALL v2d::SetY(double Y) {
+	M = _mm_unpacklo_pd(M, _mm_set_sd(Y)); 
+}
+FM_INLINE v2d FM_CALL operator+(v2d A, v2d B) {
+	A.M = _mm_add_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d FM_CALL operator-(v2d A, v2d B) {
+	A.M = _mm_sub_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d& FM_CALL operator+=(v2d& A, v2d B) {
+	A.M = _mm_add_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d& FM_CALL operator-=(v2d& A, v2d B) {
+	A.M = _mm_sub_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d FM_CALL HadamardMul(v2d A, v2d B) {
+	A.M = _mm_mul_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d FM_CALL HadamardDiv(v2d A, v2d B) {
+	A.M = _mm_div_pd(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2d FM_CALL operator*(v2d V, double Scalar) {
+	V.M = _mm_mul_pd(V.M, _mm_set1_pd(Scalar));
+	return V; 
+}
+FM_INLINE v2d FM_CALL operator*(double Scalar, v2d V) {
+	V.M = _mm_mul_pd(V.M, _mm_set1_pd(Scalar));
+	return V; 
+} 
+FM_INLINE v2d FM_CALL operator/(v2d V, double Scalar) {
+	V.M = _mm_div_pd(V.M, _mm_set1_pd(Scalar));
+	return V; 
+}
+FM_INLINE v2d FM_CALL operator-(v2d V) {
+	V.M = _mm_sub_pd(_mm_setzero_pd(), V.M);
+	return V;
+}
+FM_INLINE double FM_CALL Dot(v2d A, v2d B) {
+	return SumOfElements(HadamardMul(A, B));
+}
+FM_INLINE v2d FM_CALL Min(v2d A, v2d B) {
+	A.M = _mm_min_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL Max(v2d A, v2d B) {
+	A.M = _mm_max_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL Abs(v2d V) {
+	__m128d SignBits = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
+	V.M = _mm_andnot_pd(SignBits, V.M);
+	return V;
+}
+FM_INLINE double FM_CALL SumOfElements(v2d V) {
+	return V.X() + V.Y();
+}
+FM_INLINE double FM_CALL Length(v2d V) {
+	return sqrt(Dot(V, V));
+}
+FM_INLINE double FM_CALL LengthSquared(v2d V) {
+	return Dot(V, V);
+}
+FM_INLINE v2d FM_CALL Normalize(v2d V) {
+	return V / Length(V);
+}
+FM_INLINE v2d FM_CALL Clamp(v2d V, v2d MinV, v2d MaxV) {
+	return Min(Max(V, MinV), MaxV);
+} 
+FM_INLINE v2d FM_CALL Lerp(v2d A, v2d B, double T) {
+	return A + (B-A)*T;
+}
+FM_INLINE bool FM_CALL operator==(v2d A, v2d B) {
+	v2d EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y();
+} 
+FM_INLINE bool FM_CALL operator!=(v2d A, v2d B) {
+	v2d EqMask = EqualsMask(A, B);
+	return !(EqMask.X() && EqMask.Y());
+}
+FM_INLINE v2d FM_CALL EqualsMask(v2d A, v2d B) {
+	A.M = _mm_cmpeq_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL GreaterMask(v2d A, v2d B) {
+	A.M = _mm_cmpgt_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL GreaterOrEqualMask(v2d A, v2d B) {
+	A.M = _mm_cmpge_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL LesserMask(v2d A, v2d B) {
+	A.M = _mm_cmplt_pd(A.M, B.M);
+	return A;
+}
+FM_INLINE v2d FM_CALL LesserOrEqualMask(v2d A, v2d B) {
+	A.M = _mm_cmple_pd(A.M, B.M);
+	return A;
 }
 
 ////////////////
-// vec2d impl //
+// v2i impl //
 ////////////////
-FM_INLINE vec2d FM_CALL makeVec2dFromMemory(const double* v) {
-	vec2d res;
-	res.m = _mm_set_pd(v[1], v[0]); 
-	return res;
+FM_INLINE v2i FM_CALL V2iFromMemory(const int32_t* V) {
+	v2i Res;
+	Res.M = _mm_set_epi32(0, 0, V[1], V[0]); 
+	return Res;
 }
-FM_INLINE vec2d FM_CALL makeVec2d(double x, double y) {
-	vec2d res;
-	res.m = _mm_set_pd(y, x); 
-	return res;
+FM_INLINE v2i FM_CALL V2i(int32_t X, int32_t Y) {
+	v2i Res;
+	Res.M = _mm_set_epi32(0, 0, Y, X); 
+	return Res;
 }
-FM_INLINE vec2d FM_CALL makeVec2d(double a) {
-	vec2d res;
-	res.m = _mm_set1_pd(a);
-	return res;
+FM_INLINE v2i FM_CALL V2i(int32_t A) { 
+	v2i Res;
+	Res.M = _mm_set1_epi32(A); 
+	return Res;
 }
-FM_INLINE vec2d FM_CALL makeVec2d(__m128d m) {
-	vec2d res;
-	res.m = m;
-	return res;
+FM_INLINE v2i FM_CALL V2i(__m128i M) {
+	v2i Res;
+	Res.M = M;
+	return Res;
 }
-FM_INLINE vec2d FM_CALL makeZeroVec2d() {
-	vec2d res;
-	res.m = _mm_setzero_pd(); 
-	return res;
+FM_INLINE v2i FM_CALL V2i() {
+	v2i Res;
+	Res.M = _mm_setzero_si128();
+	return Res;
 }
-FM_INLINE double FM_CALL vec2d::x() const {
-	return _mm_cvtsd_f64(m);
-}
-FM_INLINE double FM_CALL vec2d::y() const { 
-	return _mm_cvtsd_f64(_mm_shuffle_pd(m, m, _MM_SHUFFLE(1, 1, 1, 1))); 
-}
-FM_INLINE vec2d FM_CALL vec2d::yx() const {
-	return makeVec2d(_mm_shuffle_pd(m, m, _MM_SHUFFLE(0, 0, 0, 1))); 
-}
-FM_INLINE vec2d FM_CALL vec2d::xx() const {
-	return makeVec2d(_mm_unpacklo_pd(m, m));
-}
-FM_INLINE vec2d FM_CALL vec2d::yy() const {
-	return makeVec2d(_mm_unpackhi_pd(m, m));
-}
-FM_INLINE void FM_CALL store(double* mem, vec2d v) { 
-	_mm_storeu_pd(mem, v.m); 
+FM_INLINE int32_t FM_CALL v2i::X() const { 
+	return _mm_cvtsi128_si32(M); 
 } 
-FM_INLINE void FM_CALL store16ByteAligned(double* mem, vec2d v) {
-	_mm_store_pd(mem, v.m); 
-}
-FM_INLINE void FM_CALL vec2d::setX(double x) {
-	m = _mm_move_sd(m, _mm_set_sd(x)); 
-}
-FM_INLINE void FM_CALL vec2d::setY(double y) {
-	m = _mm_unpacklo_pd(m, _mm_set_sd(y)); 
-}
-FM_INLINE vec2d FM_CALL operator+(vec2d a, vec2d b) {
-	a.m = _mm_add_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d FM_CALL operator-(vec2d a, vec2d b) {
-	a.m = _mm_sub_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d& FM_CALL operator+=(vec2d& a, vec2d b) {
-	a.m = _mm_add_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d& FM_CALL operator-=(vec2d& a, vec2d b) {
-	a.m = _mm_sub_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d FM_CALL hadamardMul(vec2d a, vec2d b) {
-	a.m = _mm_mul_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d FM_CALL hadamardDiv(vec2d a, vec2d b) {
-	a.m = _mm_div_pd(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2d FM_CALL operator*(vec2d v, double scalar) {
-	v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar));
-	return v; 
-}
-FM_INLINE vec2d FM_CALL operator*(double scalar, vec2d v) {
-	v.m = _mm_mul_pd(v.m, _mm_set1_pd(scalar));
-	return v; 
+FM_INLINE int32_t FM_CALL v2i::Y() const {
+	return _mm_cvtsi128_si32(_mm_shuffle_epi32(M, _MM_SHUFFLE(1, 1, 1, 1))); 
 } 
-FM_INLINE vec2d FM_CALL operator/(vec2d v, double scalar) {
-	v.m = _mm_div_pd(v.m, _mm_set1_pd(scalar));
-	return v; 
+FM_INLINE v2i FM_CALL v2i::YX() const {
+	return V2i(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 0, 1)));
 }
-FM_INLINE vec2d FM_CALL operator-(vec2d v) {
-	v.m = _mm_sub_pd(_mm_setzero_pd(), v.m);
-	return v;
+FM_INLINE v2i FM_CALL v2i::XX() const {
+	return V2i(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 0, 0)));
 }
-FM_INLINE double FM_CALL dot(vec2d a, vec2d b) {
-	return sumOfElements(hadamardMul(a, b));
+FM_INLINE v2i FM_CALL v2i::YY() const {
+	return V2i(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 1, 1)));
 }
-FM_INLINE vec2d FM_CALL min(vec2d a, vec2d b) {
-	a.m = _mm_min_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL max(vec2d a, vec2d b) {
-	a.m = _mm_max_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL abs(vec2d v) {
-	__m128d signBits = _mm_castsi128_pd(_mm_set1_epi32(0x80000000));
-	v.m = _mm_andnot_pd(signBits, v.m);
-	return v;
-}
-FM_INLINE double FM_CALL sumOfElements(vec2d v) {
-	return v.x() + v.y();
-}
-FM_INLINE double FM_CALL length(vec2d v) {
-	return sqrt(dot(v, v));
-}
-FM_INLINE double FM_CALL lengthSquared(vec2d v) {
-	return dot(v, v);
-}
-FM_INLINE vec2d FM_CALL normalize(vec2d v) {
-	return v / length(v);
-}
-FM_INLINE vec2d FM_CALL clamp(vec2d v, vec2d minV, vec2d maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE void FM_CALL Store(int32_t* Mem, v2i V) {
+	Mem[0] = V.X();
+	Mem[1] = V.Y();
 } 
-FM_INLINE vec2d FM_CALL lerp(vec2d a, vec2d b, double t) {
-	return a + (b-a)*t;
+FM_INLINE v2i FM_CALL operator+(v2i A, v2i B) {
+	A.M = _mm_add_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE bool FM_CALL operator==(vec2d a, vec2d b) {
-	vec2d eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y();
+FM_INLINE v2i FM_CALL operator-(v2i A, v2i B) {
+	A.M = _mm_sub_epi32(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2i& FM_CALL operator+=(v2i& A, v2i B) {
+	A.M = _mm_add_epi32(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2i& FM_CALL operator-=(v2i& A, v2i B) {
+	A.M = _mm_sub_epi32(A.M, B.M);
+	return A; 
+}
+FM_INLINE v2i FM_CALL operator-(v2i V) {
+	V.M = _mm_sub_epi32(_mm_setzero_si128(), V.M);
+	return V;
+}
+FM_INLINE int32_t FM_CALL SumOfElements(v2i V) {
+	return V.X() + V.Y();
+}
+FM_INLINE int32_t FM_CALL Length(v2i V) {
+	int32_t X = V.X();
+	int32_t Y = V.Y();
+	return (int32_t)sqrt(X*X + Y*Y);
+}
+FM_INLINE int32_t FM_CALL LengthSquared(v2i V) {
+	int32_t X = V.X();
+	int32_t Y = V.Y();
+	return X*X + Y*Y;
+}
+FM_INLINE bool FM_CALL operator==(v2i A, v2i B) {
+	v2i EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y();
 } 
-FM_INLINE bool FM_CALL operator!=(vec2d a, vec2d b) {
-	vec2d eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y());
-}
-FM_INLINE vec2d FM_CALL equalsMask(vec2d a, vec2d b) {
-	a.m = _mm_cmpeq_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL greaterMask(vec2d a, vec2d b) {
-	a.m = _mm_cmpgt_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL greaterOrEqualMask(vec2d a, vec2d b) {
-	a.m = _mm_cmpge_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL lesserMask(vec2d a, vec2d b) {
-	a.m = _mm_cmplt_pd(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2d FM_CALL lesserOrEqualMask(vec2d a, vec2d b) {
-	a.m = _mm_cmple_pd(a.m, b.m);
-	return a;
-}
-
-////////////////
-// vec2i impl //
-////////////////
-FM_INLINE vec2i FM_CALL makeVec2iFromMemory(const int32_t* v) {
-	vec2i res;
-	res.m = _mm_set_epi32(0, 0, v[1], v[0]); 
-	return res;
-}
-FM_INLINE vec2i FM_CALL makeVec2i(int32_t x, int32_t y) {
-	vec2i res;
-	res.m = _mm_set_epi32(0, 0, y, x); 
-	return res;
-}
-FM_INLINE vec2i FM_CALL makeVec2i(int32_t a) { 
-	vec2i res;
-	res.m = _mm_set1_epi32(a); 
-	return res;
-}
-FM_INLINE vec2i FM_CALL makeVec2i(__m128i m) {
-	vec2i res;
-	res.m = m;
-	return res;
-}
-FM_INLINE vec2i FM_CALL makeZeroVec2i() {
-	vec2i res;
-	res.m = _mm_setzero_si128();
-	return res;
-}
-FM_INLINE int32_t FM_CALL vec2i::x() const { 
-	return _mm_cvtsi128_si32(m); 
+FM_INLINE bool FM_CALL operator!=(v2i A, v2i B) {
+	v2i EqMask = EqualsMask(A, B);
+	return !(EqMask.X() && EqMask.Y());
 } 
-FM_INLINE int32_t FM_CALL vec2i::y() const {
-	return _mm_cvtsi128_si32(_mm_shuffle_epi32(m, _MM_SHUFFLE(1, 1, 1, 1))); 
-} 
-FM_INLINE vec2i FM_CALL vec2i::yx() const {
-	return makeVec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 1)));
+FM_INLINE v2i FM_CALL EqualsMask(v2i A, v2i B) {
+	A.M = _mm_cmpeq_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2i FM_CALL vec2i::xx() const {
-	return makeVec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 0)));
+FM_INLINE v2i FM_CALL GreaterMask(v2i A, v2i B) {
+	A.M = _mm_cmpgt_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2i FM_CALL vec2i::yy() const {
-	return makeVec2i(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
+FM_INLINE v2i FM_CALL GreaterOrEqualMask(v2i A, v2i B) {
+	__m128i GT = _mm_cmpgt_epi32(A.M, B.M);
+	__m128i EQ = _mm_cmpeq_epi32(A.M, B.M);
+	A.M = _mm_or_si128(GT, EQ);
+	return A;
 }
-FM_INLINE void FM_CALL store(int32_t* mem, vec2i v) {
-	mem[0] = v.x();
-	mem[1] = v.y();
-} 
-FM_INLINE vec2i FM_CALL operator+(vec2i a, vec2i b) {
-	a.m = _mm_add_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2i FM_CALL LesserMask(v2i A, v2i B) {
+	A.M = _mm_cmplt_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2i FM_CALL operator-(vec2i a, vec2i b) {
-	a.m = _mm_sub_epi32(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i b) {
-	a.m = _mm_add_epi32(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2i& FM_CALL operator-=(vec2i& a, vec2i b) {
-	a.m = _mm_sub_epi32(a.m, b.m);
-	return a; 
-}
-FM_INLINE vec2i FM_CALL operator-(vec2i v) {
-	v.m = _mm_sub_epi32(_mm_setzero_si128(), v.m);
-	return v;
-}
-FM_INLINE int32_t FM_CALL sumOfElements(vec2i v) {
-	return v.x() + v.y();
-}
-FM_INLINE int32_t FM_CALL length(vec2i v) {
-	int32_t x = v.x();
-	int32_t y = v.y();
-	return (int32_t)sqrt(x*x + y*y);
-}
-FM_INLINE int32_t FM_CALL lengthSquared(vec2i v) {
-	int32_t x = v.x();
-	int32_t y = v.y();
-	return x*x + y*y;
-}
-FM_INLINE bool FM_CALL operator==(vec2i a, vec2i b) {
-	vec2i eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y();
-} 
-FM_INLINE bool FM_CALL operator!=(vec2i a, vec2i b) {
-	vec2i eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y());
-} 
-FM_INLINE vec2i FM_CALL equalsMask(vec2i a, vec2i b) {
-	a.m = _mm_cmpeq_epi32(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2i FM_CALL greaterMask(vec2i a, vec2i b) {
-	a.m = _mm_cmpgt_epi32(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2i FM_CALL greaterOrEqualMask(vec2i a, vec2i b) {
-	__m128i gt = _mm_cmpgt_epi32(a.m, b.m);
-	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
-	a.m = _mm_or_si128(gt, eq);
-	return a;
-}
-FM_INLINE vec2i FM_CALL lesserMask(vec2i a, vec2i b) {
-	a.m = _mm_cmplt_epi32(a.m, b.m);
-	return a;
-}
-FM_INLINE vec2i FM_CALL lesserOrEqualMask(vec2i a, vec2i b) {
-	__m128i lt = _mm_cmplt_epi32(a.m, b.m);
-	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
-	a.m = _mm_or_si128(lt, eq);
-	return a;
+FM_INLINE v2i FM_CALL LesserOrEqualMask(v2i A, v2i B) {
+	__m128i LT = _mm_cmplt_epi32(A.M, B.M);
+	__m128i EQ = _mm_cmpeq_epi32(A.M, B.M);
+	A.M = _mm_or_si128(LT, EQ);
+	return A;
 }
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
-FM_INLINE void FM_CALL vec2i::setX(int32_t x) {
-	m = _mm_insert_epi32(m, x, 0);
+FM_INLINE void FM_CALL v2i::SetX(int32_t X) {
+	M = _mm_insert_epi32(M, X, 0);
 }
-FM_INLINE void FM_CALL vec2i::setY(int32_t y) {
-	m = _mm_insert_epi32(m, y, 1);
+FM_INLINE void FM_CALL v2i::SetY(int32_t Y) {
+	M = _mm_insert_epi32(M, Y, 1);
 }
-FM_INLINE vec2i FM_CALL operator*(vec2i v, int32_t scalar) {
-	v.m = _mm_mullo_epi32(v.m, _mm_set1_epi32(scalar));
-	return v; 
+FM_INLINE v2i FM_CALL operator*(v2i V, int32_t Scalar) {
+	V.M = _mm_mullo_epi32(V.M, _mm_set1_epi32(Scalar));
+	return V; 
 }
-FM_INLINE vec2i FM_CALL operator*(int32_t scalar, vec2i v) {
-	v.m =_mm_mullo_epi32(v.m, _mm_set1_epi32(scalar)); 
-	return v; 
+FM_INLINE v2i FM_CALL operator*(int32_t Scalar, v2i V) {
+	V.M =_mm_mullo_epi32(V.M, _mm_set1_epi32(Scalar)); 
+	return V; 
 }
-FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) {
-	a.m = _mm_mullo_epi32(a.m, b.m); 
-	return a; 
+FM_INLINE v2i FM_CALL HadamardMul(v2i A, v2i B) {
+	A.M = _mm_mullo_epi32(A.M, B.M); 
+	return A; 
 }
-FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b) {
-	a.m = _mm_min_epi32(a.m, b.m);
-	return a;
+FM_INLINE v2i FM_CALL Min(v2i A, v2i B) {
+	A.M = _mm_min_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b) {
-	a.m = _mm_max_epi32(a.m, b.m);
-	return a;
+FM_INLINE v2i FM_CALL Max(v2i A, v2i B) {
+	A.M = _mm_max_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2i FM_CALL abs(vec2i v) {
-	v.m = _mm_abs_epi32(v.m);
-	return v;
+FM_INLINE v2i FM_CALL Abs(v2i V) {
+	V.M = _mm_abs_epi32(V.M);
+	return V;
 }
-FM_INLINE vec2i FM_CALL clamp(vec2i v, vec2i minV, vec2i maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE v2i FM_CALL Clamp(v2i V, v2i MinV, v2i MaxV) {
+	return Min(Max(V, MinV), MaxV);
 } 
 #else // SSE 2 implementations 
-FM_INLINE void FM_CALL vec2i::setX(int32_t x) {
-	int32_t arr[4];
-	_mm_store_si128((__m128i*)arr, m);
-	arr[0] = x;
-	m = _mm_load_si128((__m128i*)arr);
+FM_INLINE void FM_CALL v2i::SetX(int32_t X) {
+	int32_t Arr[4];
+	_mm_store_si128((__m128i*)Arr, M);
+	Arr[0] = X;
+	M = _mm_load_si128((__m128i*)Arr);
 }
-FM_INLINE void FM_CALL vec2i::setY(int32_t y) {
-	int32_t arr[4];
-	_mm_store_si128((__m128i*)arr, m);
-	arr[1] = y;
-	m = _mm_load_si128((__m128i*)arr);
+FM_INLINE void FM_CALL v2i::SetY(int32_t Y) {
+	int32_t Arr[4];
+	_mm_store_si128((__m128i*)Arr, M);
+	Arr[1] = Y;
+	M = _mm_load_si128((__m128i*)Arr);
 	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
-FM_INLINE vec2i FM_CALL hadamardMul(vec2i a, vec2i b) {
-	int32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = aArr[0] * bArr[0]; 
-	aArr[1] = aArr[1] * bArr[1]; 
-	return vec2i(aArr);
+FM_INLINE v2i FM_CALL HadamardMul(v2i A, v2i B) {
+	int32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = AArr[0] * BArr[0]; 
+	AArr[1] = AArr[1] * BArr[1]; 
+	return V2i(AArr);
 }
-FM_INLINE vec2i FM_CALL operator*(vec2i v, int32_t scalar) {
-	int32_t vArr[4];
-	_mm_store_si128((__m128i*)vArr, v.m);
-	vArr[0] *= scalar;
-	vArr[1] *= scalar;
-	return vec2i(vArr);
+FM_INLINE v2i FM_CALL operator*(v2i V, int32_t Scalar) {
+	int32_t VArr[4];
+	_mm_store_si128((__m128i*)VArr, V.M);
+	VArr[0] *= Scalar;
+	VArr[1] *= Scalar;
+	return V2i(VArr);
 	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
-FM_INLINE vec2i FM_CALL operator*(int32_t scalar, vec2i v) {
-	return v * scalar; 
+FM_INLINE v2i FM_CALL operator*(int32_t Scalar, v2i v) {
+	return V * Scalar; 
 }
-FM_INLINE vec2i FM_CALL min(vec2i a, vec2i b) {
-	int32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = min(aArr[0], bArr[0]);
-	aArr[1] = min(aArr[1], bArr[1]);
-	return vec2i(aArr);
+FM_INLINE v2i FM_CALL Min(v2i A, v2i B) {
+	int32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = Min(AArr[0], BArr[0]);
+	AArr[1] = Min(AArr[1], BArr[1]);
+	return V2i(AArr);
 }
-FM_INLINE vec2i FM_CALL max(vec2i a, vec2i b) {
-	int32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = max(aArr[0], bArr[0]);
-	aArr[1] = max(aArr[1], bArr[1]);
-	return vec2i(aArr);
+FM_INLINE v2i FM_CALL Max(v2i A, v2i B) {
+	int32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = Max(AArr[0], BArr[0]);
+	AArr[1] = Max(AArr[1], BArr[1]);
+	return V2i(AArr);
 	// TODO: This code is repeated. Make helper function or write it somehow using SSE2!
 }
-FM_INLINE vec2i FM_CALL abs(vec2i v) {
-	int32_t vArr[4];
-	_mm_store_si128((__m128i*)vArr, v.m);
-	vArr[0] = abs(vArr[0]);
-	vArr[1] = abs(vArr[1]);
-	return vec2i(vArr);
+FM_INLINE v2i FM_CALL abs(v2i v) {
+	int32_t VArr[4];
+	_mm_store_si128((__m128i*)VArr, V.M);
+	VArr[0] = abs(VArr[0]);
+	VArr[1] = abs(VArr[1]);
+	return V2i(VArr);
 }
 #endif
 
 ////////////////
-// vec2u impl //
+// v2u impl //
 ////////////////
-FM_INLINE vec2u FM_CALL makeVec2uFromMemory(const uint32_t* v) {
-	vec2u res;
-	res.m = _mm_set_epi32(0, 0, v[1], v[0]); 
-	return res;
+FM_INLINE v2u FM_CALL V2uFromMemory(const uint32_t* V) {
+	v2u Res;
+	Res.M = _mm_set_epi32(0, 0, V[1], V[0]); 
+	return Res;
 }
-FM_INLINE vec2u FM_CALL makeVec2u(uint32_t x, uint32_t y) {
-	vec2u res;
-	res.m = _mm_set_epi32(0, 0, y, x); 
-	return res;
+FM_INLINE v2u FM_CALL V2u(uint32_t x, uint32_t y) {
+	v2u Res;
+	Res.M = _mm_set_epi32(0, 0, y, x); 
+	return Res;
 }
-FM_INLINE vec2u FM_CALL makeVec2u(uint32_t a) {
-	vec2u res;
-	res.m = _mm_set1_epi32(a); 
-	return res;
+FM_INLINE v2u FM_CALL V2u(uint32_t a) {
+	v2u Res;
+	Res.M = _mm_set1_epi32(a); 
+	return Res;
 } 
-FM_INLINE vec2u FM_CALL makeVec2u(__m128i m) {
-	vec2u res;
-	res.m = m;
-	return res;
+FM_INLINE v2u FM_CALL V2u(__m128i m) {
+	v2u Res;
+	Res.M = m;
+	return Res;
 } 
-FM_INLINE vec2u FM_CALL makeZeroVec2u() {
-	vec2u res;
-	res.m = _mm_setzero_si128(); 
-	return res;
+FM_INLINE v2u FM_CALL V2u() {
+	v2u Res;
+	Res.M = _mm_setzero_si128(); 
+	return Res;
 }
-FM_INLINE uint32_t FM_CALL vec2u::x() const {
-	return (uint32_t)_mm_cvtsi128_si32(m); 
+FM_INLINE uint32_t FM_CALL v2u::X() const {
+	return (uint32_t)_mm_cvtsi128_si32(M); 
 } 
-FM_INLINE uint32_t FM_CALL vec2u::y() const { 
-	return (uint32_t)_mm_cvtsi128_si32(_mm_shuffle_epi32(m, _MM_SHUFFLE(1, 1, 1, 1))); 
+FM_INLINE uint32_t FM_CALL v2u::Y() const { 
+	return (uint32_t)_mm_cvtsi128_si32(_mm_shuffle_epi32(M, _MM_SHUFFLE(1, 1, 1, 1))); 
 }
-FM_INLINE vec2u FM_CALL vec2u::yx() const { 
-	return makeVec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 1))); 
+FM_INLINE v2u FM_CALL v2u::YX() const { 
+	return V2u(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 0, 1))); 
 }
-FM_INLINE vec2u FM_CALL vec2u::xx() const { 
-	return makeVec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 0, 0)));
+FM_INLINE v2u FM_CALL v2u::XX() const { 
+	return V2u(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 0, 0)));
 }
-FM_INLINE vec2u FM_CALL vec2u::yy() const { 
-	return makeVec2u(_mm_shuffle_epi32(m, _MM_SHUFFLE(3, 2, 1, 1)));
+FM_INLINE v2u FM_CALL v2u::YY() const { 
+	return V2u(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 1, 1)));
 }
-FM_INLINE void FM_CALL store(uint32_t* mem, vec2u v) {
-	mem[0] = v.x();
-	mem[1] = v.y();
+FM_INLINE void FM_CALL Store(uint32_t* Mem, v2u V) {
+	Mem[0] = V.X();
+	Mem[1] = V.Y();
 } 
-FM_INLINE vec2u FM_CALL operator+(vec2u a, vec2u b) {
-	a.m = _mm_add_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2u FM_CALL operator+(v2u A, v2u B) {
+	A.M = _mm_add_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2u FM_CALL operator-(vec2u a, vec2u b) {
-	a.m = _mm_sub_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2u FM_CALL operator-(v2u A, v2u B) {
+	A.M = _mm_sub_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2u& FM_CALL operator+=(vec2u& a, vec2u b) {
-	a.m = _mm_add_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2u& FM_CALL operator+=(v2u& A, v2u B) {
+	A.M = _mm_add_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2u& FM_CALL operator-=(vec2u& a, vec2u b) {
-	a.m = _mm_sub_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2u& FM_CALL operator-=(v2u& A, v2u B) {
+	A.M = _mm_sub_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE uint32_t FM_CALL sumOfElements(vec2u v) {
-	return v.x() + v.y();
+FM_INLINE uint32_t FM_CALL SumOfElements(v2u V) {
+	return V.X() + V.Y();
 }
-FM_INLINE uint32_t FM_CALL length(vec2u v) {
-	uint32_t x = v.x();
-	uint32_t y = v.y();
-	return (uint32_t)sqrt(x*x + y*y);
+FM_INLINE uint32_t FM_CALL Length(v2u V) {
+	uint32_t X = V.X();
+	uint32_t Y = V.Y();
+	return (uint32_t)sqrt(X*X + Y*Y);
 }
-FM_INLINE uint32_t FM_CALL lengthSquared(vec2u v) {
-	uint32_t x = v.x();
-	uint32_t y = v.y();
-	return x*x + y*y;	
+FM_INLINE uint32_t FM_CALL LengthSquared(v2u V) {
+	uint32_t X = V.X();
+	uint32_t Y = V.Y();
+	return X*X + Y*Y;	
 }
-FM_INLINE vec2u FM_CALL clamp(vec2u v, vec2u minV, vec2u maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE v2u FM_CALL Clamp(v2u V, v2u MinV, v2u MaxV) {
+	return Min(Max(V, MinV), MaxV);
 } 
-FM_INLINE bool FM_CALL operator==(vec2u a, vec2u b) {
-	vec2u eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y();
+FM_INLINE bool FM_CALL operator==(v2u A, v2u B) {
+	v2u EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y();
 } 
-FM_INLINE bool FM_CALL operator!=(vec2u a, vec2u b) {
-	vec2u eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y());
+FM_INLINE bool FM_CALL operator!=(v2u A, v2u B) {
+	v2u EqMask = EqualsMask(A, B);
+	return !(EqMask.X() && EqMask.Y());
 } 
-FM_INLINE vec2u FM_CALL equalsMask(vec2u a, vec2u b) {
-	a.m = _mm_cmpeq_epi32(a.m, b.m);
-	return a;
+FM_INLINE v2u FM_CALL EqualsMask(v2u A, v2u B) {
+	A.M = _mm_cmpeq_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2u FM_CALL greaterMask(vec2u a, vec2u b) {
-	a.m = _mm_cmpgt_epi32(a.m, b.m);
-	return a;
+FM_INLINE v2u FM_CALL GreaterMask(v2u A, v2u B) {
+	A.M = _mm_cmpgt_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2u FM_CALL greaterOrEqualMask(vec2u a, vec2u b) {
-	__m128i gt = _mm_cmpgt_epi32(a.m, b.m);
-	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
-	a.m = _mm_or_si128(gt, eq);
-	return a;
+FM_INLINE v2u FM_CALL GreaterOrEqualMask(v2u A, v2u B) {
+	__m128i gt = _mm_cmpgt_epi32(A.M, B.M);
+	__m128i eq = _mm_cmpeq_epi32(A.M, B.M);
+	A.M = _mm_or_si128(gt, eq);
+	return A;
 }
-FM_INLINE vec2u FM_CALL lesserMask(vec2u a, vec2u b) {
-	a.m = _mm_cmplt_epi32(a.m, b.m);
-	return a;
+FM_INLINE v2u FM_CALL LesserMask(v2u A, v2u B) {
+	A.M = _mm_cmplt_epi32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2u FM_CALL lesserOrEqualMask(vec2u a, vec2u b) {
-	__m128i lt = _mm_cmplt_epi32(a.m, b.m);
-	__m128i eq = _mm_cmpeq_epi32(a.m, b.m);
-	a.m = _mm_or_si128(lt, eq);
-	return a;
+FM_INLINE v2u FM_CALL LesserOrEqualMask(v2u A, v2u B) {
+	__m128i lt = _mm_cmplt_epi32(A.M, B.M);
+	__m128i eq = _mm_cmpeq_epi32(A.M, B.M);
+	A.M = _mm_or_si128(lt, eq);
+	return A;
 }
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
-FM_INLINE void FM_CALL vec2u::setX(uint32_t x) {
-	m = _mm_insert_epi32(m, (int32_t)x, 0);
+FM_INLINE void FM_CALL v2u::SetX(uint32_t X) {
+	M = _mm_insert_epi32(M, (int32_t)X, 0);
 }
-FM_INLINE void FM_CALL vec2u::setY(uint32_t y) {
-	m = _mm_insert_epi32(m, (int32_t)y, 1);
+FM_INLINE void FM_CALL v2u::SetY(uint32_t Y) {
+	M = _mm_insert_epi32(M, (int32_t)Y, 1);
 }
-FM_INLINE vec2u FM_CALL operator*(vec2u v, uint32_t scalar) {
-	v.m = _mm_mullo_epi32(v.m, _mm_set1_epi32(scalar)); 
-	return v; 
+FM_INLINE v2u FM_CALL operator*(v2u V, uint32_t Scalar) {
+	V.M = _mm_mullo_epi32(V.M, _mm_set1_epi32(Scalar)); 
+	return V; 
 }
-FM_INLINE vec2u FM_CALL operator*(uint32_t scalar, vec2u v) {
-	v.m =_mm_mullo_epi32(v.m, _mm_set1_epi32(scalar));
-	return v; 
+FM_INLINE v2u FM_CALL operator*(uint32_t Scalar, v2u V) {
+	V.M =_mm_mullo_epi32(V.M, _mm_set1_epi32(Scalar));
+	return V; 
 }
-FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b) {
-	a.m = _mm_mullo_epi32(a.m, b.m);
-	return a; 
+FM_INLINE v2u FM_CALL HadamardMul(v2u A, v2u B) {
+	A.M = _mm_mullo_epi32(A.M, B.M);
+	return A; 
 }
-FM_INLINE vec2u FM_CALL min(vec2u a, vec2u b) {
-	a.m = _mm_min_epu32(a.m, b.m);
-	return a;
+FM_INLINE v2u FM_CALL Min(v2u A, v2u B) {
+	A.M = _mm_min_epu32(A.M, B.M);
+	return A;
 }
-FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b) {
-	a.m = _mm_max_epu32(a.m, b.m);
-	return a;
+FM_INLINE v2u FM_CALL Max(v2u A, v2u B) {
+	A.M = _mm_max_epu32(A.M, B.M);
+	return A;
 }
 #else // SSE 2 implementations
-FM_INLINE void FM_CALL vec2u::setX(uint32_t x) {
-	uint32_t arr[4];
-	_mm_store_si128((__m128i*)arr, m);
-	arr[0] = x;
-	m = _mm_load_si128((__m128i*)arr);
+FM_INLINE void FM_CALL v2u::SetX(uint32_t x) {
+	uint32_t Arr[4];
+	_mm_store_si128((__m128i*)Arr, m);
+	Arr[0] = x;
+	m = _mm_load_si128((__m128i*)Arr);
 }
-FM_INLINE void FM_CALL vec2u::setY(uint32_t y) {
-	uint32_t arr[4];
-	_mm_store_si128((__m128i*)arr, m);
-	arr[1] = y;
-	m = _mm_load_si128((__m128i*)arr);
+FM_INLINE void FM_CALL v2u::SetY(uint32_t y) {
+	uint32_t Arr[4];
+	_mm_store_si128((__m128i*)Arr, m);
+	Arr[1] = y;
+	M = _mm_load_si128((__m128i*)Arr);
 	// TODO: This code is repeated. Make utility function!
 }
-FM_INLINE vec2u FM_CALL hadamardMul(vec2u a, vec2u b) {
-	uint32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = aArr[0] * bArr[0]; 
-	aArr[1] = aArr[1] * bArr[1]; 
-	return vec2u(aArr);
+FM_INLINE v2u FM_CALL HadamardMul(v2u A, v2u B) {
+	uint32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = AArr[0] * BArr[0]; 
+	AArr[1] = AArr[1] * BArr[1]; 
+	return V2u(AArr);
 }
-FM_INLINE vec2u FM_CALL operator*(vec2u v, uint32_t scalar) {
-	uint32_t vArr[4];
-	_mm_store_si128((__m128i*)vArr, v.m);
-	vArr[0] *= scalar;
-	vArr[1] *= scalar;
-	return vec2u(vArr);
+FM_INLINE v2u FM_CALL operator*(v2u V, uint32_t Scalar) {
+	uint32_t VArr[4];
+	_mm_store_si128((__m128i*)VArr, V.M);
+	VArr[0] *= Scalar;
+	VArr[1] *= Scalar;
+	return V2u(VArr);
 }
-FM_INLINE vec2u FM_CALL operator*(uint32_t scalar, vec2u v) {
-	return v * scalar;
+FM_INLINE v2u FM_CALL operator*(uint32_t Scalar, v2u V) {
+	return V * Scalar;
 }
-FM_INLINE vec2u FM_CALL min(vec2u a, vec2u b) {
-	uint32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = min(aArr[0], bArr[0]);
-	aArr[1] = min(aArr[1], bArr[1]);
-	return vec2u(aArr);
+FM_INLINE v2u FM_CALL Min(v2u A, v2u B) {
+	uint32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = Min(AArr[0], BArr[0]);
+	AArr[1] = Min(AArr[1], BArr[1]);
+	return V2u(AArr);
 }
-FM_INLINE vec2u FM_CALL max(vec2u a, vec2u b) {
-	uint32_t aArr[4], bArr[4];
-	_mm_store_si128((__m128i*)aArr, a.m);
-	_mm_store_si128((__m128i*)bArr, b.m);
-	aArr[0] = max(aArr[0], bArr[0]);
-	aArr[1] = max(aArr[1], bArr[1]);
-	return vec2u(aArr);
+FM_INLINE v2u FM_CALL Max(v2u A, v2u B) {
+	uint32_t AArr[4], BArr[4];
+	_mm_store_si128((__m128i*)AArr, A.M);
+	_mm_store_si128((__m128i*)BArr, B.M);
+	AArr[0] = Max(AArr[0], BArr[0]);
+	AArr[1] = Max(AArr[1], BArr[1]);
+	return V2u(AArr);
 }
 #endif
 
 ///////////////
-// vec3 impl //
+// v3 impl //
 ///////////////
-FM_INLINE vec3 FM_CALL makeVec3FromMemory(float* v) {
-	vec3 res;
-	res.m = _mm_set_ps(0, v[2], v[1], v[0]);
-	return res;
+FM_INLINE v3 FM_CALL V3FromMemory(float* V) {
+	v3 Res;
+	Res.M = _mm_set_ps(0, V[2], V[1], V[0]);
+	return Res;
 }
-FM_INLINE vec3 FM_CALL makeVec3(float x, float y, float z) {
-	vec3 res;
-	res.m = _mm_set_ps(0, z, y, x); 
-	return res;
+FM_INLINE v3 FM_CALL V3(float X, float Y, float Z) {
+	v3 Res;
+	Res.M = _mm_set_ps(0, Z, Y, X); 
+	return Res;
 }
-FM_INLINE vec3 FM_CALL makeVec3(float a) {
-	vec3 res;
-	res.m = _mm_set1_ps(a);
-	return res;
+FM_INLINE v3 FM_CALL V3(float A) {
+	v3 Res;
+	Res.M = _mm_set1_ps(A);
+	return Res;
 }
-FM_INLINE vec3 FM_CALL makeVec3(__m128 m) {
-	vec3 res;
-	res.m = m;
-	return res;
+FM_INLINE v3 FM_CALL V3(__m128 M) {
+	v3 Res;
+	Res.M = M;
+	return Res;
 }
-FM_INLINE vec3 FM_CALL makeZeroVec3() {
-	vec3 res;
-	res.m = _mm_setzero_ps();
-	return res;
+FM_INLINE v3 FM_CALL V3() {
+	v3 Res;
+	Res.M = _mm_setzero_ps();
+	return Res;
 }
-FM_INLINE void FM_CALL vec3::setX(float x) {
-	m = priv::setX(m, x); 
+FM_INLINE void FM_CALL v3::SetX(float X) {
+	M = priv::SetX(M, X); 
 }
-FM_INLINE void FM_CALL vec3::setY(float y) {
-	m = priv::setY(m, y);
+FM_INLINE void FM_CALL v3::SetY(float Y) {
+	M = priv::SetY(M, Y);
 }
-FM_INLINE void FM_CALL vec3::setZ(float z) {
-	m = priv::setZ(m, z);
+FM_INLINE void FM_CALL v3::SetZ(float Z) {
+	M = priv::SetZ(M, Z);
 }
-FM_INLINE void FM_CALL store(float* mem, vec3 v) {
-	mem[0] = v.x();
-	mem[1] = v.y();
-	mem[2] = v.z();
+FM_INLINE void FM_CALL Store(float* Mem, v3 V) {
+	Mem[0] = V.X();
+	Mem[1] = V.Y();
+	Mem[2] = V.Z();
 }
-FM_INLINE float FM_CALL vec3::x() const {
-	return priv::getX(m); 
+FM_INLINE float FM_CALL v3::X() const {
+	return priv::GetX(M); 
 }
-FM_INLINE float FM_CALL vec3::y() const {
-	return priv::getY(m); 
+FM_INLINE float FM_CALL v3::Y() const {
+	return priv::GetY(M); 
 }
-FM_INLINE float FM_CALL vec3::z() const {
-	return priv::getZ(m); 
+FM_INLINE float FM_CALL v3::Z() const {
+	return priv::GetZ(M); 
 }
 #ifndef FM_EXCLUDE_SWIZZLES
-FM_INLINE vec2 FM_CALL vec3::xy() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 0)));
+FM_INLINE v2 FM_CALL v3::XY() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 0)));
 }
-FM_INLINE vec2 FM_CALL vec3::yx() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1)));
+FM_INLINE v2 FM_CALL v3::YX() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 1)));
 }
-FM_INLINE vec2 FM_CALL vec3::yz() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 1)));
+FM_INLINE v2 FM_CALL v3::YZ() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 1)));
 }
-FM_INLINE vec2 FM_CALL vec3::zy() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 2)));
+FM_INLINE v2 FM_CALL v3::ZY() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 2)));
 }
-FM_INLINE vec2 FM_CALL vec3::xz() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 0)));
+FM_INLINE v2 FM_CALL v3::XZ() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 0)));
 }
-FM_INLINE vec2 FM_CALL vec3::zx() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 2)));
+FM_INLINE v2 FM_CALL v3::ZX() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 2)));
 }
-FM_INLINE vec2 FM_CALL vec3::xx() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0)));
+FM_INLINE v2 FM_CALL v3::XX() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 0)));
 }
-FM_INLINE vec2 FM_CALL vec3::yy() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 1)));
+FM_INLINE v2 FM_CALL v3::YY() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 1)));
 }
-FM_INLINE vec2 FM_CALL vec3::zz() const {
-	return makeVec2(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 2)));
+FM_INLINE v2 FM_CALL v3::ZZ() const {
+	return V2(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::xyz() const {
+FM_INLINE v3 FM_CALL v3::XYZ() const {
 	return *this;
 }
-FM_INLINE vec3 FM_CALL vec3::yzx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 1)));
+FM_INLINE v3 FM_CALL v3::YZX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::zxy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 2)));
+FM_INLINE v3 FM_CALL v3::ZXY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 0, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::zyx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 2)));
+FM_INLINE v3 FM_CALL v3::ZYX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::xzy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 0)));
+FM_INLINE v3 FM_CALL v3::XZY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 2, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::yxz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 1)));
+FM_INLINE v3 FM_CALL v3::YXZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 0, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::xxy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 0)));
+FM_INLINE v3 FM_CALL v3::XXY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 0, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::xxz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 0)));
+FM_INLINE v3 FM_CALL v3::XXZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 0, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::yyx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 1)));
+FM_INLINE v3 FM_CALL v3::YYX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::yyz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 1, 1)));
+FM_INLINE v3 FM_CALL v3::YYZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 1, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::zzx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 2)));
+FM_INLINE v3 FM_CALL v3::ZZX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::zzy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 2)));
+FM_INLINE v3 FM_CALL v3::ZZY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 2, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::yxx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 1)));
+FM_INLINE v3 FM_CALL v3::YXX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::zxx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 2)));
+FM_INLINE v3 FM_CALL v3::ZXX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::xyy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 0)));
+FM_INLINE v3 FM_CALL v3::XYY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 1, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::zyy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 2)));
+FM_INLINE v3 FM_CALL v3::ZYY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 1, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::xzz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 0)));
+FM_INLINE v3 FM_CALL v3::XZZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 2, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::yzz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 1)));
+FM_INLINE v3 FM_CALL v3::YZZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 2, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::xyx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 1, 0)));
+FM_INLINE v3 FM_CALL v3::XYX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 1, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::xzx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 2, 0)));
+FM_INLINE v3 FM_CALL v3::XZX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 2, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::yxy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 0, 1)));
+FM_INLINE v3 FM_CALL v3::YXY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 0, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::yzy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 2, 1)));
+FM_INLINE v3 FM_CALL v3::YZY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 2, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::zxz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 0, 2)));
+FM_INLINE v3 FM_CALL v3::ZXZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 0, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::zyz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 1, 2)));
+FM_INLINE v3 FM_CALL v3::ZYZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 1, 2)));
 }
-FM_INLINE vec3 FM_CALL vec3::xxx() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 0, 0, 0)));
+FM_INLINE v3 FM_CALL v3::XXX() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 0, 0, 0)));
 }
-FM_INLINE vec3 FM_CALL vec3::yyy() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 1, 1, 1)));
+FM_INLINE v3 FM_CALL v3::YYY() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 1, 1, 1)));
 }
-FM_INLINE vec3 FM_CALL vec3::zzz() const {
-	return makeVec3(_mm_shuffle_ps(m, m, _MM_SHUFFLE(0, 2, 2, 2)));
+FM_INLINE v3 FM_CALL v3::ZZZ() const {
+	return V3(_mm_shuffle_ps(M, M, _MM_SHUFFLE(0, 2, 2, 2)));
 }
 #endif
-FM_INLINE vec3 FM_CALL operator+(vec3 a, vec3 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL operator+(v3 A, v3 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL operator-(vec3 a, vec3 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL operator-(v3 A, v3 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3& FM_CALL operator+=(vec3& a, vec3 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a;
+FM_INLINE v3& FM_CALL operator+=(v3& A, v3 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3& FM_CALL operator-=(vec3& a, vec3 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a;
+FM_INLINE v3& FM_CALL operator-=(v3& A, v3 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL hadamardMul(vec3 a, vec3 b) {
-	a.m = _mm_mul_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL HadamardMul(v3 A, v3 B) {
+	A.M = _mm_mul_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL hadamardDiv(vec3 a, vec3 b) {
-	a.m = _mm_div_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL HadamardDiv(v3 A, v3 B) {
+	A.M = _mm_div_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL operator*(vec3 v, float scalar) {
-	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar));
-	return v;
+FM_INLINE v3 FM_CALL operator*(v3 V, float Scalar) {
+	V.M = _mm_mul_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
 }
-FM_INLINE vec3 FM_CALL operator*(float scalar, vec3 v) {
-	return v * scalar;
+FM_INLINE v3 FM_CALL operator*(float Scalar, v3 V) {
+	return V * Scalar;
 }
-FM_INLINE vec3 FM_CALL operator/(vec3 v, float scalar) {
-	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
-	return v;
+FM_INLINE v3 FM_CALL operator/(v3 V, float Scalar) {
+	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
 }
-FM_INLINE vec3 FM_CALL operator-(vec3 v) {
-	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
-	return v;
+FM_INLINE v3 FM_CALL operator-(v3 V) {
+	V.M = _mm_sub_ps(_mm_setzero_ps(), V.M);
+	return V;
 }
-FM_INLINE vec3 FM_CALL cross(vec3 a, vec3 b) {
-	return vec3(hadamardMul(a.zxy(), b) - hadamardMul(a, b.zxy())).zxy(); 
+FM_INLINE v3 FM_CALL Cross(v3 A, v3 B) {
+	return v3(HadamardMul(A.ZXY(), B) - HadamardMul(A, B.ZXY())).ZXY(); 
 }
-FM_INLINE float FM_CALL dot(vec3 a, vec3 b) {
-	return sumOfElements(hadamardMul(a, b));
+FM_INLINE float FM_CALL Dot(v3 A, v3 B) {
+	return SumOfElements(HadamardMul(A, B));
 }
-FM_INLINE vec3 FM_CALL min(vec3 a, vec3 b) {
-	a.m = _mm_min_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL Min(v3 A, v3 B) {
+	A.M = _mm_min_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL max(vec3 a, vec3 b) {
-	a.m = _mm_max_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL Max(v3 A, v3 B) {
+	A.M = _mm_max_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL normalize(vec3 v) {
-	return v / length(v);
+FM_INLINE v3 FM_CALL Normalize(v3 V) {
+	return V / Length(V);
 }
-FM_INLINE vec3 FM_CALL abs(vec3 v) {
-	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
-	v.m = _mm_andnot_ps(signMask, v.m);
-	return v;
+FM_INLINE v3 FM_CALL Abs(v3 V) {
+	__m128 SignMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+	V.M = _mm_andnot_ps(SignMask, V.M);
+	return V;
 }
-FM_INLINE float FM_CALL sumOfElements(vec3 v) {
-	return v.x() + v.y() + v.z();
+FM_INLINE float FM_CALL SumOfElements(v3 V) {
+	return V.X() + V.Y() + V.Z();
 }
-FM_INLINE float FM_CALL length(vec3 v) {
-	return sqrt(dot(v, v));
+FM_INLINE float FM_CALL Length(v3 V) {
+	return sqrt(Dot(V, V));
 }
-FM_INLINE float FM_CALL lengthSquared(vec3 v) {
-	return dot(v, v);
+FM_INLINE float FM_CALL LengthSquared(v3 V) {
+	return Dot(V, V);
 }
-FM_INLINE vec3 FM_CALL clamp(vec3 v, vec3 minV, vec3 maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE v3 FM_CALL Clamp(v3 V, v3 MinV, v3 MaxV) {
+	return Min(Max(V, MinV), MaxV);
 }
-FM_INLINE vec3 FM_CALL lerp(vec3 a, vec3 b, float t) {
-	return a + (b-a)*t;
+FM_INLINE v3 FM_CALL Lerp(v3 A, v3 B, float T) {
+	return A + (B-A)*T;
 } 
-FM_INLINE bool FM_CALL operator==(vec3 a, vec3 b) {
-	vec3 eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y() && eqMask.z();
+FM_INLINE bool FM_CALL operator==(v3 A, v3 B) {
+	v3 EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y() && EqMask.Z();
 } 
-FM_INLINE bool FM_CALL operator!=(vec3 a, vec3 b) {
-	vec3 eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y() && eqMask.z());
+FM_INLINE bool FM_CALL operator!=(v3 A, v3 B) {
+	v3 EqMask = EqualsMask(A, B);
+	return !(EqMask.X() && EqMask.Y() && EqMask.Z());
 }
-FM_INLINE vec3 FM_CALL equalsMask(vec3 a, vec3 b) {
-	a.m = _mm_cmpeq_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL EqualsMask(v3 A, v3 B) {
+	A.M = _mm_cmpeq_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL greaterMask(vec3 a, vec3 b) {
-	a.m = _mm_cmpgt_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL GreaterMask(v3 A, v3 B) {
+	A.M = _mm_cmpgt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL greaterOrEqualMask(vec3 a, vec3 b) {
-	a.m = _mm_cmpge_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL GreaterOrEqualMask(v3 A, v3 B) {
+	A.M = _mm_cmpge_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL lesserMask(vec3 a, vec3 b) {
-	a.m = _mm_cmplt_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL LesserMask(v3 A, v3 B) {
+	A.M = _mm_cmplt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec3 FM_CALL lesserOrEqualMask(vec3 a, vec3 b) {
-	a.m = _mm_cmple_ps(a.m, b.m);
-	return a;
+FM_INLINE v3 FM_CALL LesserOrEqualMask(v3 A, v3 B) {
+	A.M = _mm_cmple_ps(A.M, B.M);
+	return A;
 }
 
 ///////////////
-// vec4 impl //
+// v4 impl //
 ///////////////
-FM_INLINE vec4 FM_CALL makeVec4FromMemory(const float* v) {
-	vec4 res;
-	res.m = _mm_set_ps(v[3], v[2], v[1], v[0]);	
-	return res;
+FM_INLINE v4 FM_CALL V4FromMemory(const float* V) {
+	v4 Res;
+	Res.M = _mm_set_ps(V[3], V[2], V[1], V[0]);	
+	return Res;
 } 
-FM_INLINE vec4 FM_CALL makeVec4(vec3 v, float w) {
-	vec4 res;
-	v.m = _mm_shuffle_ps(v.m, v.m, _MM_SHUFFLE(2, 1, 0, 0));
-	res.m = _mm_move_ss(v.m, _mm_set_ss(w));
-	res.m = _mm_shuffle_ps(res.m, res.m, _MM_SHUFFLE(0, 3, 2, 1));
-	return res;
+FM_INLINE v4 FM_CALL V4(v3 V, float W) {
+	v4 Res;
+	V.M = _mm_shuffle_ps(V.M, V.M, _MM_SHUFFLE(2, 1, 0, 0));
+	Res.M = _mm_move_ss(V.M, _mm_set_ss(W));
+	Res.M = _mm_shuffle_ps(Res.M, Res.M, _MM_SHUFFLE(0, 3, 2, 1));
+	return Res;
 }
-FM_INLINE vec4 FM_CALL makeVec4(float x, float y, float z, float w) {
-	vec4 res;
-	res.m = _mm_set_ps(w, z, y, x);
-	return res;
+FM_INLINE v4 FM_CALL V4(float X, float Y, float Z, float W) {
+	v4 Res;
+	Res.M = _mm_set_ps(W, Z, Y, X);
+	return Res;
 }
-FM_INLINE vec4 FM_CALL makeVec4(float a) {
-	vec4 res;
-	res.m = _mm_set1_ps(a);
-	return res;
+FM_INLINE v4 FM_CALL V4(float A) {
+	v4 Res;
+	Res.M = _mm_set1_ps(A);
+	return Res;
 }
-FM_INLINE vec4 FM_CALL makeVec4(__m128 m) {
-	vec4 res;
-	res.m = m;
-	return res;
+FM_INLINE v4 FM_CALL V4(__m128 M) {
+	v4 Res;
+	Res.M = M;
+	return Res;
 } 
-FM_INLINE vec4 FM_CALL makeZeroVec4() {
-	vec4 res;
-	res.m = _mm_setzero_ps();
-	return res;
+FM_INLINE v4 FM_CALL V4() {
+	v4 Res;
+	Res.M = _mm_setzero_ps();
+	return Res;
 }
-FM_INLINE void FM_CALL vec4::setX(float x) {
-	m = priv::setX(m, x); 
+FM_INLINE void FM_CALL v4::SetX(float X) {
+	M = priv::SetX(M, X); 
 }
-FM_INLINE void FM_CALL vec4::setY(float y) {
-	m = priv::setY(m, y);
+FM_INLINE void FM_CALL v4::SetY(float Y) {
+	M = priv::SetY(M, Y);
 } 
-FM_INLINE void FM_CALL vec4::setZ(float z) {
-	m = priv::setZ(m, z);
+FM_INLINE void FM_CALL v4::SetZ(float Z) {
+	M = priv::SetZ(M, Z);
 } 
-FM_INLINE void FM_CALL vec4::setW(float w) {
-	m = priv::setW(m, w);
+FM_INLINE void FM_CALL v4::SetW(float W) {
+	M = priv::SetW(M, W);
 } 
-FM_INLINE float FM_CALL vec4::x() const {
-	return _mm_cvtss_f32(m);
+FM_INLINE float FM_CALL v4::X() const {
+	return _mm_cvtss_f32(M);
 }
-FM_INLINE float FM_CALL vec4::y() const {
-	return priv::getY(m); 
+FM_INLINE float FM_CALL v4::Y() const {
+	return priv::GetY(M); 
 }
-FM_INLINE float FM_CALL vec4::z() const {
-	return priv::getZ(m); 
+FM_INLINE float FM_CALL v4::Z() const {
+	return priv::GetZ(M); 
 }
-FM_INLINE float FM_CALL vec4::w() const {
-	return priv::getW(m); 
+FM_INLINE float FM_CALL v4::W() const {
+	return priv::GetW(M); 
 }
-FM_INLINE void FM_CALL store(float* mem, vec4 v) {
-	_mm_storeu_ps(mem, v.m);
+FM_INLINE void FM_CALL Store(float* Mem, v4 V) {
+	_mm_storeu_ps(Mem, V.M);
 }
-FM_INLINE void FM_CALL store16ByteAligned(float* mem, vec4 v) {
-	_mm_store_ps(mem, v.m);
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, v4 V) {
+	_mm_store_ps(Mem, V.M);
 }
-FM_INLINE vec4 FM_CALL operator+(vec4 a, vec4 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL operator+(v4 A, v4 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL operator-(vec4 a, vec4 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL operator-(v4 A, v4 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4& FM_CALL operator+=(vec4& a, vec4 b) {
-	a.m = _mm_add_ps(a.m, b.m);
-	return a;
+FM_INLINE v4& FM_CALL operator+=(v4& A, v4 B) {
+	A.M = _mm_add_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4& FM_CALL operator-=(vec4& a, vec4 b) {
-	a.m = _mm_sub_ps(a.m, b.m);
-	return a;
+FM_INLINE v4& FM_CALL operator-=(v4& A, v4 B) {
+	A.M = _mm_sub_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL hadamardMul(vec4 a, vec4 b) {
-	a.m = _mm_mul_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL HadamardMul(v4 A, v4 B) {
+	A.M = _mm_mul_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL hadamardDiv(vec4 a, vec4 b) {
-	a.m = _mm_div_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL HadamardDiv(v4 A, v4 B) {
+	A.M = _mm_div_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL operator*(vec4 v, float scalar) {
-	v.m = _mm_mul_ps(v.m, _mm_set1_ps(scalar));
-	return v;
+FM_INLINE v4 FM_CALL operator*(v4 V, float Scalar) {
+	V.M = _mm_mul_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
 }
-FM_INLINE vec4 FM_CALL operator*(float scalar, vec4 v) {
-	return v * scalar;
+FM_INLINE v4 FM_CALL operator*(float Scalar, v4 V) {
+	return V * Scalar;
 }
-FM_INLINE vec4 FM_CALL operator/(vec4 v, float scalar) {
-	v.m = _mm_div_ps(v.m, _mm_set1_ps(scalar));
-	return v;
+FM_INLINE v4 FM_CALL operator/(v4 V, float Scalar) {
+	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
 }
-FM_INLINE vec4 FM_CALL operator-(vec4 v) {
-	v.m = _mm_sub_ps(_mm_setzero_ps(), v.m);
-	return v;
+FM_INLINE v4 FM_CALL operator-(v4 V) {
+	V.M = _mm_sub_ps(_mm_setzero_ps(), V.M);
+	return V;
 }
-FM_INLINE float FM_CALL dot(vec4 a, vec4 b) {
-	return sumOfElements(hadamardMul(a, b));
+FM_INLINE float FM_CALL Dot(v4 A, v4 B) {
+	return SumOfElements(HadamardMul(A, B));
 }
-FM_INLINE vec4 FM_CALL min(vec4 a, vec4 b) {
-	a.m = _mm_min_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL Min(v4 A, v4 B) {
+	A.M = _mm_min_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL max(vec4 a, vec4 b) {
-	a.m = _mm_max_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL Max(v4 A, v4 B) {
+	A.M = _mm_max_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL abs(vec4 v) {
-	__m128 signMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
-	v.m = _mm_andnot_ps(signMask, v.m);
-	return v;
+FM_INLINE v4 FM_CALL Abs(v4 V) {
+	__m128 SignMask = _mm_castsi128_ps(_mm_set1_epi32(0x80000000));
+	V.M = _mm_andnot_ps(SignMask, V.M);
+	return V;
 }
-FM_INLINE float FM_CALL sumOfElements(vec4 v) {
-	return v.x() + v.y() + v.z() + v.w();
+FM_INLINE float FM_CALL SumOfElements(v4 V) {
+	return V.X() + V.Y() + V.Z() + V.W();
 }
-FM_INLINE float FM_CALL length(vec4 v) {
-	return sqrt(dot(v, v));
+FM_INLINE float FM_CALL Length(v4 V) {
+	return sqrt(Dot(V, V));
 }
-FM_INLINE float FM_CALL lengthSquared(vec4 v) {
-	return dot(v, v);
+FM_INLINE float FM_CALL LengthSquared(v4 V) {
+	return Dot(V, V);
 }
-FM_INLINE vec4 FM_CALL normalize(vec4 v) {
-	return v / length(v);
+FM_INLINE v4 FM_CALL Normalize(v4 V) {
+	return V / Length(V);
 }
-FM_INLINE vec4 FM_CALL clamp(vec4 v, vec4 minV, vec4 maxV) {
-	return min(max(v, minV), maxV);
+FM_INLINE v4 FM_CALL Clamp(v4 V, v4 MinV, v4 MaxV) {
+	return Min(Max(V, MinV), MaxV);
 }
-FM_INLINE vec4 FM_CALL lerp(vec4 a, vec4 b, float t) {
-	return a + (b-a)*t;
+FM_INLINE v4 FM_CALL Lerp(v4 A, v4 B, float T) {
+	return A + (B-A)*T;
 } 
-FM_INLINE bool FM_CALL operator==(vec4 a, vec4 b) {
-	vec4 eqMask = equalsMask(a, b);
-	return eqMask.x() && eqMask.y() && eqMask.z();
+FM_INLINE bool FM_CALL operator==(v4 A, v4 B) {
+	v4 EqMask = EqualsMask(A, B);
+	return EqMask.X() && EqMask.Y() && EqMask.Z() && EqMask.W();
 } 
-FM_INLINE bool FM_CALL operator!=(vec4 a, vec4 b) {
-	vec4 eqMask = equalsMask(a, b);
-	return !(eqMask.x() && eqMask.y() && eqMask.z());
+FM_INLINE bool FM_CALL operator!=(v4 A, v4 B) {
+	return !(A == B);
 }
-FM_INLINE vec4 FM_CALL equalsMask(vec4 a, vec4 b) {
-	a.m = _mm_cmpeq_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL EqualsMask(v4 A, v4 B) {
+	A.M = _mm_cmpeq_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL greaterMask(vec4 a, vec4 b) {
-	a.m = _mm_cmpgt_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL GreaterMask(v4 A, v4 B) {
+	A.M = _mm_cmpgt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL greaterOrEqualMask(vec4 a, vec4 b) {
-	a.m = _mm_cmpge_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL GreaterOrEqualMask(v4 A, v4 B) {
+	A.M = _mm_cmpge_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL lesserMask(vec4 a, vec4 b) {
-	a.m = _mm_cmplt_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL LesserMask(v4 A, v4 B) {
+	A.M = _mm_cmplt_ps(A.M, B.M);
+	return A;
 }
-FM_INLINE vec4 FM_CALL lesserOrEqualMask(vec4 a, vec4 b) {
-	a.m = _mm_cmple_ps(a.m, b.m);
-	return a;
+FM_INLINE v4 FM_CALL LesserOrEqualMask(v4 A, v4 B) {
+	A.M = _mm_cmple_ps(A.M, B.M);
+	return A;
 }
 
 ///////////////
 // mat4 impl //
 ///////////////
-FM_INLINE vec4 FM_CALL mat4::getColumn(uint32_t index) {
-	return makeVec4(columns[index]);
+FM_INLINE v4 FM_CALL mat4::GetColumn(uint32_t Index) {
+	return V4(Columns[Index]);
 }
-FM_INLINE void FM_CALL mat4::setColumn(uint32_t index, vec4 col) {
-	columns[index] = col.m;
+FM_INLINE void FM_CALL mat4::SetColumn(uint32_t Index, v4 Col) {
+	Columns[Index] = Col.M;
 }
-FM_INLINE void FM_CALL mat4::setColumn(uint32_t index, float x, float y, float z, float w) {
-	columns[index] = _mm_set_ps(w, z, y, x);
+FM_INLINE void FM_CALL mat4::SetColumn(uint32_t Index, float X, float Y, float Z, float W) {
+	Columns[Index] = _mm_set_ps(W, Z, Y, X);
 }
-FM_INLINE void FM_CALL mat4::swapColumns(uint32_t col1Index, uint32_t col2Index) {
-	__m128 temp = columns[col1Index];
-	columns[col1Index] = columns[col2Index];
-	columns[col2Index] = temp;
+FM_INLINE void FM_CALL mat4::SwapColumns(uint32_t Col1Index, uint32_t Col2Index) {
+	__m128 Temp = Columns[Col1Index];
+	Columns[Col1Index] = Columns[Col2Index];
+	Columns[Col2Index] = Temp;
 }
-vec4 FM_CALL mat4::getRow(uint32_t index) {
-	switch(index)
+v4 FM_CALL mat4::GetRow(uint32_t Index) {
+	switch(Index)
 	{
 		case 0: {
-			return makeVec4(
-				priv::getX(columns[0]), priv::getX(columns[1]),
-				priv::getX(columns[2]), priv::getX(columns[3]));
+			return V4(
+				priv::GetX(Columns[0]), priv::GetX(Columns[1]),
+				priv::GetX(Columns[2]), priv::GetX(Columns[3]));
 		} break;
 		
 		case 1: {
-			return makeVec4(
-				priv::getY(columns[0]), priv::getY(columns[1]),
-				priv::getY(columns[2]), priv::getY(columns[3]));
+			return V4(
+				priv::GetY(Columns[0]), priv::GetY(Columns[1]),
+				priv::GetY(Columns[2]), priv::GetY(Columns[3]));
 		} break;
 	
 		case 2: {
-			return makeVec4(
-				priv::getZ(columns[0]), priv::getZ(columns[1]),
-				priv::getZ(columns[2]), priv::getZ(columns[3]));
+			return V4(
+				priv::GetZ(Columns[0]), priv::GetZ(Columns[1]),
+				priv::GetZ(Columns[2]), priv::GetZ(Columns[3]));
 		} break;
 	
 		case 3: {
-			return makeVec4(
-				priv::getW(columns[0]), priv::getW(columns[1]),
-				priv::getW(columns[2]), priv::getW(columns[3]));
+			return V4(
+				priv::GetW(Columns[0]), priv::GetW(Columns[1]),
+				priv::GetW(Columns[2]), priv::GetW(Columns[3]));
 		} break;
 		
 		default: {
-			FM_ERROR(); // index has to be in range from 0 to 3
+			FM_ERROR(); // Index has to be in range from 0 to 3
 		}
 	}
 }
-void FM_CALL mat4::setRow(uint32_t index, vec4 row) {
-	switch(index)
+void FM_CALL mat4::SetRow(uint32_t Index, v4 Row) {
+	switch(Index)
 	{
 		case 0: {
-				columns[0] = priv::setX(columns[0], row.x());
-				columns[1] = priv::setX(columns[1], row.y());
-				columns[2] = priv::setX(columns[2], row.z());
-				columns[3] = priv::setX(columns[3], row.w());
+				Columns[0] = priv::SetX(Columns[0], Row.X());
+				Columns[1] = priv::SetX(Columns[1], Row.Y());
+				Columns[2] = priv::SetX(Columns[2], Row.Z());
+				Columns[3] = priv::SetX(Columns[3], Row.W());
 		} break;
 	
 		case 1: {
-				columns[0] = priv::setY(columns[0], row.x());
-				columns[1] = priv::setY(columns[1], row.y());
-				columns[2] = priv::setY(columns[2], row.z());
-				columns[3] = priv::setY(columns[3], row.w());
+				Columns[0] = priv::SetY(Columns[0], Row.X());
+				Columns[1] = priv::SetY(Columns[1], Row.Y());
+				Columns[2] = priv::SetY(Columns[2], Row.Z());
+				Columns[3] = priv::SetY(Columns[3], Row.W());
 		} break;
 	
 		case 2: {
-				columns[0] = priv::setZ(columns[0], row.x());
-				columns[1] = priv::setZ(columns[1], row.y());
-				columns[2] = priv::setZ(columns[2], row.z());
-				columns[3] = priv::setZ(columns[3], row.w());
+				Columns[0] = priv::SetZ(Columns[0], Row.X());
+				Columns[1] = priv::SetZ(Columns[1], Row.Y());
+				Columns[2] = priv::SetZ(Columns[2], Row.Z());
+				Columns[3] = priv::SetZ(Columns[3], Row.W());
 		} break;
 	
 		case 3: {
-				columns[0] = priv::setW(columns[0], row.x());
-				columns[1] = priv::setW(columns[1], row.y());
-				columns[2] = priv::setW(columns[2], row.z());
-				columns[3] = priv::setW(columns[3], row.w());
+				Columns[0] = priv::SetW(Columns[0], Row.X());
+				Columns[1] = priv::SetW(Columns[1], Row.Y());
+				Columns[2] = priv::SetW(Columns[2], Row.Z());
+				Columns[3] = priv::SetW(Columns[3], Row.W());
 		} break;
 	
 		default: {
-			FM_ERROR(); // index has to be in range from 0 to 3
+			FM_ERROR(); // Index has to be in range from 0 to 3
 		}
 	}	
 }
-FM_INLINE void FM_CALL mat4::setRow(uint32_t index, float x, float y, float z, float w) {
-	setRow(index, makeVec4(x, y, z, w));
+FM_INLINE void FM_CALL mat4::SetRow(uint32_t Index, float X, float Y, float Z, float W) {
+	SetRow(Index, V4(X, Y, Z, W));
 }
-FM_INLINE void FM_CALL mat4::swapRows(uint32_t row1Index, uint32_t row2Index) {
-	vec4 row1 = getRow(row1Index);
-	vec4 row2 = getRow(row2Index);
-	setRow(row2Index, row1);
-	setRow(row1Index, row2);
+FM_INLINE void FM_CALL mat4::SwapRows(uint32_t Row1Index, uint32_t Row2Index) {
+	v4 Row1 = GetRow(Row1Index);
+	v4 Row2 = GetRow(Row2Index);
+	SetRow(Row2Index, Row1);
+	SetRow(Row1Index, Row2);
 }
-FM_INLINE vec4 FM_CALL mat4::getMainDiagonal() {
-	vec4 res;
-	res.setX(priv::getX(columns[0]));
-	res.setY(priv::getY(columns[1]));
-	res.setZ(priv::getZ(columns[2]));
-	res.setW(priv::getW(columns[3]));
-	return res;
+FM_INLINE v4 FM_CALL mat4::GetMainDiagonal() {
+	v4 Res;
+	Res.SetX(priv::GetX(Columns[0]));
+	Res.SetY(priv::GetY(Columns[1]));
+	Res.SetZ(priv::GetZ(Columns[2]));
+	Res.SetW(priv::GetW(Columns[3]));
+	return Res;
 }
-FM_INLINE void FM_CALL mat4::setMainDiagonal(float x, float y, float z, float w) {
-	columns[0] = priv::setX(columns[0], x);
-	columns[1] = priv::setY(columns[1], y);
-	columns[2] = priv::setZ(columns[2], z);
-	columns[3] = priv::setW(columns[3], w);
+FM_INLINE void FM_CALL mat4::SetMainDiagonal(float x, float y, float z, float w) {
+	Columns[0] = priv::SetX(Columns[0], x);
+	Columns[1] = priv::SetY(Columns[1], y);
+	Columns[2] = priv::SetZ(Columns[2], z);
+	Columns[3] = priv::SetW(Columns[3], w);
 }
-FM_INLINE void FM_CALL mat4::setMainDiagonal(vec4 v) {
-	setMainDiagonal(v.x(), v.y(), v.z(), v.w());
+FM_INLINE void FM_CALL mat4::SetMainDiagonal(v4 V) {
+	SetMainDiagonal(V.X(), V.Y(), V.Z(), V.W());
 }
-FM_INLINE mat4 FM_CALL makeMat4FromColumnMajorMemory(float* mem) {
-	mat4 res;
+FM_INLINE mat4 FM_CALL Mat4FromColumnMajorMemory(float* Mem) {
+	mat4 Res;
 	for(int32_t i = 0; i < 4; ++i)
-		res.columns[i] = _mm_load_ps(mem + i*4);
-	return res;
+		Res.Columns[i] = _mm_load_ps(Mem + i*4);
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeZeroMat4() {
-	mat4 res;
-	res.columns[0] = _mm_setzero_ps();
-	res.columns[1] = _mm_setzero_ps();
-	res.columns[2] = _mm_setzero_ps();
-	res.columns[3] = _mm_setzero_ps();
-	return res;
+FM_INLINE mat4 FM_CALL Mat4() {
+	mat4 Res;
+	Res.Columns[0] = _mm_setzero_ps();
+	Res.Columns[1] = _mm_setzero_ps();
+	Res.Columns[2] = _mm_setzero_ps();
+	Res.Columns[3] = _mm_setzero_ps();
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeIdentityMat4() {
-	return makeDiagonalMat4(1.f);
+FM_INLINE mat4 FM_CALL Mat4Identity() {
+	return Mat4Diagonal(1.f);
 }
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diag) {
-	mat4 res;
-	res.columns[0] = _mm_setr_ps(diag, 0.f, 0.f, 0.f);
-	res.columns[1] = _mm_setr_ps(0.f, diag, 0.f, 0.f);
-	res.columns[2] = _mm_setr_ps(0.f, 0.f, diag, 0.f);
-	res.columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, diag);
-	return res;
+FM_INLINE mat4 FM_CALL Mat4Diagonal(float Diag) {
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(Diag, 0.f, 0.f, 0.f);
+	Res.Columns[1] = _mm_setr_ps(0.f, Diag, 0.f, 0.f);
+	Res.Columns[2] = _mm_setr_ps(0.f, 0.f, Diag, 0.f);
+	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, Diag);
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(float diagX, float diagY, float diagZ, float diagW) {
-	mat4 res;
-	res.columns[0] = _mm_setr_ps(diagX, 0.f, 0.f, 0.f);
-	res.columns[1] = _mm_setr_ps(0.f, diagY, 0.f, 0.f);
-	res.columns[2] = _mm_setr_ps(0.f, 0.f, diagZ, 0.f);
-	res.columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, diagW);
-	return res;
+FM_INLINE mat4 FM_CALL Mat4Diagonal(float DiagX, float DiagY, float DiagZ, float DiagW) {
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(DiagX, 0.f, 0.f, 0.f);
+	Res.Columns[1] = _mm_setr_ps(0.f, DiagY, 0.f, 0.f);
+	Res.Columns[2] = _mm_setr_ps(0.f, 0.f, DiagZ, 0.f);
+	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, DiagW);
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeDiagonalMat4(vec4 diag) {
-	// TODO: What is going on with diag.x() diag.y()... 
-	mat4 res;
-	float* v = (float*)(&diag);
-	res.columns[0] = _mm_set_ps(0.f, 0.f, 0.f, v[0]);
-	res.columns[1] = _mm_set_ps(0.f, 0.f, v[1], 0.f);
-	res.columns[2] = _mm_set_ps(0.f, v[2], 0.f, 0.f);
-	res.columns[3] = _mm_set_ps(v[3], 0.f, 0.f, 0.f);
-	return res;
+FM_INLINE mat4 FM_CALL Mat4Diagonal(v4 Diag) {
+	// TODO: What is going on with Diag.X() Diag.Y()... 
+	mat4 Res;
+	float* V = (float*)(&Diag);
+	Res.Columns[0] = _mm_set_ps(0.f, 0.f, 0.f, V[0]);
+	Res.Columns[1] = _mm_set_ps(0.f, 0.f, V[1], 0.f);
+	Res.Columns[2] = _mm_set_ps(0.f, V[2], 0.f, 0.f);
+	Res.Columns[3] = _mm_set_ps(V[3], 0.f, 0.f, 0.f);
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeMat4FromColumns(vec4 col1, vec4 col2, vec4 col3, vec4 col4) {
-	mat4 res;
-	res.columns[0] = col1.m;
-	res.columns[1] = col2.m;
-	res.columns[2] = col3.m;
-	res.columns[3] = col4.m;
-	return res;
+FM_INLINE mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4) {
+	mat4 Res;
+	Res.Columns[0] = Col1.M;
+	Res.Columns[1] = Col2.M;
+	Res.Columns[2] = Col3.M;
+	Res.Columns[3] = Col4.M;
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeMat4FromColumns(
-	float e11, float e21, float e31, float e41,
-    float e12, float e22, float e32, float e42,
-    float e13, float e23, float e33, float e43,
-    float e14, float e24, float e34, float e44) 
+FM_INLINE mat4 FM_CALL Mat4FromColumns(
+	float E11, float E21, float E31, float E41,
+    float E12, float E22, float E32, float E42,
+    float E13, float E23, float E33, float E43,
+    float E14, float E24, float E34, float E44) 
 {
-	mat4 res;
-	res.columns[0] = _mm_setr_ps(e11, e21, e31, e41);
-	res.columns[1] = _mm_setr_ps(e12, e22, e32, e42);
-	res.columns[2] = _mm_setr_ps(e13, e23, e33, e43);
-	res.columns[3] = _mm_setr_ps(e14, e24, e34, e44);
-	return res;
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
+	Res.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
+	Res.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
+	Res.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeMat4FromRows(vec4 row1, vec4 row2, vec4 row3, vec4 row4) {
-	mat4 res;
-	res.columns[0] = _mm_setr_ps(row1.x(), row2.x(), row3.x(), row4.x());
-	res.columns[1] = _mm_setr_ps(row1.y(), row2.y(), row3.y(), row4.y());
-	res.columns[2] = _mm_setr_ps(row1.z(), row2.z(), row3.z(), row4.z());
-	res.columns[3] = _mm_setr_ps(row1.w(), row2.w(), row3.w(), row4.w());
-	return res;
+FM_INLINE mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4) {
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
+	Res.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
+	Res.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
+	Res.Columns[3] = _mm_setr_ps(Row1.W(), Row2.W(), Row3.W(), Row4.W());
+	return Res;
 }
-FM_INLINE mat4 FM_CALL makeMat4FromRows(
-	float e11, float e12, float e13, float e14,
-    float e21, float e22, float e23, float e24,
-    float e31, float e32, float e33, float e34,
-    float e41, float e42, float e43, float e44)
+FM_INLINE mat4 FM_CALL Mat4FromRows(
+	float E11, float E12, float E13, float E14,
+    float E21, float E22, float E23, float E24,
+    float E31, float E32, float E33, float E34,
+    float E41, float E42, float E43, float E44)
 {
-	mat4 res;
-	res.columns[0] = _mm_setr_ps(e11, e21, e31, e41);
-	res.columns[1] = _mm_setr_ps(e12, e22, e32, e42);
-	res.columns[2] = _mm_setr_ps(e13, e23, e33, e43);
-	res.columns[3] = _mm_setr_ps(e14, e24, e34, e44);
-	return res;
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
+	Res.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
+	Res.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
+	Res.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
+	return Res;
 }
-FM_INLINE void FM_CALL store(float* mem, mat4 mat) {
-	for(int32_t col = 0; col < 4; ++col)
-		_mm_storeu_ps(mem + col*4, mat.columns[col]);
+FM_INLINE void FM_CALL Store(float* Mem, mat4 Mat) {
+	for(int32_t Col = 0; Col < 4; ++Col)
+		_mm_storeu_ps(Mem + Col*4, Mat.Columns[Col]);
 }
-FM_INLINE void FM_CALL store16ByteAligned(float* mem, mat4 mat) {
-	for(int32_t col = 0; col < 4; ++col)
-		_mm_store_ps(mem + col*4, mat.columns[col]);
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, mat4 Mat) {
+	for(int32_t Col = 0; Col < 4; ++Col)
+		_mm_store_ps(Mem + Col*4, Mat.Columns[Col]);
 }
-FM_INLINE mat4 FM_CALL operator+(mat4 a, mat4 b) {
-	for(int32_t col = 0; col < 4; ++col)
-		a.columns[col] = _mm_add_ps(a.columns[col], b.columns[col]);
-	return a;
+FM_INLINE mat4 FM_CALL operator+(mat4 A, mat4 B) {
+	for(int32_t Col = 0; Col < 4; ++Col)
+		A.Columns[Col] = _mm_add_ps(A.Columns[Col], B.Columns[Col]);
+	return A;
 }
-FM_INLINE mat4 FM_CALL operator-(mat4 a, mat4 b) {
-	for(int32_t col = 0; col < 4; ++col)
-		a.columns[col] = _mm_sub_ps(a.columns[col], b.columns[col]);
-	return a;
+FM_INLINE mat4 FM_CALL operator-(mat4 A, mat4 B) {
+	for(int32_t Col = 0; Col < 4; ++Col)
+		A.Columns[Col] = _mm_sub_ps(A.Columns[Col], B.Columns[Col]);
+	return A;
 }
-FM_INLINE mat4 FM_CALL operator*(mat4 a, mat4 b) {
-	__m128 row;
+FM_INLINE mat4 FM_CALL operator*(mat4 A, mat4 B) {
+	__m128 Row;
 		
-	row = _mm_setr_ps(priv::getX(a.columns[0]), priv::getX(a.columns[1]),
-	                  priv::getX(a.columns[2]), priv::getX(a.columns[3]));
-	float res11 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
-	float res12 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
-	float res13 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
-	float res14 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+	Row = _mm_setr_ps(priv::GetX(A.Columns[0]), priv::GetX(A.Columns[1]),
+	                  priv::GetX(A.Columns[2]), priv::GetX(A.Columns[3]));
+	float Res11 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float Res12 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float Res13 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float Res14 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
-	row = _mm_setr_ps(priv::getY(a.columns[0]), priv::getY(a.columns[1]),
-	                  priv::getY(a.columns[2]), priv::getY(a.columns[3]));
-	float res21 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
-	float res22 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
-	float res23 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
-	float res24 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+	Row = _mm_setr_ps(priv::GetY(A.Columns[0]), priv::GetY(A.Columns[1]),
+	                  priv::GetY(A.Columns[2]), priv::GetY(A.Columns[3]));
+	float Res21 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float Res22 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float Res23 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float Res24 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
-	row = _mm_setr_ps(priv::getZ(a.columns[0]), priv::getZ(a.columns[1]),
-	                  priv::getZ(a.columns[2]), priv::getZ(a.columns[3]));
-	float res31 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
-	float res32 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
-	float res33 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
-	float res34 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+	Row = _mm_setr_ps(priv::GetZ(A.Columns[0]), priv::GetZ(A.Columns[1]),
+	                  priv::GetZ(A.Columns[2]), priv::GetZ(A.Columns[3]));
+	float Res31 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float Res32 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float Res33 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float Res34 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
-	row = _mm_setr_ps(priv::getW(a.columns[0]), priv::getW(a.columns[1]),
-	                  priv::getW(a.columns[2]), priv::getW(a.columns[3]));
-	float res41 = priv::sumOfElements(_mm_mul_ps(row, b.columns[0]));
-	float res42 = priv::sumOfElements(_mm_mul_ps(row, b.columns[1]));
-	float res43 = priv::sumOfElements(_mm_mul_ps(row, b.columns[2]));
-	float res44 = priv::sumOfElements(_mm_mul_ps(row, b.columns[3]));
+	Row = _mm_setr_ps(priv::GetW(A.Columns[0]), priv::GetW(A.Columns[1]),
+	                  priv::GetW(A.Columns[2]), priv::GetW(A.Columns[3]));
+	float Res41 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float Res42 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float Res43 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float Res44 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
-	return makeMat4FromColumns(
-		res11, res21, res31, res41,
-	    res12, res22, res32, res42,
-		res13, res23, res33, res43,
-		res14, res24, res34, res44);
+	return Mat4FromColumns(
+		Res11, Res21, Res31, Res41,
+	    Res12, Res22, Res32, Res42,
+		Res13, Res23, Res33, Res43,
+		Res14, Res24, Res34, Res44);
 }
-FM_INLINE vec4 FM_CALL operator*(mat4 m, vec4 v) {
-	__m128 row1 = _mm_setr_ps(priv::getX(m.columns[0]), priv::getX(m.columns[1]),
-	                          priv::getX(m.columns[2]), priv::getX(m.columns[3]));
-	__m128 row2 = _mm_setr_ps(priv::getY(m.columns[0]), priv::getY(m.columns[1]),
-	                          priv::getY(m.columns[2]), priv::getY(m.columns[3]));
-	__m128 row3 = _mm_setr_ps(priv::getZ(m.columns[0]), priv::getZ(m.columns[1]),
-	                          priv::getZ(m.columns[2]), priv::getZ(m.columns[3]));
-	__m128 row4 = _mm_setr_ps(priv::getW(m.columns[0]), priv::getW(m.columns[1]),
-	                          priv::getW(m.columns[2]), priv::getW(m.columns[3]));
-	float resX = priv::sumOfElements(_mm_mul_ps(row1, v.m)); 
-	float resY = priv::sumOfElements(_mm_mul_ps(row2, v.m)); 
-	float resZ = priv::sumOfElements(_mm_mul_ps(row3, v.m)); 
-	float resW = priv::sumOfElements(_mm_mul_ps(row4, v.m));
-	return makeVec4(resX, resY, resZ, resW);
+FM_INLINE v4 FM_CALL operator*(mat4 M, v4 V) {
+	__m128 Row1 = _mm_setr_ps(priv::GetX(M.Columns[0]), priv::GetX(M.Columns[1]),
+	                          priv::GetX(M.Columns[2]), priv::GetX(M.Columns[3]));
+	__m128 Row2 = _mm_setr_ps(priv::GetY(M.Columns[0]), priv::GetY(M.Columns[1]),
+	                          priv::GetY(M.Columns[2]), priv::GetY(M.Columns[3]));
+	__m128 Row3 = _mm_setr_ps(priv::GetZ(M.Columns[0]), priv::GetZ(M.Columns[1]),
+	                          priv::GetZ(M.Columns[2]), priv::GetZ(M.Columns[3]));
+	__m128 Row4 = _mm_setr_ps(priv::GetW(M.Columns[0]), priv::GetW(M.Columns[1]),
+	                          priv::GetW(M.Columns[2]), priv::GetW(M.Columns[3]));
+	float ResX = priv::SumOfElements(_mm_mul_ps(Row1, V.M)); 
+	float ResY = priv::SumOfElements(_mm_mul_ps(Row2, V.M)); 
+	float ResZ = priv::SumOfElements(_mm_mul_ps(Row3, V.M)); 
+	float ResW = priv::SumOfElements(_mm_mul_ps(Row4, V.M));
+	return V4(ResX, ResY, ResZ, ResW);
 }
-FM_INLINE mat4 FM_CALL operator*(mat4 m, float scalar) {
-	__m128 scalarM = _mm_set1_ps(scalar);
-	for(uint32_t col = 0; col < 4; ++col)
-		m.columns[col] = _mm_mul_ps(m.columns[col], scalarM);
-	return m;
+FM_INLINE mat4 FM_CALL operator*(mat4 M, float Scalar) {
+	__m128 ScalarM = _mm_set1_ps(Scalar);
+	for(uint32_t Col = 0; Col < 4; ++Col)
+		M.Columns[Col] = _mm_mul_ps(M.Columns[Col], ScalarM);
+	return M;
 }
-FM_INLINE mat4 FM_CALL operator*(float scalar, mat4 m) {
-	return m * scalar;
+FM_INLINE mat4 FM_CALL operator*(float Scalar, mat4 M) {
+	return M * Scalar;
 }
-FM_INLINE mat4 FM_CALL operator/(mat4 m, float scalar) {
-	__m128 scalarM = _mm_set1_ps(scalar);
-	for(uint32_t col = 0; col < 4; ++col)
-		m.columns[col] = _mm_div_ps(m.columns[col], scalarM);
-	return m;
+FM_INLINE mat4 FM_CALL operator/(mat4 M, float Scalar) {
+	__m128 ScalarM = _mm_set1_ps(Scalar);
+	for(uint32_t Col = 0; Col < 4; ++Col)
+		M.Columns[Col] = _mm_div_ps(M.Columns[Col], ScalarM);
+	return M;
 }
-FM_INLINE mat4 FM_CALL transpose(mat4 m) {
-	_MM_TRANSPOSE4_PS(m.columns[0], m.columns[1], m.columns[2], m.columns[3]);
-	return m;
+FM_INLINE mat4 FM_CALL Transpose(mat4 M) {
+	_MM_TRANSPOSE4_PS(M.Columns[0], M.Columns[1], M.Columns[2], M.Columns[3]);
+	return M;
 }
-FM_INLINE mat4 FM_CALL makeTranslationMat4(float x, float y, float z) {
-	return makeMat4FromRows(
-		1.f, 0.f, 0.f, x,
-		0.f, 1.f, 0.f, y,
-		0.f, 0.f, 1.f, z,
+FM_INLINE mat4 FM_CALL Mat4Translation(float X, float Y, float Z) {
+	return Mat4FromRows(
+		1.f, 0.f, 0.f, X,
+		0.f, 1.f, 0.f, Y,
+		0.f, 0.f, 1.f, Z,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeTranslationMat4(vec3 translation) {
-	return makeMat4FromRows(
-		1.f, 0.f, 0.f, translation.x(),
-		0.f, 1.f, 0.f, translation.y(),
-		0.f, 0.f, 1.f, translation.z(),
+FM_INLINE mat4 FM_CALL Mat4Translation(v3 Translation) {
+	return Mat4FromRows(
+		1.f, 0.f, 0.f, Translation.X(),
+		0.f, 1.f, 0.f, Translation.Y(),
+		0.f, 0.f, 1.f, Translation.Z(),
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL translate(mat4 m, float x, float y, float z) {
-	m.columns[3] = _mm_add_ps(m.columns[3], _mm_set_ps(0.f, z, y, x));
-	return m;
+FM_INLINE mat4 FM_CALL Translate(mat4 M, float X, float Y, float Z) {
+	M.Columns[3] = _mm_add_ps(M.Columns[3], _mm_set_ps(0.f, Z, Y, X));
+	return M;
 }
-FM_INLINE mat4 FM_CALL translate(mat4 m, vec3 translation) {
-	m.columns[3] = _mm_add_ps(m.columns[3], translation.m);
-	return m;
+FM_INLINE mat4 FM_CALL Translate(mat4 M, v3 Translation) {
+	M.Columns[3] = _mm_add_ps(M.Columns[3], Translation.M);
+	return M;
 }
-FM_INLINE mat4 FM_CALL makeScaleMat4(float scalar) {
-	return makeDiagonalMat4(scalar, scalar, scalar, 1.f);
+FM_INLINE mat4 FM_CALL Mat4Scale(float Scalar) {
+	return Mat4Diagonal(Scalar, Scalar, Scalar, 1.f);
 } 
-FM_INLINE mat4 FM_CALL makeScaleMat4(float scalarX, float scalarY, float scalarZ) {
-	return makeDiagonalMat4(scalarX, scalarY, scalarZ, 1.f);
+FM_INLINE mat4 FM_CALL Mat4Scale(float ScalarX, float ScalarY, float ScalarZ) {
+	return Mat4Diagonal(ScalarX, ScalarY, ScalarZ, 1.f);
 } 
-FM_INLINE mat4 FM_CALL makeScaleMat4(vec3 scalar) {
-	return makeDiagonalMat4(scalar.x(), scalar.y(), scalar.z(), 1.f); 
+FM_INLINE mat4 FM_CALL Mat4Scale(v3 Scalar) {
+	return Mat4Diagonal(Scalar.X(), Scalar.Y(), Scalar.Z(), 1.f); 
 }
-FM_INLINE mat4 FM_CALL scale(mat4 m, float scalar) {
-	return scale(m, scalar, scalar, scalar);
+FM_INLINE mat4 FM_CALL Scale(mat4 M, float Scalar) {
+	return Scale(M, Scalar, Scalar, Scalar);
 }
-FM_INLINE mat4 FM_CALL scale(mat4 m, float x, float y, float z) {
-	vec4 mainDiag = m.getMainDiagonal();
-	vec4 scalarVec = makeVec4(x, y, z, 1.f);
-	mainDiag = hadamardMul(mainDiag, scalarVec);
-	m.setMainDiagonal(mainDiag);
-	return m;
+FM_INLINE mat4 FM_CALL Scale(mat4 M, float X, float Y, float Z) {
+	v4 MainDiag = M.GetMainDiagonal();
+	v4 ScalarVec = V4(X, Y, Z, 1.f);
+	MainDiag = HadamardMul(MainDiag, ScalarVec);
+	M.SetMainDiagonal(MainDiag);
+	return M;
 }
-FM_INLINE mat4 FM_CALL scale(mat4 m, vec3 scalar) {
-	vec4 mainDiag = m.getMainDiagonal();
-	mainDiag.m = _mm_mul_ps(mainDiag.m, scalar.m);
-	mainDiag.m = priv::setW(mainDiag.m, 1.f);
-	m.setMainDiagonal(mainDiag);
-	return m;
+FM_INLINE mat4 FM_CALL Scale(mat4 M, v3 Scalar) {
+	v4 MainDiag = M.GetMainDiagonal();
+	MainDiag.M = _mm_mul_ps(MainDiag.M, Scalar.M);
+	MainDiag.M = priv::SetW(MainDiag.M, 1.f);
+	M.SetMainDiagonal(MainDiag);
+	return M;
 }
-FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, float axisX, float axisY, float axisZ) {
-	float r = degreesToRadians(degrees);
-	return makeRotationMat4Radians(r, axisX, axisY, axisZ);
+FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ) {
+	float R = DegreesToRadians(Degrees);
+	return Mat4RotationRadians(R, AxisX, AxisY, AxisZ);
 } 
-FM_INLINE mat4 FM_CALL makeRotationMat4Degrees(float degrees, vec3 axis) {
-	float r = degreesToRadians(degrees);
-	return makeRotationMat4Radians(r, axis);
+FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, v3 Axis) {
+	float R = DegreesToRadians(Degrees);
+	return Mat4RotationRadians(R, Axis);
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Degrees(float degrees) {
-	float r = degreesToRadians(degrees);
-	return makeRotationAroundXAxisMat4Radians(r);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisDegrees(float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	return Mat4RotationAroundXAxisRadians(R);
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Degrees(float degrees) {
-	float r = degreesToRadians(degrees);
-	return makeRotationAroundYAxisMat4Radians(r);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisDegrees(float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	return Mat4RotationAroundYAxisRadians(R);
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Degrees(float degrees) {
-	float r = degreesToRadians(degrees);
-	return makeRotationAroundZAxisMat4Radians(r);
+FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisDegrees(float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	return Mat4RotationAroundZAxisRadians(R);
 }
-FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, float axisX, float axisY, float axisZ) {
-	float r = degreesToRadians(degrees);
-	return rotateRadians(m, r, axisX, axisY, axisZ);
+FM_INLINE mat4 FM_CALL RotateDegrees(mat4 M, float Degrees, float AxisX, float AxisY, float AxisZ) {
+	float R = DegreesToRadians(Degrees);
+	return RotateRadians(M, R, AxisX, AxisY, AxisZ);
 } 
-FM_INLINE mat4 FM_CALL rotateDegrees(mat4 m, float degrees, vec3 axis) {
-	float r = degreesToRadians(degrees);
-	return rotateRadians(m, r, axis);
+FM_INLINE mat4 FM_CALL RotateDegrees(mat4 M, float Degrees, v3 Axis) {
+	float R = DegreesToRadians(Degrees);
+	return RotateRadians(M, R, Axis);
 }
-FM_INLINE mat4 FM_CALL rotateAroundXAxisDegrees(mat4 m, float degrees) {
-	float r = degreesToRadians(degrees);
-	return rotateAroundXAxisRadians(m, r);
+FM_INLINE mat4 FM_CALL RotateAroundXAxisDegrees(mat4 M, float Degrees) {
+	float r = DegreesToRadians(Degrees);
+	return RotateAroundXAxisRadians(M, r);
 }
-FM_INLINE mat4 FM_CALL rotateAroundYAxisDegrees(mat4 m, float degrees) {
-	float r = degreesToRadians(degrees);
-	return rotateAroundYAxisRadians(m, r);
+FM_INLINE mat4 FM_CALL RotateAroundYAxisDegrees(mat4 M, float Degrees) {
+	float r = DegreesToRadians(Degrees);
+	return RotateAroundYAxisRadians(M, r);
 }
-FM_INLINE mat4 FM_CALL rotateAroundZAxisDegrees(mat4 m, float degrees) {
-	float r = degreesToRadians(degrees);
-	return rotateAroundZAxisRadians(m, r);
+FM_INLINE mat4 FM_CALL RotateAroundZAxisDegrees(mat4 M, float Degrees) {
+	float r = DegreesToRadians(Degrees);
+	return RotateAroundZAxisRadians(M, r);
 }
-FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, float axisX, float axisY, float axisZ) {
-	vec3 normalized = normalize(makeVec3(axisX, axisY, axisZ));
-	axisX = normalized.x();
-	axisY = normalized.y();
-	axisZ = normalized.z();
-	float sinTheta = sin(radians);
-	float cosTheta = cos(radians);
-	float cosVal = 1.f - cosTheta;
-	return makeMat4FromColumns(
-		(axisX * axisX * cosVal) + cosTheta,
-		(axisX * axisY * cosVal) + (axisZ * sinTheta),
-		(axisX * axisZ * cosVal) - (axisY * sinTheta),
+FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY, float AxisZ) {
+	v3 Normalized = Normalize(V3(AxisX, AxisY, AxisZ));
+	AxisX = Normalized.X();
+	AxisY = Normalized.Y();
+	AxisZ = Normalized.Z();
+	float SinTheta = sin(Radians);
+	float CosTheta = cos(Radians);
+	float CosVal = 1.f - CosTheta;
+	return Mat4FromColumns(
+		(AxisX * AxisX * CosVal) + CosTheta,
+		(AxisX * AxisY * CosVal) + (AxisZ * SinTheta),
+		(AxisX * AxisZ * CosVal) - (AxisY * SinTheta),
 		0.f,
-		(axisY * axisX * cosVal) - (axisZ * sinTheta),
-		(axisY * axisY * cosVal) + cosTheta,
-		(axisY * axisZ * cosVal) + (axisX * sinTheta),
+		(AxisY * AxisX * CosVal) - (AxisZ * SinTheta),
+		(AxisY * AxisY * CosVal) + CosTheta,
+		(AxisY * AxisZ * CosVal) + (AxisX * SinTheta),
 		0.f,
-		(axisZ * axisX * cosVal) + (axisY * sinTheta),
-		(axisZ * axisY * cosVal) - (axisX * sinTheta),
-		(axisZ * axisZ * cosVal) + cosTheta,
+		(AxisZ * AxisX * CosVal) + (AxisY * SinTheta),
+		(AxisZ * AxisY * CosVal) - (AxisX * SinTheta),
+		(AxisZ * AxisZ * CosVal) + CosTheta,
 		0.f,
 		0.f, 0.f, 0.f, 1.f);
 } 
-FM_INLINE mat4 FM_CALL makeRotationMat4Radians(float radians, vec3 axis) {
-	return makeRotationMat4Radians(radians, axis.x(), axis.y(), axis.z());
+FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, v3 Axis) {
+	return Mat4RotationRadians(Radians, Axis.X(), Axis.Y(), Axis.Z());
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundXAxisMat4Radians(float r) {
-	return makeMat4FromRows(
+FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisRadians(float R) {
+	return Mat4FromRows(
 		1.f, 0.f, 0.f, 0.f,
-		0.f, cos(r), -sin(r), 0.f,
-		0.f, sin(r), cos(r), 0.f,
+		0.f, cos(R), -sin(R), 0.f,
+		0.f, sin(R), cos(R), 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundYAxisMat4Radians(float r) {
-	return makeMat4FromRows(
-		cos(r), 0.f, sin(r), 0.f,
+FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisRadians(float R) {
+	return Mat4FromRows(
+		cos(R), 0.f, sin(R), 0.f,
 		0.f, 1.f, 0.f, 0.f,
-		-sin(r), 0.f, cos(r), 0.f,
+		-sin(R), 0.f, cos(R), 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeRotationAroundZAxisMat4Radians(float r) {
-	return makeMat4FromRows(
-		cos(r), -sin(r), 0.f, 0.f,
-		sin(r), cos(r), 0.f, 0.f,
+FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisRadians(float R) {
+	return Mat4FromRows(
+		cos(R), -sin(R), 0.f, 0.f,
+		sin(R), cos(R), 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, float axisX, float axisY, float axisZ) {
-	mat4 rotMat = makeRotationMat4Radians(radians, axisX, axisY, axisZ);
-	return m * rotMat;
+FM_INLINE mat4 FM_CALL RotateRadians(mat4 M, float Radians, float AxisX, float AxisY, float AxisZ) {
+	mat4 RotMat = Mat4RotationRadians(Radians, AxisX, AxisY, AxisZ);
+	return M * RotMat;
 }
-FM_INLINE mat4 FM_CALL rotateRadians(mat4 m, float radians, vec3 axis) {
-	mat4 rotMat = makeRotationMat4Radians(radians, axis);
-	return m * rotMat;
+FM_INLINE mat4 FM_CALL RotateRadians(mat4 M, float Radians, v3 Axis) {
+	mat4 RotMat = Mat4RotationRadians(Radians, Axis);
+	return M * RotMat;
 }
-FM_INLINE mat4 FM_CALL rotateAroundXAxisRadians(mat4 m, float radians) {
-	mat4 rotMat = makeRotationAroundXAxisMat4Radians(radians);
-	return m * rotMat;	
+FM_INLINE mat4 FM_CALL RotateAroundXAxisRadians(mat4 M, float Radians) {
+	mat4 RotMat = Mat4RotationAroundXAxisRadians(Radians);
+	return M * RotMat;	
 }
-FM_INLINE mat4 FM_CALL rotateAroundYAxisRadians(mat4 m, float radians) {
-	mat4 rotMat = makeRotationAroundYAxisMat4Radians(radians);
-	return m * rotMat;
+FM_INLINE mat4 FM_CALL RotateAroundYAxisRadians(mat4 M, float Radians) {
+	mat4 RotMat = Mat4RotationAroundYAxisRadians(Radians);
+	return M * RotMat;
 }
-FM_INLINE mat4 FM_CALL rotateAroundZAxisRadians(mat4 m, float radians) {
-	mat4 rotMat = makeRotationAroundZAxisMat4Radians(radians);
-	return m * rotMat;
+FM_INLINE mat4 FM_CALL RotateAroundZAxisRadians(mat4 M, float Radians) {
+	mat4 RotMat = Mat4RotationAroundZAxisRadians(Radians);
+	return M * RotMat;
 }
-FM_INLINE mat4 FM_CALL makeShearXAxisMat4(float y, float z) {
-	return makeMat4FromRows(
+FM_INLINE mat4 FM_CALL Mat4ShearXAxis(float Y, float Z) {
+	return Mat4FromRows(
 		1.f, 0.f, 0.f, 0.f,
-		y,   1.f, 0.f, 0.f,
-		z,   0.f, 1.f, 0.f,
+		Y,   1.f, 0.f, 0.f,
+		Z,   0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeShearYAxisMat4(float x, float z) {
-	return makeMat4FromRows(
-		1.f, x,   0.f, 0.f,
+FM_INLINE mat4 FM_CALL Mat4ShearYAxis(float X, float Z) {
+	return Mat4FromRows(
+		1.f, X,   0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
-		0.f, z,   1.f, 0.f,
+		0.f, Z,   1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeShearZAxisMat4(float x, float y) {
-	return makeMat4FromRows(
-		1.f, 0.f, x,   0.f,
-		0.f, 1.f, y,   0.f,
+FM_INLINE mat4 FM_CALL Mat4ShearZAxis(float X, float Y) {
+	return Mat4FromRows(
+		1.f, 0.f, X,   0.f,
+		0.f, 1.f, Y,   0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL makeShearMat4(float xy, float xz, float yx, float yz, float zx, float zy) {
-	return makeMat4FromRows(
-		1.f, yx, zx, 0.f,
-		xy, 1.f, zy, 0.f,
-		xz, yz, 1.f, 0.f,
+FM_INLINE mat4 FM_CALL Mat4Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
+	return Mat4FromRows(
+		1.f, YX, ZX, 0.f,
+		XY, 1.f, ZY, 0.f,
+		XZ, YZ, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL shearXAxisMat4(mat4 m, float y, float z) {
-	mat4 shearMat = makeShearXAxisMat4(y, z);
-	return m * shearMat;
+FM_INLINE mat4 FM_CALL ShearXAxis(mat4 M, float Y, float Z) {
+	mat4 ShearMat = Mat4ShearXAxis(Y, Z);
+	return M * ShearMat;
 }
-FM_INLINE mat4 FM_CALL shearYAxisMat4(mat4 m, float x, float z) {
-	mat4 shearMat = makeShearYAxisMat4(x, z);
-	return m * shearMat;
+FM_INLINE mat4 FM_CALL ShearYAxis(mat4 M, float X, float Z) {
+	mat4 ShearMat = Mat4ShearYAxis(X, Z);
+	return M * ShearMat;
 } 
-FM_INLINE mat4 FM_CALL shearZAxisMat4(mat4 m, float x, float y) {
-	mat4 shearMat = makeShearZAxisMat4(x, y);
-	return m * shearMat;
+FM_INLINE mat4 FM_CALL ShearZAxis(mat4 M, float X, float Y) {
+	mat4 ShearMat = Mat4ShearZAxis(X, Y);
+	return M * ShearMat;
 } 
-FM_INLINE mat4 FM_CALL shearMat4(mat4 m, float xy, float xz, float yx, float yz, float zx, float zy) {
-	mat4 shearMat = makeShearMat4(xy, xz, yx, yz, zx, zy);
-	return m * shearMat;
+FM_INLINE mat4 FM_CALL Shear(mat4 M, float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
+	mat4 ShearMat = Mat4Shear(XY, XZ, YX, YZ, ZX, ZY);
+	return M * ShearMat;
 }
-mat4 makeOrthographicMat4(float left, float right, float bottom, float top, float nearValue, float farValue) {
-	float rl = right - left;
-	float tb = top - bottom;
-	float fn = farValue - nearValue; 
+mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far) {
+	float RL = Right - Left;
+	float TB = Top - Bottom;
+	float FN = Far - Near; 
 		
-	return makeMat4FromRows(
-		2.f / rl, 0.f, 0.f, -((right + left) / rl),
-		0.f, 2.f / tb, 0.f, -((top + bottom) / tb),
-		0.f, 0.f, -2.f / fn, -((farValue + nearValue) / fn),
+	return Mat4FromRows(
+		2.f / RL, 0.f, 0.f, -((Right + Left) / RL),
+		0.f, 2.f / TB, 0.f, -((Top + Bottom) / TB),
+		0.f, 0.f, -2.f / FN, -((Far + Near) / FN),
 		0.f, 0.f, 0.f, 1.f);
 }
-mat4 makePerspectiveMat4(float fov, float aspectRatio, float nearValue, float farValue)
+mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far)
 {
-	float cotangent = 1.f / tanf(fov * FM_PI32 / 360.f);
-	float nf = nearValue - farValue;
+	float Cotangent = 1.f / tanf(FOV * FM_PI32 / 360.f);
+	float NF = Near - Far;
 		
-	return makeMat4FromRows(
-		cotangent / aspectRatio, 0.f, 0.f, 0.f,
-		0.f, cotangent, 0.f, 0.f,
+	return Mat4FromRows(
+		Cotangent / AspectRatio, 0.f, 0.f, 0.f,
+		0.f, Cotangent, 0.f, 0.f,
 		0.f, 0.f, 
-		(nearValue + farValue) / nf,
-		(2 * nearValue * farValue) / nf,
+		(Near + Far) / NF,
+		(2 * Near * Far) / NF,
 		0.f, 0.f, -1.f, 0.f);
 }
 

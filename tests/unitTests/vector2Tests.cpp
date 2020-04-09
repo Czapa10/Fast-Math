@@ -9,591 +9,576 @@
 
 using namespace fm;
 
-TEST_CASE("vec2 constructors and getters") 
+TEST_CASE("v2 Constructors and getters") 
 {
-	vec2 a = makeVec2(-3.f, 4.5f);
-	CHECK_VECTOR2_ALL_ALIASES(a, -3.f, 4.5f);
+	v2 A = V2(-3.f, 4.5f);
+	CHECK_VECTOR2_ALL_ALIASES(A, -3.f, 4.5f);
 
-	float arr[2];
-	store(arr, a);
-	CHECK_VECTOR2_ARRAY(arr, -3.f, 4.5f);
+	float Arr[2];
+	Store(Arr, A);
+	CHECK_VECTOR2_ARRAY(Arr, -3.f, 4.5f);
 
-	vec2 b = makeVec2(1.f);
-	CHECK_VECTOR2(b, 1.f, 1.f);
+	v2 B = V2(1.f);
+	CHECK_VECTOR2(B, 1.f, 1.f);
 
-	vec2 c = makeZeroVec2();
-	CHECK_VECTOR2(c, 0.f, 0.f);
+	v2 C = V2();
+	CHECK_VECTOR2(C, 0.f, 0.f);
 
-	float initArr[] = {-1.f, 2.f};	
-	vec2 d = makeVec2FromMemory(initArr);
-	CHECK_VECTOR2(d, -1.f, 2.f);
+	float InitArr[] = {-1.f, 2.f};	
+	v2 D = V2FromMemory(InitArr);
+	CHECK_VECTOR2(D, -1.f, 2.f);
 
-	CHECK(a.yx().x() == 4.5f);
-	CHECK(a.yx().y() == -3.f);
-	CHECK(a.vu().u() == 4.5f);
-	CHECK(a.vu().v() == -3.f);
+	CHECK(A.YX().X() == 4.5f);
+	CHECK(A.YX().Y() == -3.f);
+	CHECK(A.VU().U() == 4.5f);
+	CHECK(A.VU().V() == -3.f);
 
-	CHECK(a.xx().x() == -3.f);
-	CHECK(a.xx().y() == -3.f);
-	CHECK(a.uu().u() == -3.f);
-	CHECK(a.uu().v() == -3.f);
+	CHECK(A.XX().X() == -3.f);
+	CHECK(A.XX().Y() == -3.f);
+	CHECK(A.UU().U() == -3.f);
+	CHECK(A.UU().V() == -3.f);
 
-	CHECK(a.yy().x() == 4.5f);
-	CHECK(a.yy().y() == 4.5f);
-	CHECK(a.vv().u() == 4.5f);
-	CHECK(a.vv().v() == 4.5f);
+	CHECK(A.YY().X() == 4.5f);
+	CHECK(A.YY().Y() == 4.5f);
+	CHECK(A.VV().U() == 4.5f);
+	CHECK(A.VV().V() == 4.5f);
 
-	float* px = ptr(d);
-	float* py = ptrY(d);
-	CHECK(*px == -1.f);
-	CHECK(*py == 2.f);
+	float* PX = Ptr(D);
+	float* PY = PtrY(D);
+	CHECK(*PX == -1.f);
+	CHECK(*PY == 2.f);
 }
 
-TEST_CASE("vec2 setters")
+TEST_CASE("v2 Setters")
 {
-	vec2 a;
-	a.setX(4.f);
-	a.setY(-2.5f);
-	CHECK_VECTOR2(a, 4.f, -2.5f);
+	v2 A;
+	A.SetX(4.f);
+	A.SetY(-2.5f);
+	CHECK_VECTOR2(A, 4.f, -2.5f);
 
-	vec2 b;
-	b.setY(-2.5f);
-	b.setX(4.f);
-	CHECK_VECTOR2(b, 4.f, -2.5f);
+	v2 B;
+	B.SetY(-2.5f);
+	B.SetX(4.f);
+	CHECK_VECTOR2(B, 4.f, -2.5f);
 }
 
-TEST_CASE("vec2 operations")
+TEST_CASE("v2 operations")
 {
-	vec2 a = makeVec2(2.f, 4.f);	
-	vec2 b = makeVec2(-5.f, 3.f);	
+	v2 A = V2(2.f, 4.f);	
+	v2 B = V2(-5.f, 3.f);	
 
-	LOG_VECTOR2(a);
-	LOG_VECTOR2(b);
+	v2 AddRes = A + B; 
+	CHECK_VECTOR2(AddRes, -3.f, 7.f);
 
-	vec2 addRes = a + b; 
-	CHECK_VECTOR2(addRes, -3.f, 7.f);
+	v2 SubRes = A - B;
+	CHECK_VECTOR2(SubRes, 7.f, 1.f);
 
-	vec2 subRes = a - b;
-	CHECK_VECTOR2(subRes, 7.f, 1.f);
+	v2 AddAsignmentRes = A;
+	AddAsignmentRes += B;
+	CHECK_VECTOR2(AddAsignmentRes, -3.f, 7.f);
 
-	vec2 addAsignmentRes = a;
-	addAsignmentRes += b;
-	CHECK_VECTOR2(addAsignmentRes, -3.f, 7.f);
+	v2 SubAsignmentRes = A;
+	SubAsignmentRes -= B;
+	CHECK_VECTOR2(SubAsignmentRes, 7.f, 1.f);
 
-	vec2 subAsignmentRes = a;
-	subAsignmentRes -= b;
-	CHECK_VECTOR2(subAsignmentRes, 7.f, 1.f);
+	v2 ScalarMulRes1 = A * 4.5f;
+	CHECK_VECTOR2(ScalarMulRes1, 9.f, 18.f);
 
-	vec2 scalarMulRes1 = a * 4.5f;
-	CHECK_VECTOR2(scalarMulRes1, 9.f, 18.f);
+	v2 ScalarMulRes2 = 4.5f * A;
+	CHECK_VECTOR2(ScalarMulRes2, 9.f, 18.f);
 
-	vec2 scalarMulRes2 = 4.5f * a;
-	CHECK_VECTOR2(scalarMulRes2, 9.f, 18.f);
+	v2 ScalarDivRes = A / 2.f;
+	CHECK_VECTOR2(ScalarDivRes, 1.f, 2.f);
 
-	vec2 scalarDivRes = a / 2.f;
-	CHECK_VECTOR2(scalarDivRes, 1.f, 2.f);
-
-	vec2 hadamardMulRes = hadamardMul(a, b);
-	CHECK_VECTOR2(hadamardMulRes, -10.f, 12.f);
+	v2 HadamardMulRes = HadamardMul(A, B);
+	CHECK_VECTOR2(HadamardMulRes, -10.f, 12.f);
 	
-	vec2 hadamardDivRes = hadamardDiv(a, b);
-	CHECK_VECTOR2(hadamardDivRes, 2.f / -5.f, 4.f / 3.f);
+	v2 HadamardDivRes = HadamardDiv(A, B);
+	CHECK_VECTOR2(HadamardDivRes, 2.f / -5.f, 4.f / 3.f);
 
-	vec2 negatedB = -b;
-	CHECK_VECTOR2(negatedB, 5.f, -3.f); 
+	v2 NegatedB = -B;
+	CHECK_VECTOR2(NegatedB, 5.f, -3.f); 
 
-	vec2 minRes = min(a, b);
-	CHECK_VECTOR2(minRes, -5.f, 3.f); 
+	v2 MinRes = Min(A, B);
+	CHECK_VECTOR2(MinRes, -5.f, 3.f); 
 
-	vec2 maxRes = max(a, b);
-	CHECK_VECTOR2(maxRes, 2.f, 4.f); 
+	v2 MaxRes = Max(A, B);
+	CHECK_VECTOR2(MaxRes, 2.f, 4.f); 
 
-	vec2 absoluteB = abs(b);
-	CHECK_VECTOR2(absoluteB, 5.f, 3.f); 
+	v2 AbsoluteB = Abs(B);
+	CHECK_VECTOR2(AbsoluteB, 5.f, 3.f); 
 
-	vec2 normalizedB = normalize(b);
-	CHECK_VECTOR2_APPROX(normalizedB, b.x() / sqrt(34.f), b.y() / sqrt(34.f)); 
+	v2 NormalizedB = Normalize(B);
+	CHECK_VECTOR2_APPROX(NormalizedB, B.X() / sqrt(34.f), B.Y() / sqrt(34.f)); 
 
-	CHECK(dot(a, b) == 2.f);
-	CHECK(sumOfElements(b) == -2.f);
-	CHECK(length(b) == floatCmp(sqrt(34.f)));
-	CHECK(lengthSquared(b) == 34.f);
+	CHECK(Dot(A, B) == 2.f);
+	CHECK(SumOfElements(B) == -2.f);
+	CHECK(Length(B) == FloatCmp(sqrt(34.f)));
+	CHECK(LengthSquared(B) == 34.f);
 
-	vec2 min = makeVec2(0.f, 0.f);
-	vec2 max = makeVec2(5.f, 2.f);
-	vec2 clampBRes = clamp(b, min, max);
-	CHECK_VECTOR2(clampBRes, 0.f, 2.f);
+	v2 Min = V2(0.f, 0.f);
+	v2 Max = V2(5.f, 2.f);
+	v2 ClampBRes = Clamp(B, Min, Max);
+	CHECK_VECTOR2(ClampBRes, 0.f, 2.f);
 
-	vec2 c = makeVec2(0.f, 0.f);
-	vec2 d = makeVec2(2.f, 4.f);
-	vec2 lerpRes = lerp(c, d, 0.5f);
-	CHECK_VECTOR2(lerpRes, 1.f, 2.f);
+	v2 C = V2(0.f, 0.f);
+	v2 D = V2(2.f, 4.f);
+	v2 LerpRes = Lerp(C, D, 0.5f);
+	CHECK_VECTOR2(LerpRes, 1.f, 2.f);
 
-	lerpRes = lerp(d, c, 0.5f);
-	CHECK_VECTOR2(lerpRes, 1.f, 2.f);
+	LerpRes = Lerp(D, C, 0.5f);
+	CHECK_VECTOR2(LerpRes, 1.f, 2.f);
 }
 
-TEST_CASE("vec2 comparisons")
+TEST_CASE("v2 Comparisons")
 {
-	vec2 a = makeVec2(5.f, 5.f);
-	vec2 b = makeVec2(3.f, 5.f);
-	vec2 c = makeVec2(-2.f, 6.f);
+	v2 A = V2(5.f, 5.f);
+	v2 B = V2(3.f, 5.f);
+	v2 C = V2(-2.f, 6.f);
 
-	CHECK(a == a);
-	CHECK(a != b);
+	CHECK(A == A);
+	CHECK(A != B);
 
-	vec2 eqMask = equalsMask(a, a);
-	CHECK((eqMask.x() && eqMask.y()));
-	eqMask = equalsMask(a, b);
-	CHECK((!eqMask.x() && eqMask.y()));
+	v2 EqMask = EqualsMask(A, A);
+	CHECK((EqMask.X() && EqMask.Y()));
+	EqMask = EqualsMask(A, B);
+	CHECK((!EqMask.X() && EqMask.Y()));
 
-	vec2 gtMask = greaterMask(a, b);
-	CHECK((gtMask.x() && !gtMask.y()));
+	v2 GTMask = GreaterMask(A, B);
+	CHECK((GTMask.X() && !GTMask.Y()));
 
-	vec2 geMask = greaterOrEqualMask(a, b);
-	CHECK((geMask.x() && geMask.y()));
-	geMask = greaterOrEqualMask(c, a);
-	CHECK((!geMask.x() && geMask.y()));
+	v2 GEMask = GreaterOrEqualMask(A, B);
+	CHECK((GEMask.X() && GEMask.Y()));
+	GEMask = GreaterOrEqualMask(C, A);
+	CHECK((!GEMask.X() && GEMask.Y()));
 
-	vec2 ltMask = lesserMask(c, b);
-	CHECK((ltMask.x() && !ltMask.y()));
+	v2 LTMask = LesserMask(C, B);
+	CHECK((LTMask.X() && !LTMask.Y()));
 
-	vec2 leMask = lesserOrEqualMask(b, a);
-	CHECK((leMask.x() && leMask.y()));
-	leMask = lesserOrEqualMask(c, b);
-	CHECK((leMask.x() && !leMask.y()));
+	v2 LEMask = LesserOrEqualMask(B, A);
+	CHECK((LEMask.X() && LEMask.Y()));
+	LEMask = LesserOrEqualMask(C, B);
+	CHECK((LEMask.X() && !LEMask.Y()));
 }
 
-TEST_CASE("vec2d constructors and getters") 
+TEST_CASE("v2d constructors and getters") 
 {
-	vec2d a = makeVec2d(-3.0, 4.0);
+	v2d A = V2d(-3.0, 4.0);
 
-	CHECK_VECTOR2_ALL_ALIASES(a, -3.0, 4.0);
+	CHECK_VECTOR2_ALL_ALIASES(A, -3.0, 4.0);
 
-	CHECK(a.yx().x() == 4.0);
-	CHECK(a.yx().y() == -3.0);
-	CHECK(a.vu().u() == 4.0);
-	CHECK(a.vu().v() == -3.0);
+	CHECK(A.YX().X() == 4.0);
+	CHECK(A.YX().Y() == -3.0);
+	CHECK(A.VU().U() == 4.0);
+	CHECK(A.VU().V() == -3.0);
 
-	CHECK(a.xx().x() == -3.0);
-	CHECK(a.xx().y() == -3.0);
-	CHECK(a.uu().u() == -3.0);
-	CHECK(a.uu().v() == -3.0);
+	CHECK(A.XX().X() == -3.0);
+	CHECK(A.XX().Y() == -3.0);
+	CHECK(A.UU().U() == -3.0);
+	CHECK(A.UU().V() == -3.0);
 
-	CHECK(a.yy().x() == 4.0);
-	CHECK(a.yy().y() == 4.0);
-	CHECK(a.vv().u() == 4.0);
-	CHECK(a.vv().v() == 4.0);
+	CHECK(A.YY().X() == 4.0);
+	CHECK(A.YY().Y() == 4.0);
+	CHECK(A.VV().U() == 4.0);
+	CHECK(A.VV().V() == 4.0);
 
-	double arr[2];
-	store16ByteAligned(arr, a);
-	CHECK_VECTOR2_ARRAY(arr, -3.0, 4.0);
-	store(arr, a);
-	CHECK_VECTOR2_ARRAY(arr, -3.0, 4.0);
+	double Arr[2];
+	Store16ByteAligned(Arr, A);
+	CHECK_VECTOR2_ARRAY(Arr, -3.0, 4.0);
+	Store(Arr, A);
+	CHECK_VECTOR2_ARRAY(Arr, -3.0, 4.0);
 
-	vec2d b = makeVec2d(1.0);
-	CHECK_VECTOR2(b, 1.0, 1.0);
+	v2d B = V2d(1.0);
+	CHECK_VECTOR2(B, 1.0, 1.0);
 
-	vec2d c = makeZeroVec2d();
-	CHECK_VECTOR2(c, 0.0, 0.0);
+	v2d C = V2d();
+	CHECK_VECTOR2(C, 0.0, 0.0);
 
-	double initArr[] = {-1.0, 2.0};	
-	vec2d d = makeVec2dFromMemory(initArr);
-	CHECK_VECTOR2(d, -1.0, 2.0);
+	double InitArr[] = {-1.0, 2.0};	
+	v2d D = V2dFromMemory(InitArr);
+	CHECK_VECTOR2(D, -1.0, 2.0);
 
-	double* px = ptr(d);
-	double* py = ptrY(d);
-	CHECK(*px == -1.0);
-	CHECK(*py == 2.0);
+	double* PX = Ptr(D);
+	double* PY = PtrY(D);
+	CHECK(*PX == -1.0);
+	CHECK(*PY == 2.0);
 }
 
-TEST_CASE("vec2d setters")
+TEST_CASE("v2d Setters")
 {
-	vec2d a;
-	a.setX(4.0);
-	a.setY(-2.5);
-	CHECK_VECTOR2(a, 4.0, -2.5);
+	v2d A;
+	A.SetX(4.0);
+	A.SetY(-2.5);
+	CHECK_VECTOR2(A, 4.0, -2.5);
 
-	vec2d b;
-	b.setY(-2.5);
-	b.setX(4.0);
-	CHECK_VECTOR2(b, 4.0, -2.5);
+	v2d B;
+	B.SetY(-2.5);
+	B.SetX(4.0);
+	CHECK_VECTOR2(B, 4.0, -2.5);
 }
 
-TEST_CASE("vec2d operations")
+TEST_CASE("v2d operations")
 {
-	vec2d a = makeVec2d(2.0, 4.0);	
-	vec2d b = makeVec2d(-5.0, 3.0);	
+	v2d A = V2d(2.0, 4.0);	
+	v2d B = V2d(-5.0, 3.0);	
 
-	INFO("a == (" << a.x() << ", " << a.y() << ")");
-	INFO("b == (" << b.x() << ", " << b.y() << ")");
+	v2d AddRes = A + B; 
+	CHECK_VECTOR2(AddRes, -3.0, 7.0);
 
-	vec2d addRes = a + b; 
-	CHECK_VECTOR2(addRes, -3.0, 7.0);
+	v2d SubRes = A - B;
+	CHECK_VECTOR2(SubRes, 7.0, 1.0);
 
-	vec2d subRes = a - b;
-	CHECK_VECTOR2(subRes, 7.0, 1.0);
+	v2d AddAsignmentRes = A;
+	AddAsignmentRes += B;
+	CHECK_VECTOR2(AddAsignmentRes, -3.0, 7.0);
 
-	vec2d addAsignmentRes = a;
-	addAsignmentRes += b;
-	CHECK_VECTOR2(addAsignmentRes, -3.0, 7.0);
+	v2d SubAsignmentRes = A;
+	SubAsignmentRes -= B;
+	CHECK_VECTOR2(SubAsignmentRes, 7.0, 1.0);
 
-	vec2d subAsignmentRes = a;
-	subAsignmentRes -= b;
-	CHECK_VECTOR2(subAsignmentRes, 7.0, 1.0);
+	v2d ScalarMulRes1 = A * 4.5;
+	CHECK_VECTOR2(ScalarMulRes1, 9.0, 18.0);
 
-	vec2d scalarMulRes1 = a * 4.5;
-	CHECK_VECTOR2(scalarMulRes1, 9.0, 18.0);
+	v2d ScalarMulRes2 = 4.5 * A;
+	CHECK_VECTOR2(ScalarMulRes2, 9.0, 18.0);
 
-	vec2d scalarMulRes2 = 4.5 * a;
-	CHECK_VECTOR2(scalarMulRes2, 9.0, 18.0);
+	v2d ScalarDivRes = A / 2.0;
+	CHECK_VECTOR2(ScalarDivRes, 1.0, 2.0);
 
-	vec2d scalarDivRes = a / 2.0;
-	CHECK_VECTOR2(scalarDivRes, 1.0, 2.0);
-
-	vec2d hadamardMulRes = hadamardMul(a, b);
-	CHECK_VECTOR2(hadamardMulRes, -10.0, 12.0);
+	v2d HadamardMulRes = HadamardMul(A, B);
+	CHECK_VECTOR2(HadamardMulRes, -10.0, 12.0);
 	
-	vec2d hadamardDivRes = hadamardDiv(a, b);
-	CHECK_VECTOR2_APPROX(hadamardDivRes, 2.0 / -5.0, 4.0 / 3.0);
+	v2d HadamardDivRes = HadamardDiv(A, B);
+	CHECK_VECTOR2_APPROX(HadamardDivRes, 2.0 / -5.0, 4.0 / 3.0);
 
-	vec2d negatedB = -b;
-	CHECK_VECTOR2(negatedB, 5.0, -3.0);
+	v2d NegatedB = -B;
+	CHECK_VECTOR2(NegatedB, 5.0, -3.0);
 
-	vec2d minRes = min(a, b);
-	CHECK_VECTOR2(minRes, -5.0, 3.0);
+	v2d MinRes = Min(A, B);
+	CHECK_VECTOR2(MinRes, -5.0, 3.0);
 
-	vec2d maxRes = max(a, b);
-	CHECK_VECTOR2(maxRes, 2.0, 4.0);
+	v2d MaxRes = Max(A, B);
+	CHECK_VECTOR2(MaxRes, 2.0, 4.0);
 
-	vec2d absoluteB = abs(b);
-	CHECK_VECTOR2(absoluteB, 5.0, 3.0);
+	v2d AbsoluteB = Abs(B);
+	CHECK_VECTOR2(AbsoluteB, 5.0, 3.0);
 
-	vec2d normalizedB = normalize(b);
-	CHECK_VECTOR2_APPROX(normalizedB, b.x() / sqrt(34), b.y() / sqrt(34));
+	v2d NormalizedB = Normalize(B);
+	CHECK_VECTOR2_APPROX(NormalizedB, B.X() / sqrt(34), B.Y() / sqrt(34));
 
-	CHECK(dot(a, b) == 2.0);
-	CHECK(sumOfElements(b) == -2.0);
-	CHECK(length(b) == floatCmp(sqrt(34.0)));
-	CHECK(lengthSquared(b) == 34.0);
+	CHECK(Dot(A, B) == 2.0);
+	CHECK(SumOfElements(B) == -2.0);
+	CHECK(Length(B) == FloatCmp(sqrt(34.0)));
+	CHECK(LengthSquared(B) == 34.0);
 
-	vec2d min = makeVec2d(0.0, 0.0);
-	vec2d max = makeVec2d(5.0, 7.0);
-	vec2d clampRes = clamp(makeVec2d(-1.0, 8.0), min, max);
-	CHECK_VECTOR2(clampRes, 0.0, 7.0);
+	v2d Min = V2d(0.0, 0.0);
+	v2d Max = V2d(5.0, 7.0);
+	v2d ClampRes = Clamp(V2d(-1.0, 8.0), Min, Max);
+	CHECK_VECTOR2(ClampRes, 0.0, 7.0);
 
-	vec2d c = makeVec2d(0.0, 0.0);
-	vec2d d = makeVec2d(2.0, 4.0);
-	vec2d lerpRes = lerp(c, d, 0.5f);
-	CHECK_VECTOR2(lerpRes, 1.0, 2.0);
-	lerpRes = lerp(d, c, 0.5);
-	CHECK_VECTOR2(lerpRes, 1.0, 2.0);
+	v2d C = V2d(0.0, 0.0);
+	v2d D = V2d(2.0, 4.0);
+	v2d LerpRes = Lerp(C, D, 0.5f);
+	CHECK_VECTOR2(LerpRes, 1.0, 2.0);
+	LerpRes = Lerp(D, C, 0.5);
+	CHECK_VECTOR2(LerpRes, 1.0, 2.0);
 }
 
-TEST_CASE("vec2d comparisons")
+TEST_CASE("v2d comparisons")
 {
-	vec2d a = makeVec2d(5.0, 5.0);
-	vec2d b = makeVec2d(3.0, 5.0);
-	vec2d c = makeVec2d(-2.0, 6.0);
+	v2d A = V2d(5.0, 5.0);
+	v2d B = V2d(3.0, 5.0);
+	v2d C = V2d(-2.0, 6.0);
 
-	CHECK(a == a);
-	CHECK(a != b);
+	CHECK(A == A);
+	CHECK(A != B);
 
-	vec2d eqMask = equalsMask(a, a);
-	CHECK((eqMask.x() && eqMask.y()));
-	eqMask = equalsMask(a, b);
-	CHECK((!eqMask.x() && eqMask.y()));
+	v2d EqMask = EqualsMask(A, A);
+	CHECK((EqMask.X() && EqMask.Y()));
+	EqMask = EqualsMask(A, B);
+	CHECK((!EqMask.X() && EqMask.Y()));
 
-	vec2d gtMask = greaterMask(a, b);
-	CHECK((gtMask.x() && !gtMask.y()));
+	v2d GTMask = GreaterMask(A, B);
+	CHECK((GTMask.X() && !GTMask.Y()));
 
-	vec2d geMask = greaterOrEqualMask(a, b);
-	CHECK((geMask.x() && geMask.y()));
-	geMask = greaterOrEqualMask(c, a);
-	CHECK((!geMask.x() && geMask.y()));
+	v2d GEMask = GreaterOrEqualMask(A, B);
+	CHECK((GEMask.X() && GEMask.Y()));
+	GEMask = GreaterOrEqualMask(C, A);
+	CHECK((!GEMask.X() && GEMask.Y()));
 
-	vec2d ltMask = lesserMask(c, b);
-	CHECK((ltMask.x() && !ltMask.y()));
+	v2d LTMask = LesserMask(C, B);
+	CHECK((LTMask.X() && !LTMask.Y()));
 
-	vec2d leMask = lesserOrEqualMask(b, a);
-	CHECK((leMask.x() && leMask.y()));
-	leMask = lesserOrEqualMask(c, b);
-	CHECK((leMask.x() && !leMask.y()));
+	v2d LEMask = LesserOrEqualMask(B, A);
+	CHECK((LEMask.X() && LEMask.Y()));
+	LEMask = LesserOrEqualMask(C, B);
+	CHECK((LEMask.X() && !LEMask.Y()));
 }
 
-TEST_CASE("vec2i constructors and getters") 
+TEST_CASE("v2i constructors and getters") 
 {
-	vec2i a = makeVec2i(-3, 4);
+	v2i A = V2i(-3, 4);
 
-	CHECK_VECTOR2_ALL_ALIASES(a, -3, 4);
+	CHECK_VECTOR2_ALL_ALIASES(A, -3, 4);
 
-	CHECK(a.yx().x() == 4);
-	CHECK(a.yx().y() == -3);
-	CHECK(a.vu().u() == 4);
-	CHECK(a.vu().v() == -3);
+	CHECK(A.YX().X() == 4);
+	CHECK(A.YX().Y() == -3);
+	CHECK(A.VU().U() == 4);
+	CHECK(A.VU().V() == -3);
 
-	CHECK(a.xx().x() == -3);
-	CHECK(a.xx().y() == -3);
-	CHECK(a.uu().u() == -3);
-	CHECK(a.uu().v() == -3);
+	CHECK(A.XX().X() == -3);
+	CHECK(A.XX().Y() == -3);
+	CHECK(A.UU().U() == -3);
+	CHECK(A.UU().V() == -3);
 
-	CHECK(a.yy().x() == 4);
-	CHECK(a.yy().y() == 4);
-	CHECK(a.vv().u() == 4);
-	CHECK(a.vv().v() == 4);
+	CHECK(A.YY().X() == 4);
+	CHECK(A.YY().Y() == 4);
+	CHECK(A.VV().U() == 4);
+	CHECK(A.VV().V() == 4);
 
-	int32 arr[2];
-	store(arr, a);
-	CHECK_VECTOR2_ARRAY(arr, -3, 4);
+	int32 Arr[2];
+	Store(Arr, A);
+	CHECK_VECTOR2_ARRAY(Arr, -3, 4);
 
-	vec2i b = makeVec2i(1);
-	CHECK_VECTOR2(b, 1, 1);
+	v2i B = V2i(1);
+	CHECK_VECTOR2(B, 1, 1);
 
-	vec2i c = makeZeroVec2i();
-	CHECK_VECTOR2(c, 0, 0);
+	v2i C = V2i();
+	CHECK_VECTOR2(C, 0, 0);
 
-	int32 initArr[] = {-1, 2};	
-	vec2i d = makeVec2iFromMemory(initArr);
-	CHECK_VECTOR2(d, -1, 2);
+	int32 InitArr[] = {-1, 2};	
+	v2i D = V2iFromMemory(InitArr);
+	CHECK_VECTOR2(D, -1, 2);
 
-	int32* px = ptr(d);
-	int32* py = ptrY(d);
-	CHECK(*px == -1);
-	CHECK(*py == 2);
+	int32* PX = Ptr(D);
+	int32* PY = PtrY(D);
+	CHECK(*PX == -1);
+	CHECK(*PY == 2);
 }
 
-TEST_CASE("vec2i setters")
+TEST_CASE("v2i Setters")
 {
-	vec2i a;
-	a.setX(4);
-	a.setY(-2);
-	CHECK_VECTOR2(a, 4, -2);
+	v2i A;
+	A.SetX(4);
+	A.SetY(-2);
+	CHECK_VECTOR2(A, 4, -2);
 
-	vec2d b;
-	b.setY(-2);
-	b.setX(4);
-	CHECK_VECTOR2(a, 4, -2);
+	v2d B;
+	B.SetY(-2);
+	B.SetX(4);
+	CHECK_VECTOR2(B, 4, -2);
 }
 
-TEST_CASE("vec2i operations")
+TEST_CASE("v2i operations")
 {
-	vec2i a = makeVec2i(2, 4);
-	vec2i b = makeVec2i(-5, 3);
+	v2i A = V2i(2, 4);
+	v2i B = V2i(-5, 3);
 
-	LOG_VECTOR2(a);
-	LOG_VECTOR2(b);
+	LOG_VECTOR2(A);
+	LOG_VECTOR2(B);
 	
-	vec2i addRes = a + b;
-	CHECK_VECTOR2(addRes, -3, 7);
+	v2i AddRes = A + B;
+	CHECK_VECTOR2(AddRes, -3, 7);
 	
-	vec2i subRes = a - b;
-	CHECK_VECTOR2(subRes, 7, 1);
+	v2i SubRes = A - B;
+	CHECK_VECTOR2(SubRes, 7, 1);
 
-	vec2i addAsignmentRes = a;
-	addAsignmentRes += b;
-	CHECK_VECTOR2(addAsignmentRes, -3, 7);
+	v2i AddAsignmentRes = A;
+	AddAsignmentRes += B;
+	CHECK_VECTOR2(AddAsignmentRes, -3, 7);
 
-	vec2i subAsignmentRes = a;
-	subAsignmentRes -= b;
-	CHECK_VECTOR2(subAsignmentRes, 7, 1);
+	v2i SubAsignmentRes = A;
+	SubAsignmentRes -= B;
+	CHECK_VECTOR2(SubAsignmentRes, 7, 1);
 	
-	vec2i scalarMulRes1 = a * -5;
-	CHECK_VECTOR2(scalarMulRes1, -10, -20);
+	v2i ScalarMulRes1 = A * -5;
+	CHECK_VECTOR2(ScalarMulRes1, -10, -20);
 	
-	vec2i scalarMulRes2 = -5 * a;
-	CHECK_VECTOR2(scalarMulRes2, -10, -20);
+	v2i ScalarMulRes2 = -5 * A;
+	CHECK_VECTOR2(ScalarMulRes2, -10, -20);
 	
-	vec2i hadamardMulRes = hadamardMul(a, b); 
-	CHECK_VECTOR2(hadamardMulRes, -10, 12);
+	v2i HadamardMulRes = HadamardMul(A, B); 
+	CHECK_VECTOR2(HadamardMulRes, -10, 12);
 
-	vec2i negatedB = -b;
-	CHECK_VECTOR2(negatedB, 5, -3);
+	v2i NegatedB = -B;
+	CHECK_VECTOR2(NegatedB, 5, -3);
 
-	vec2i minRes = min(a, b);
-	CHECK_VECTOR2(minRes, -5, 3);
+	v2i MinRes = Min(A, B);
+	CHECK_VECTOR2(MinRes, -5, 3);
 
-	vec2i maxRes = max(a, b);
-	CHECK_VECTOR2(maxRes, 2, 4);
+	v2i MaxRes = Max(A, B);
+	CHECK_VECTOR2(MaxRes, 2, 4);
 
-	vec2i absoluteB = abs(b);
-	CHECK_VECTOR2(absoluteB, 5, 3);
+	v2i AbsoluteB = Abs(B);
+	CHECK_VECTOR2(AbsoluteB, 5, 3);
 
-	CHECK(sumOfElements(b) == -2);
-	CHECK(length(b) == (int32)sqrt(34));
-	CHECK(lengthSquared(b) == 34);
+	CHECK(SumOfElements(B) == -2);
+	CHECK(Length(B) == (int32)sqrt(34));
+	CHECK(LengthSquared(B) == 34);
 
-	vec2i min = makeVec2i(0, 0);
-	vec2i max = makeVec2i(5, 2);
-	vec2i clampBRes = clamp(b, min, max);
-	CHECK_VECTOR2(clampBRes, 0, 2);
+	v2i Min = V2i(0, 0);
+	v2i Max = V2i(5, 2);
+	v2i ClampBRes = Clamp(B, Min, Max);
+	CHECK_VECTOR2(ClampBRes, 0, 2);
 }
 
-TEST_CASE("vec2i comparisons")
+TEST_CASE("v2i comparisons")
 {
-	vec2i a = makeVec2i(5, 5);
-	vec2i b = makeVec2i(3, 5);
-	vec2i c = makeVec2i(-2, 6);
+	v2i A = V2i(5, 5);
+	v2i B = V2i(3, 5);
+	v2i C = V2i(-2, 6);
 
-	CHECK(a == a);
-	CHECK(a != b);
+	CHECK(A == A);
+	CHECK(A != B);
 
-	vec2i eqMask = equalsMask(a, a);
-	CHECK((eqMask.x() && eqMask.y()));
-	eqMask = equalsMask(a, b);
-	CHECK((!eqMask.x() && eqMask.y()));
+	v2i EqMask = EqualsMask(A, A);
+	CHECK((EqMask.X() && EqMask.Y()));
+	EqMask = EqualsMask(A, B);
+	CHECK((!EqMask.X() && EqMask.Y()));
 
-	vec2i gtMask = greaterMask(a, b);
-	CHECK((gtMask.x() && !gtMask.y()));
+	v2i GTMask = GreaterMask(A, B);
+	CHECK((GTMask.X() && !GTMask.Y()));
 
-	vec2i geMask = greaterOrEqualMask(a, b);
-	CHECK((geMask.x() && geMask.y()));
-	geMask = greaterOrEqualMask(c, a);
-	CHECK((!geMask.x() && geMask.y()));
+	v2i GEMask = GreaterOrEqualMask(A, B);
+	CHECK((GEMask.X() && GEMask.Y()));
+	GEMask = GreaterOrEqualMask(C, A);
+	CHECK((!GEMask.X() && GEMask.Y()));
 
-	vec2i ltMask = lesserMask(c, b);
-	CHECK(ltMask.x());
-	CHECK(!ltMask.y());
+	v2i LTMask = LesserMask(C, B);
+	CHECK(LTMask.X());
+	CHECK(!LTMask.Y());
 
-	vec2i leMask = lesserOrEqualMask(b, a);
-	CHECK((leMask.x() && leMask.y()));
-	leMask = lesserOrEqualMask(c, b);
-	CHECK((leMask.x() && !leMask.y()));
+	v2i LEMask = LesserOrEqualMask(B, A);
+	CHECK((LEMask.X() && LEMask.Y()));
+	LEMask = LesserOrEqualMask(C, B);
+	CHECK((LEMask.X() && !LEMask.Y()));
 }
 
-TEST_CASE("vec2u constructors and getters") 
+TEST_CASE("v2u constructors and getters") 
 {
-	vec2u a = makeVec2u(3, 4);
+	v2u A = V2u(3, 4);
 
-	CHECK_VECTOR2_ALL_ALIASES(a, 3, 4);
+	CHECK_VECTOR2_ALL_ALIASES(A, 3, 4);
 
-	CHECK(a.yx().x() == 4);
-	CHECK(a.yx().y() == 3);
-	CHECK(a.vu().u() == 4);
-	CHECK(a.vu().v() == 3);
+	CHECK(A.YX().X() == 4);
+	CHECK(A.YX().Y() == 3);
+	CHECK(A.VU().U() == 4);
+	CHECK(A.VU().V() == 3);
 
-	CHECK(a.xx().x() == 3);
-	CHECK(a.xx().y() == 3);
-	CHECK(a.uu().u() == 3);
-	CHECK(a.uu().v() == 3);
+	CHECK(A.XX().X() == 3);
+	CHECK(A.XX().Y() == 3);
+	CHECK(A.UU().U() == 3);
+	CHECK(A.UU().V() == 3);
 
-	CHECK(a.yy().x() == 4);
-	CHECK(a.yy().y() == 4);
-	CHECK(a.vv().u() == 4);
-	CHECK(a.vv().v() == 4);
+	CHECK(A.YY().X() == 4);
+	CHECK(A.YY().Y() == 4);
+	CHECK(A.VV().U() == 4);
+	CHECK(A.VV().V() == 4);
 
-	vec2u b = makeVec2u(1);
-	CHECK_VECTOR2(b, 1, 1);
+	v2u B = V2u(1);
+	CHECK_VECTOR2(B, 1, 1);
 
-	uint32 arr[2];
-	store(arr, a);
-	CHECK_VECTOR2_ARRAY(arr, 3, 4);
+	uint32 Arr[2];
+	Store(Arr, A);
+	CHECK_VECTOR2_ARRAY(Arr, 3, 4);
 
-	vec2u c = makeVec2u(-2, 3);
-	CHECK_VECTOR2(c, -2, 3);
+	v2u C = V2u(-2, 3);
+	CHECK_VECTOR2(C, -2, 3);
 
-	vec2u d = makeZeroVec2u();
-	CHECK_VECTOR2(d, 0, 0);
+	v2u D = V2u();
+	CHECK_VECTOR2(D, 0, 0);
 
-	uint32 initArr[] = {1, 2};	
-	vec2u e = makeVec2uFromMemory(initArr);
-	CHECK_VECTOR2(e, 1, 2);
+	uint32 InitArr[] = {1, 2};	
+	v2u E = V2uFromMemory(InitArr);
+	CHECK_VECTOR2(E, 1, 2);
 
-	uint32* px = ptr(e);
-	uint32* py = ptrY(e);
-	CHECK(*px == 1);
-	CHECK(*py == 2);
+	uint32* PX = Ptr(E);
+	uint32* PY = PtrY(E);
+	CHECK(*PX == 1);
+	CHECK(*PY == 2);
 }
 
-TEST_CASE("vec2u setters")
+TEST_CASE("v2u Setters")
 {
-	vec2u a;
-	a.setX(4);
-	a.setY(2);
-	CHECK_VECTOR2(a, 4, 2);
+	v2u A;
+	A.SetX(4);
+	A.SetY(2);
+	CHECK_VECTOR2(A, 4, 2);
 
-	vec2u b;
-	b.setY(2);
-	b.setX(4);
-	CHECK_VECTOR2(b, 4, 2);
+	v2u B;
+	B.SetY(2);
+	B.SetX(4);
+	CHECK_VECTOR2(B, 4, 2);
 }
 
-TEST_CASE("vec2u operations")
+TEST_CASE("v2u operations")
 {
-	vec2u a = makeVec2u(5, 4);
-	vec2u b = makeVec2u(1, 3);
+	v2u A = V2u(5, 4);
+	v2u B = V2u(1, 3);
 
-	LOG_VECTOR2(a);
-	LOG_VECTOR2(b);
+	v2u AddAsignmentRes = A;
+	AddAsignmentRes += B;
+	CHECK_VECTOR2(AddAsignmentRes, 6, 7);
+
+	v2u SubAsignmentRes = A;
+	SubAsignmentRes -= B;
+	CHECK_VECTOR2(SubAsignmentRes, 4, 1);
 	
-	vec2u addRes = a + b;
-	CHECK_VECTOR2(addRes, 6, 7);
+	v2u ScalarMulRes1 = A * 5;
+	CHECK_VECTOR2(ScalarMulRes1, 25, 20);
 	
-	vec2u subRes = a - b;
-	CHECK_VECTOR2(subRes, 4, 1);
-
-	vec2u addAsignmentRes = a;
-	addAsignmentRes += b;
-	CHECK_VECTOR2(addAsignmentRes, 6, 7);
-
-	vec2u subAsignmentRes = a;
-	subAsignmentRes -= b;
-	CHECK_VECTOR2(subAsignmentRes, 4, 1);
+	v2u ScalarMulRes2 = 5 * A;
+	CHECK_VECTOR2(ScalarMulRes2, 25, 20);
 	
-	vec2u scalarMulRes1 = a * 5;
-	CHECK_VECTOR2(scalarMulRes1, 25, 20);
-	
-	vec2u scalarMulRes2 = 5 * a;
-	CHECK_VECTOR2(scalarMulRes2, 25, 20);
-	
-	vec2u hadamardMulRes = hadamardMul(a, b); 
-	CHECK_VECTOR2(hadamardMulRes, 5, 12);
+	v2u HadamardMulRes = HadamardMul(A, B); 
+	CHECK_VECTOR2(HadamardMulRes, 5, 12);
 
-	vec2u minRes = min(a, b);
-	CHECK_VECTOR2(minRes, 1, 3);
+	v2u MinRes = Min(A, B);
+	CHECK_VECTOR2(MinRes, 1, 3);
 
-	vec2u maxRes = max(a, b);
-	CHECK_VECTOR2(maxRes, 5, 4);
+	v2u MaxRes = Max(A, B);
+	CHECK_VECTOR2(MaxRes, 5, 4);
 
-	CHECK(sumOfElements(b) == 4);
-	CHECK(length(b) == (uint32)sqrt(10));
-	CHECK(lengthSquared(b) == 10);
+	CHECK(SumOfElements(B) == 4);
+	CHECK(Length(B) == (uint32)sqrt(10));
+	CHECK(LengthSquared(B) == 10);
 
-	vec2u min = makeVec2u(2, 0);
-	vec2u max = makeVec2u(5, 3);
-	vec2u clampBRes = clamp(b, min, max);
-	CHECK_VECTOR2(clampBRes, 2, 3);
+	v2u Min = V2u(2, 0);
+	v2u Max = V2u(5, 3);
+	v2u ClampBRes = Clamp(B, Min, Max);
+	CHECK_VECTOR2(ClampBRes, 2, 3);
 }
 
-TEST_CASE("vec2u comparisons")
+TEST_CASE("v2u comparisons")
 {
-	vec2u a = makeVec2u(5, 5);
-	vec2u b = makeVec2u(3, 5);
-	vec2u c = makeVec2u(-2, 6);
+	v2u A = V2u(5, 5);
+	v2u B = V2u(3, 5);
+	v2u C = V2u(-2, 6);
 
-	CHECK(a == a);
-	CHECK(a != b);
+	CHECK(A == A);
+	CHECK(A != B);
 
-	vec2u eqMask = equalsMask(a, a);
-	CHECK((eqMask.x() && eqMask.y()));
-	eqMask = equalsMask(a, b);
-	CHECK((!eqMask.x() && eqMask.y()));
+	v2u EqMask = EqualsMask(A, A);
+	CHECK((EqMask.X() && EqMask.Y()));
+	EqMask = EqualsMask(A, B);
+	CHECK((!EqMask.X() && EqMask.Y()));
 
-	vec2u gtMask = greaterMask(a, b);
-	CHECK((gtMask.x() && !gtMask.y()));
+	v2u GTMask = GreaterMask(A, B);
+	CHECK((GTMask.X() && !GTMask.Y()));
 
-	vec2u geMask = greaterOrEqualMask(a, b);
-	CHECK((geMask.x() && geMask.y()));
-	geMask = greaterOrEqualMask(c, a);
-	CHECK((!geMask.x() && geMask.y()));
+	v2u GEMask = GreaterOrEqualMask(A, B);
+	CHECK((GEMask.X() && GEMask.Y()));
+	GEMask = GreaterOrEqualMask(C, A);
+	CHECK((!GEMask.X() && GEMask.Y()));
 
-	vec2u ltMask = lesserMask(c, b);
-	CHECK(ltMask.x());
-	CHECK(!ltMask.y());
+	v2u LTMask = LesserMask(C, B);
+	CHECK(LTMask.X());
+	CHECK(!LTMask.Y());
 
-	vec2u leMask = lesserOrEqualMask(b, a);
-	CHECK((leMask.x() && leMask.y()));
-	leMask = lesserOrEqualMask(c, b);
-	CHECK((leMask.x() && !leMask.y()));
+	v2u LEMask = LesserOrEqualMask(B, A);
+	CHECK((LEMask.X() && LEMask.Y()));
+	LEMask = LesserOrEqualMask(C, B);
+	CHECK((LEMask.X() && !LEMask.Y()));
 }
 
 

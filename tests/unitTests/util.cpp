@@ -12,97 +12,97 @@ using bool32 = int;
 static long long vElements;
 static char binaryOutput[128];
 
-#define logRegisterOf(v, name) \
-	_mm_store_ps((float*)(&vElements), v.m); \
-	for(int i = 0; i < 128; ++i) \
+#define LogRegisterOf(V, Name) \
+	_mm_store_ps((float*)(&VElements), V.M); \
+	for(int Bit = 0; Bit < 128; ++Bit) \
 	{ \
-		binaryOutput[i] = (vElements >> i) & 1 ? '1' : '0'; \
+		BinaryOutput[i] = (VElements >> i) & 1 ? '1' : '0'; \
 	} \
-	INFO(name << " (binary): " << std::string(binaryOutput)); 
+	INFO(name << " (binary): " << std::string(BinaryOutput)); 
 
-#define logIntRegisterOf(v, name) \
-	_mm_store_si128((__m128i*)(&vElements), v.m); \
-	for(int i = 0; i < 128; ++i) \
+#define LogIntRegisterOf(V, Name) \
+	_mm_store_si128((__m128i*)(&VElements), V.M); \
+	for(int Bit = 0; Bit < 128; ++Bit) \
 	{ \
-		binaryOutput[i] = (vElements >> i) & 1 ? '1' : '0'; \
+		BinaryOutput[Bit] = (VElements >> Bit) & 1 ? '1' : '0'; \
 	} \
-	INFO(name << " (binary): " << std::string(binaryOutput)); 
+	INFO(Name << " (binary): " << std::string(BinaryOutput)); 
 
-#define floatCmp(x) doctest::Approx(x).epsilon(0.01)
+#define FloatCmp(x) doctest::Approx(x).epsilon(0.01)
 
-#define CHECK4(a, b, c, d) CHECK(a); CHECK(b); CHECK(c); CHECK(d);
+#define CHECK4(A, B, C, D) CHECK(A); CHECK(B); CHECK(C); CHECK(D);
 
-#define LOG_VECTOR2(v) \
-	INFO("a == (" << v.x() << ", " << v.y() << ")");
+#define LOG_VECTOR2(V) \
+	INFO("a == (" << V.X() << ", " << V.Y() << ")");
 
-#define CHECK_VECTOR2(v, _x, _y) \
-	CHECK(v.x() == _x); CHECK(v.y() == _y);
+#define CHECK_VECTOR2(V, _X, _Y) \
+	CHECK(V.X() == _X); CHECK(V.Y() == _Y);
 
-#define CHECK_VECTOR2_APPROX(v, _x, _y) \
-	CHECK(v.x() == floatCmp(_x)); CHECK(v.y() == floatCmp(_y));
+#define CHECK_VECTOR2_APPROX(V, _X, _Y) \
+	CHECK(V.X() == FloatCmp(_X)); CHECK(V.Y() == FloatCmp(_Y));
 
-#define CHECK_VECTOR2_ARRAY(arr, _x, _y) \
-	CHECK(arr[0] == _x); CHECK(arr[1] == _y);
+#define CHECK_VECTOR2_ARRAY(Arr, _X, _Y) \
+	CHECK(Arr[0] == _X); CHECK(Arr[1] == _Y);
 
-#define CHECK_VECTOR2_ALL_ALIASES(_v, _x, _y) \
-	CHECK(_v.x() == _x); CHECK(_v.y() == _y); \
-	CHECK(_v.u() == _x); CHECK(_v.v() == _y); \
-	CHECK(_v.left() == _x); CHECK(_v.top() == _y); \
-	CHECK(_v.width() == _x); CHECK(_v.height() == _y);
+#define CHECK_VECTOR2_ALL_ALIASES(_V, _X, _Y) \
+	CHECK(_V.X() == _X); CHECK(_V.Y() == _Y); \
+	CHECK(_V.U() == _X); CHECK(_V.V() == _Y); \
+	CHECK(_V.Left() == _X); CHECK(_V.Top() == _Y); \
+	CHECK(_V.Width() == _X); CHECK(_V.Height() == _Y);
 
-#define CHECK_VECTOR4(_v, _x, _y, _z, _w) {\
-	vec4 _res = _v; \
-	CHECK4(_res.x() == _x, _res.y() == _y, _res.z() == _z, _res.w() == _w) };
+#define CHECK_VECTOR4(_V, _X, _Y, _Z, _W) {\
+	v4 _Res = _V; \
+	CHECK4(_Res.X() == _X, _Res.Y() == _Y, _Res.Z() == _Z, _Res.W() == _W) };
 
-#define CHECK_VECTOR4_APPROX(_v, _x, _y, _z, _w) { \
-	vec4 _res = _v; \
-	CHECK4(_res.x() == floatCmp(_x), _res.y() == floatCmp(_y), _res.z() == floatCmp(_z), _res.w() == floatCmp(_w)); }
+#define CHECK_VECTOR4_APPROX(_V, _X, _Y, _Z, _W) { \
+	v4 _Res = _V; \
+	CHECK4(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z), _Res.W() == FloatCmp(_W)); }
 
-#define CHECK_VECTOR4_1(v, a) \
-	CHECK4(v.x() == a, v.y() == a, v.z() == a, v.w() == a);
+#define CHECK_VECTOR4_1(V, A) \
+	CHECK4(V.X() == A, V.Y() == A, V.Z() == A, V.W() == A);
 
-#define CHECK_VECTOR4_ARRAY(arr, _x, _y, _z, _w) \
-	CHECK4(arr[0] == _x, arr[1] == _y, arr[2] == _z, arr[3] == _w);
+#define CHECK_VECTOR4_ARRAY(Arr, _X, _Y, _Z, _W) \
+	CHECK4(Arr[0] == _X, Arr[1] == _Y, Arr[2] == _Z, Arr[3] == _W);
 
-#define CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(v, _x, _y, _z, _w) \
-	CHECK4(v.x() == _x, v.y() == _y, v.z() == _z, v.w() == _w); \
-	CHECK4(v.r() == _x, v.g() == _y, v.b() == _z, v.a() == _w);
+#define CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
+	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
+	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
 
-#define CHECK_ALL_MATRIX_ARRAY_ENTRIES(arr, a, b, c, d, \
-                                            e, f, g, h, \
-                                            i, j, k, l,\
-                                            m, n, o, p) { \
-	CHECK4(arr[0] == a, arr[1] == e, arr[2] == i, arr[3] == m); \
-	CHECK4(arr[4] == b, arr[5] == f, arr[6] == j, arr[7] == n); \
-	CHECK4(arr[8] == c, arr[9] == g, arr[10] == k, arr[11] == o); \
-	CHECK4(arr[12] == d, arr[13] == h, arr[14] == l, arr[15] == p); }\
+#define CHECK_ALL_MATRIX_ARRAY_ENTRIES(Arr, A, B, C, D, \
+                                            E, F, G, H, \
+                                            I, J, K, L,\
+                                            M, N, O, P) { \
+	CHECK4(Arr[0] == A, Arr[1] == E, Arr[2] == I, Arr[3] == M); \
+	CHECK4(Arr[4] == B, Arr[5] == F, Arr[6] == J, Arr[7] == N); \
+	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
+	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
 
-#define CHECK_ALL_MATRIX_ENTRIES(mat, a, b, c, d, \
-                                      e, f, g, h, \
-                                      i, j, k, l,\
-                                      m, n, o, p) { \
-	mat4 _mat = mat; \
-	float* arr = (float*)(&_mat); \
-	CHECK4(arr[0] == a, arr[1] == e, arr[2] == i, arr[3] == m); \
-	CHECK4(arr[4] == b, arr[5] == f, arr[6] == j, arr[7] == n); \
-	CHECK4(arr[8] == c, arr[9] == g, arr[10] == k, arr[11] == o); \
-	CHECK4(arr[12] == d, arr[13] == h, arr[14] == l, arr[15] == p); }\
+#define CHECK_ALL_MATRIX_ENTRIES(Mat, A, B, C, D, \
+                                      E, F, G, H, \
+                                      I, J, K, L,\
+                                      M, N, O, P) { \
+	mat4 _Mat = Mat; \
+	float* Arr = (float*)(&_Mat); \
+	CHECK4(Arr[0] == A, Arr[1] == E, Arr[2] == I, Arr[3] == M); \
+	CHECK4(Arr[4] == B, Arr[5] == F, Arr[6] == J, Arr[7] == N); \
+	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
+	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
 
-#define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(mat, a, b, c, d) {\
-	mat4 _mat = mat; \
-	float* arr = (float*)(&_mat); \
-	CHECK4(arr[0] == a,   arr[5] == b, arr[10] == c,  arr[15] == d);} \
+#define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat, A, B, C, D) {\
+	mat4 _Mat = Mat; \
+	float* Arr = (float*)(&_Mat); \
+	CHECK4(Arr[0] == A,   Arr[5] == B, Arr[10] == C,  Arr[15] == D);} \
 
-#define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(mat, d) \
-	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(mat, d, d, d, d)
+#define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(Mat, D) \
+	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat, D, D, D, D)
 
-#define PRINT_MAT4(mat) \
-	mat4 _mat = mat; \
-	float* arr = (float*)(&_mat); \
-	INFO(arr[0] << ", " << arr[4] << ", " << arr[8] << ", " << arr[12]); \
-    INFO(arr[1] << ", " << arr[5] << ", " << arr[9] << ", " << arr[13]); \
-	INFO(arr[2] << ", " << arr[6] << ", " << arr[10] << ", " << arr[14]); \
-    INFO(arr[3] << ", " << arr[7] << ", " << arr[11] << ", " << arr[15]); \
+#define PRINT_MAT4(Mat) \
+	mat4 _Mat = Mat; \
+	float* Arr = (float*)(&_Mat); \
+	INFO(Arr[0] << ", " << Arr[4] << ", " << Arr[8] << ", " << Arr[12]); \
+    INFO(Arr[1] << ", " << Arr[5] << ", " << Arr[9] << ", " << Arr[13]); \
+	INFO(Arr[2] << ", " << Arr[6] << ", " << Arr[10] << ", " << Arr[14]); \
+    INFO(Arr[3] << ", " << Arr[7] << ", " << Arr[11] << ", " << Arr[15]); \
 
 
 

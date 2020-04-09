@@ -9,150 +9,150 @@
 
 using namespace fm;
 
-TEST_CASE("vec4 constructors and getters") 
+TEST_CASE("v4 construction and getters") 
 {
-	vec4 a = makeVec4(1.f, 2.f, 3.f, 4.f);		
-	CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(a, 1.f, 2.f, 3.f, 4.f);
+	v4 A = V4(1.f, 2.f, 3.f, 4.f);		
+	CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(A, 1.f, 2.f, 3.f, 4.f);
 
-	float storage[4];
-	store(storage, a);
-	CHECK_VECTOR4_ARRAY(storage, 1.f, 2.f, 3.f, 4.f);
-	store16ByteAligned(storage, a);
-	CHECK_VECTOR4_ARRAY(storage, 1.f, 2.f, 3.f, 4.f);
+	float Storage[4];
+	Store(Storage, A);
+	CHECK_VECTOR4_ARRAY(Storage, 1.f, 2.f, 3.f, 4.f);
+	Store16ByteAligned(Storage, A);
+	CHECK_VECTOR4_ARRAY(Storage, 1.f, 2.f, 3.f, 4.f);
 
-	vec4 b = makeVec4(5.f);
-	CHECK_VECTOR4(b, 5.f, 5.f, 5.f, 5.f); 
+	v4 B = V4(5.f);
+	CHECK_VECTOR4(B, 5.f, 5.f, 5.f, 5.f); 
 
-	vec4 c = makeZeroVec4();
-	CHECK_VECTOR4(c, 0.f, 0.f, 0.f, 0.f); 
+	v4 C = V4();
+	CHECK_VECTOR4(C, 0.f, 0.f, 0.f, 0.f); 
 
-	float arr[4] = {1.f, 2.f, 3.f, 4.f};
-	vec4 d = makeVec4FromMemory(arr);
-	CHECK_VECTOR4(d, 1.f, 2.f, 3.f, 4.f);
+	float Arr[4] = {1.f, 2.f, 3.f, 4.f};
+	v4 D = V4FromMemory(Arr);
+	CHECK_VECTOR4(D, 1.f, 2.f, 3.f, 4.f);
 
-	vec4 e = makeVec4(makeVec3(1.f, 2.f, 3.f), 4.f);
-	CHECK_VECTOR4(e, 1.f, 2.f, 3.f, 4.f);
+	v4 E = V4(V3(1.f, 2.f, 3.f), 4.f);
+	CHECK_VECTOR4(E, 1.f, 2.f, 3.f, 4.f);
 
-	float* px = ptr(e);
-	float* py = ptrY(e);
-	float* pz = ptrZ(e);
-	float* pw = ptrW(e);
-	CHECK(*px == 1.f);
-	CHECK(*py == 2.f);
-	CHECK(*pz == 3.f);
-	CHECK(*pw == 4.f);
+	float* PX = Ptr(E);
+	float* PY = PtrY(E);
+	float* PZ = PtrZ(E);
+	float* PW = PtrW(E);
+	CHECK(*PX == 1.f);
+	CHECK(*PY == 2.f);
+	CHECK(*PZ == 3.f);
+	CHECK(*PW == 4.f);
 }
 
-TEST_CASE("vec4 setters")
+TEST_CASE("v4 setters")
 {
-	vec4 a;
-	a.setX(1.f);
-	a.setY(2.f);
-	a.setZ(3.f);
-	a.setW(4.f);
-	CHECK_VECTOR4(a, 1.f, 2.f, 3.f, 4.f);
+	v4 A;
+	A.SetX(1.f);
+	A.SetY(2.f);
+	A.SetZ(3.f);
+	A.SetW(4.f);
+	CHECK_VECTOR4(A, 1.f, 2.f, 3.f, 4.f);
 	
-	vec4 b;
-	b.setZ(3.f);
-	b.setX(1.f);
-	b.setW(4.f);
-	b.setY(2.f);
-	CHECK_VECTOR4(b, 1.f, 2.f, 3.f, 4.f);
+	v4 B;
+	B.SetZ(3.f);
+	B.SetX(1.f);
+	B.SetW(4.f);
+	B.SetY(2.f);
+	CHECK_VECTOR4(B, 1.f, 2.f, 3.f, 4.f);
 }
 
-TEST_CASE("vec4 operations")
+TEST_CASE("v4 operations")
 {
-	vec4 a = makeVec4(1.f, 3.f, 5.f, -7.f);
-	vec4 b = makeVec4(2.f, 4.f, -6.f, 8.f);
+	v4 A = V4(1.f, 3.f, 5.f, -7.f);
+	v4 B = V4(2.f, 4.f, -6.f, 8.f);
 
-	vec4 addRes = a + b;
-	CHECK_VECTOR4(addRes, 3.f, 7.f, -1.f, 1.f);
+	v4 AddRes = A + B;
+	CHECK_VECTOR4(AddRes, 3.f, 7.f, -1.f, 1.f);
 
-	vec4 subRes = a - b;
-	CHECK_VECTOR4(subRes, -1.f, -1.f, 11.f, -15.f);
+	v4 SubRes = A - B;
+	CHECK_VECTOR4(SubRes, -1.f, -1.f, 11.f, -15.f);
 
-	vec4 addAsignmentRes = a;
-	addAsignmentRes += b;
-	CHECK_VECTOR4(addAsignmentRes, 3.f, 7.f, -1.f, 1.f);
-	CHECK(addAsignmentRes.x() == 3.f);
-	CHECK(addAsignmentRes.y() == 7.f);
-	CHECK(addAsignmentRes.z() == -1.f);
-	CHECK(addAsignmentRes.w() == 1.f);
+	v4 AddAsignmentRes = A;
+	AddAsignmentRes += B;
+	CHECK_VECTOR4(AddAsignmentRes, 3.f, 7.f, -1.f, 1.f);
+	CHECK(AddAsignmentRes.X() == 3.f);
+	CHECK(AddAsignmentRes.Y() == 7.f);
+	CHECK(AddAsignmentRes.Z() == -1.f);
+	CHECK(AddAsignmentRes.W() == 1.f);
 
-	vec4 subAssignmentRes = a;
-	subAssignmentRes -= b;
-	CHECK_VECTOR4(subAssignmentRes, -1.f, -1.f, 11.f, -15.f);
+	v4 SubAssignmentRes = A;
+	SubAssignmentRes -= B;
+	CHECK_VECTOR4(SubAssignmentRes, -1.f, -1.f, 11.f, -15.f);
 
-	vec4 scalarMulRes1 = a * 2.f;
-	CHECK_VECTOR4(scalarMulRes1, 2.f, 6.f, 10.f, -14.f);
+	v4 ScalarMulRes1 = A * 2.f;
+	CHECK_VECTOR4(ScalarMulRes1, 2.f, 6.f, 10.f, -14.f);
 
-	vec4 scalarMulRes2 = 2.f * a;
-	CHECK_VECTOR4(scalarMulRes2, 2.f, 6.f, 10.f, -14.f);
+	v4 ScalarMulRes2 = 2.f * A;
+	CHECK_VECTOR4(ScalarMulRes2, 2.f, 6.f, 10.f, -14.f);
 
-	vec4 scalarDivRes = a / 2.f;
-	CHECK_VECTOR4(scalarDivRes, 0.5f, 1.5f, 2.5f, -3.5f);
+	v4 ScalarDivRes = A / 2.f;
+	CHECK_VECTOR4(ScalarDivRes, 0.5f, 1.5f, 2.5f, -3.5f);
 
-	vec4 mulRes = hadamardMul(a, b);
-	CHECK_VECTOR4(mulRes, 2.f, 12.f, -30.f, -56.f);
+	v4 MulRes = HadamardMul(A, B);
+	CHECK_VECTOR4(MulRes, 2.f, 12.f, -30.f, -56.f);
 
-	vec4 divRes = hadamardDiv(a, b);
-	CHECK_VECTOR4_APPROX(divRes, 0.5f, 0.75f, -0.83, -0.875);
+	v4 DivRes = HadamardDiv(A, B);
+	CHECK_VECTOR4_APPROX(DivRes, 0.5f, 0.75f, -0.83, -0.875);
 
-	vec4 negatedB = -b;
-	CHECK_VECTOR4(negatedB, -2.f, -4.f, 6.f, -8.f);
+	v4 NegatedB = -B;
+	CHECK_VECTOR4(NegatedB, -2.f, -4.f, 6.f, -8.f);
 
-	vec4 minRes = min(a, b);
-	CHECK_VECTOR4(minRes, 1.f, 3.f, -6.f, -7.f);
+	v4 MinRes = Min(A, B);
+	CHECK_VECTOR4(MinRes, 1.f, 3.f, -6.f, -7.f);
 
-	vec4 maxRes = max(a, b);
-	CHECK_VECTOR4(maxRes, 2.f, 4.f, 5.f, 8.f);
+	v4 MaxRes = Max(A, B);
+	CHECK_VECTOR4(MaxRes, 2.f, 4.f, 5.f, 8.f);
 
-	vec4 absoluteB = abs(b);
-	CHECK_VECTOR4(absoluteB, 2.f, 4.f, 6.f, 8.f);
+	v4 AbsoluteB = Abs(B);
+	CHECK_VECTOR4(AbsoluteB, 2.f, 4.f, 6.f, 8.f);
 
-	vec4 normalizedB = normalize(b);
-	CHECK_VECTOR4_APPROX(normalizedB,
-		b.x() / sqrt(120), b.y() / sqrt(120), b.z() / sqrt(120), b.w() / sqrt(120));
+	v4 NormalizedB = Normalize(B);
+	CHECK_VECTOR4_APPROX(NormalizedB,
+		B.X() / sqrt(120), B.Y() / sqrt(120), B.Z() / sqrt(120), B.W() / sqrt(120));
 
-	CHECK(dot(a, b) == -72.f);
-	CHECK(sumOfElements(b) == 8.f);
-	CHECK(length(b) == floatCmp(sqrt(120.f)));
-	CHECK(lengthSquared(b) == 120.f);
+	CHECK(Dot(A, B) == -72.f);
+	CHECK(SumOfElements(B) == 8.f);
+	CHECK(Length(B) == FloatCmp(sqrt(120.f)));
+	CHECK(LengthSquared(B) == 120.f);
 
-	vec4 c = makeVec4(1.f, 3.f, 5.f, -7.f);
-	vec4 min = makeVec4(2.f, 2.f, 2.f, 2.f);
-	vec4 max = makeVec4(5.f, 5.f, 3.f, 2.f);
-	vec4 clampRes = clamp(c, min, max);
-	CHECK_VECTOR4(clampRes, 2.f, 3.f, 3.f, 2.f);
+	v4 C = V4(1.f, 3.f, 5.f, -7.f);
+	v4 Min = V4(2.f, 2.f, 2.f, 2.f);
+	v4 Max = V4(5.f, 5.f, 3.f, 2.f);
+	v4 ClampRes = Clamp(C, Min, Max);
+	CHECK_VECTOR4(ClampRes, 2.f, 3.f, 3.f, 2.f);
 
-	vec4 g = makeVec4(0.f, 2.f, 3.f, 0.f);
-	vec4 h = makeVec4(4.f, 5.f, 6.f, 100.f);
-	auto lerpRes = lerp(g, h, 0.5f);
-	CHECK_VECTOR4(lerpRes, 2.f, 3.5f, 4.5f, 50.f);
-	lerpRes = lerp(h, g, 0.5f);
-	CHECK_VECTOR4(lerpRes, 2.f, 3.5f, 4.5f, 50.f);
+	v4 G = V4(0.f, 2.f, 3.f, 0.f);
+	v4 H = V4(4.f, 5.f, 6.f, 100.f);
+	auto LerpRes = Lerp(G, H, 0.5f);
+	CHECK_VECTOR4(LerpRes, 2.f, 3.5f, 4.5f, 50.f);
+	LerpRes = Lerp(H, G, 0.5f);
+	CHECK_VECTOR4(LerpRes, 2.f, 3.5f, 4.5f, 50.f);
 }
 
-TEST_CASE("vec4 comparisons")
+TEST_CASE("v4 Comparisons")
 {
-	vec4 a = makeVec4(1.f, 2.f, 4.f, 5.f);
-	vec4 b = makeVec4(1.f, 3.f, -5.f, 5.f);
+	v4 A = V4(1.f, 2.f, 4.f, 5.f);
+	v4 B = V4(1.f, 3.f, -5.f, 5.f);
 
-	CHECK(a == a);
-	CHECK(a != b);
+	CHECK(A == A);
+	CHECK(A != B);
 
-	auto eqMask = equalsMask(a, b);
-	CHECK((eqMask.x() && !eqMask.y() && !eqMask.z() && eqMask.w()));
+	auto EqMask = EqualsMask(A, B);
+	CHECK((EqMask.X() && !EqMask.Y() && !EqMask.Z() && EqMask.W()));
 
-	auto gtMask = greaterMask(a, b);
-	CHECK((!gtMask.x() && !gtMask.y() && gtMask.z() && !gtMask.w()));
+	auto GTMask = GreaterMask(A, B);
+	CHECK((!GTMask.X() && !GTMask.Y() && GTMask.Z() && !GTMask.W()));
 
-	auto geMask = greaterOrEqualMask(a, b);
-	CHECK((geMask.x() && !geMask.y() && geMask.z() && geMask.w()));
+	auto GEMask = GreaterOrEqualMask(A, B);
+	CHECK((GEMask.X() && !GEMask.Y() && GEMask.Z() && GEMask.W()));
 
-	auto ltMask = lesserMask(a, b);
-	CHECK((!ltMask.x() && ltMask.y() && !ltMask.z() && !ltMask.w()));
+	auto LTMask = LesserMask(A, B);
+	CHECK((!LTMask.X() && LTMask.Y() && !LTMask.Z() && !LTMask.W()));
 
-	auto leMask = lesserOrEqualMask(a, b);
-	CHECK((leMask.x() && leMask.y() && !leMask.z() && leMask.w()));
+	auto LEMask = LesserOrEqualMask(A, B);
+	CHECK((LEMask.X() && LEMask.Y() && !LEMask.Z() && LEMask.W()));
 }
