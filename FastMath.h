@@ -1,7 +1,7 @@
 /*
 FAST MATH
 C++ single header math libary
-https://githuB.com/Czapa10/Fast-Math
+https://github.com/Czapa10/Fast-Math
 
 Written by Grzegorz "Czapa" Bednorz
 
@@ -58,7 +58,7 @@ FM_INLINE double RadiansToDegrees(double Radians);
 FM_INLINE float DegreesToRadians(float Degrees);
 FM_INLINE double DegreesToRadians(double Degrees);
 
-struct v2
+struct alignas(16) v2
 {
 	__m128 M;
 
@@ -126,7 +126,7 @@ FM_INLINE v2 FM_CALL GreaterOrEqualMask(v2, v2);
 FM_INLINE v2 FM_CALL LesserMask(v2, v2);
 FM_INLINE v2 FM_CALL LesserOrEqualMask(v2, v2);
 
-struct v2d
+struct alignas(16) v2d
 {
 	__m128d M;
 
@@ -193,7 +193,7 @@ FM_INLINE v2d FM_CALL GreaterOrEqualMask(v2d, v2d);
 FM_INLINE v2d FM_CALL LesserMask(v2d, v2d);
 FM_INLINE v2d FM_CALL LesserOrEqualMask(v2d, v2d);
 
-struct v2i
+struct alignas(16) v2i
 {
 	__m128i M;
 
@@ -254,7 +254,7 @@ FM_INLINE v2i FM_CALL LesserMask(v2i, v2i);
 FM_INLINE v2i FM_CALL LesserOrEqualMask(v2i, v2i);
 // TODO: Add HadamardDiv() and operator/ - Maybe I can do that using cast instructions?
 
-struct v2u
+struct alignas(16) v2u
 {
 	__m128i M;
 
@@ -314,7 +314,7 @@ FM_INLINE v2u FM_CALL LesserMask(v2u, v2u);
 FM_INLINE v2u FM_CALL LesserOrEqualMask(v2u, v2u);
 // TODO: Add HadamardDiv() and operator/
 
-struct v3
+struct alignas(16) v3
 {
 	__m128 M;
 
@@ -498,7 +498,7 @@ FM_INLINE v3 FM_CALL GreaterOrEqualMask(v3, v3);
 FM_INLINE v3 FM_CALL LesserMask(v3, v3);
 FM_INLINE v3 FM_CALL LesserOrEqualMask(v3, v3);
 
-struct v4
+struct alignas(16) v4
 {
 	__m128 M;
 
@@ -563,7 +563,7 @@ FM_INLINE v4 FM_CALL LesserMask(v4, v4);
 FM_INLINE v4 FM_CALL LesserOrEqualMask(v4, v4);
 
 
-struct mat4
+struct alignas(16) mat4
 {
 	__m128 Columns[4];
 
