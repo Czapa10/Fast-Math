@@ -590,12 +590,14 @@ FM_INLINE mat4 FM_CALL Mat4Diagonal(float Diag);
 FM_INLINE mat4 FM_CALL Mat4Diagonal(float DiagX, float DiagY, float DiagZ, float DiagW); 
 FM_INLINE mat4 FM_CALL Mat4Diagonal(v4 Diag); 
 FM_INLINE mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4); 
+FM_INLINE mat4 FM_CALL Mat4FromColumns(v3 Col1, v3 Col2, v3 Col3, v3 Col4); 
 FM_INLINE mat4 FM_CALL Mat4FromColumns(
 	float E11, float E21, float E31, float E41,
     float E12, float E22, float E32, float E42,
     float E13, float E23, float E33, float E43,
     float E14, float E24, float E34, float E44);
 FM_INLINE mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4); 
+FM_INLINE mat4 FM_CALL Mat4FromRows(v3 Row1, v3 Row2, v3 Row3, v3 Row4); 
 FM_INLINE mat4 FM_CALL Mat4FromRows(
 	float E11, float E12, float E13, float E14,
     float E21, float E22, float E23, float E24,
@@ -605,7 +607,7 @@ FM_INLINE mat4 FM_CALL Mat4FromRows(
 FM_INLINE void FM_CALL Store(float* Mem, mat4);
 FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, mat4);
 
-FM_INLINE float* ptr(const mat4& V) { return (float*)(&V); }
+FM_INLINE float* Ptr(const mat4& V) { return (float*)(&V); }
 
 FM_INLINE mat4 FM_CALL operator+(mat4, mat4);
 FM_INLINE mat4 FM_CALL operator-(mat4, mat4);
@@ -660,8 +662,9 @@ FM_INLINE mat4 FM_CALL ShearYAxis(mat4, float X, float Z);
 FM_INLINE mat4 FM_CALL ShearZAxis(mat4, float X, float Y); 
 FM_INLINE mat4 FM_CALL Shear(mat4, float XY, float XZ, float YX, float YZ, float ZX, float ZY);
 
-mat4 Mat4Orthographic(float Left, float Right, float bottom, float Top, float near, float Far);
+mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far);
 mat4 Mat4Perspective(float FOV, float AspectRatio, float near, float Far);
+mat4 LookAt(v3 Eye, v3 At, v3 Up = V3(0.f, 1.f, 0.f));
 
 /* TODO:
 reflect
@@ -899,7 +902,7 @@ FM_INLINE float FM_CALL SumOfElements(v2 V) {
 	return V.X() + V.Y();
 }
 FM_INLINE float FM_CALL Length(v2 V) {
-	return sqrt(Dot(V, V));
+	return sqrtf(Dot(V, V));
 }
 FM_INLINE float FM_CALL LengthSquared(v2 V) {
 	return Dot(V, V);
@@ -1719,7 +1722,7 @@ FM_INLINE float FM_CALL SumOfElements(v3 V) {
 	return V.X() + V.Y() + V.Z();
 }
 FM_INLINE float FM_CALL Length(v3 V) {
-	return sqrt(Dot(V, V));
+	return sqrtf(Dot(V, V));
 }
 FM_INLINE float FM_CALL LengthSquared(v3 V) {
 	return Dot(V, V);
@@ -1883,7 +1886,7 @@ FM_INLINE float FM_CALL SumOfElements(v4 V) {
 	return V.X() + V.Y() + V.Z() + V.W();
 }
 FM_INLINE float FM_CALL Length(v4 V) {
-	return sqrt(Dot(V, V));
+	return sqrtf(Dot(V, V));
 }
 FM_INLINE float FM_CALL LengthSquared(v4 V) {
 	return Dot(V, V);
@@ -2087,6 +2090,15 @@ FM_INLINE mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4) {
 	Res.Columns[3] = Col4.M;
 	return Res;
 }
+FM_INLINE mat4 FM_CALL Mat4FromColumns(v3 Col1, v3 Col2, v3 Col3, v3 Col4) {
+	mat4 Res;
+	Res.Columns[0] = Col1.M;
+	Res.Columns[1] = Col2.M;
+	Res.Columns[2] = Col3.M;
+	Res.Columns[3] = Col4.M;
+	Res.SetRow(3, 0.f, 0.f, 0.f, 1.f);
+	return Res;
+}
 FM_INLINE mat4 FM_CALL Mat4FromColumns(
 	float E11, float E21, float E31, float E41,
     float E12, float E22, float E32, float E42,
@@ -2106,6 +2118,14 @@ FM_INLINE mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4) {
 	Res.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
 	Res.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
 	Res.Columns[3] = _mm_setr_ps(Row1.W(), Row2.W(), Row3.W(), Row4.W());
+	return Res;
+}
+FM_INLINE mat4 FM_CALL Mat4FromRows(v3 Row1, v3 Row2, v3 Row3, v3 Row4) {
+	mat4 Res;
+	Res.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
+	Res.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
+	Res.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
+	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, 1.f);
 	return Res;
 }
 FM_INLINE mat4 FM_CALL Mat4FromRows(
@@ -2303,8 +2323,8 @@ FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float Axi
 	AxisX = Normalized.X();
 	AxisY = Normalized.Y();
 	AxisZ = Normalized.Z();
-	float SinTheta = sin(Radians);
-	float CosTheta = cos(Radians);
+	float SinTheta = sinf(Radians);
+	float CosTheta = cosf(Radians);
 	float CosVal = 1.f - CosTheta;
 	return Mat4FromColumns(
 		(AxisX * AxisX * CosVal) + CosTheta,
@@ -2327,21 +2347,21 @@ FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, v3 Axis) {
 FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisRadians(float R) {
 	return Mat4FromRows(
 		1.f, 0.f, 0.f, 0.f,
-		0.f, cos(R), -sin(R), 0.f,
-		0.f, sin(R), cos(R), 0.f,
+		0.f, cosf(R), -sinf(R), 0.f,
+		0.f, sinf(R), cosf(R), 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
 FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisRadians(float R) {
 	return Mat4FromRows(
-		cos(R), 0.f, sin(R), 0.f,
+		cosf(R), 0.f, sinf(R), 0.f,
 		0.f, 1.f, 0.f, 0.f,
-		-sin(R), 0.f, cos(R), 0.f,
+		-sinf(R), 0.f, cosf(R), 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
 FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisRadians(float R) {
 	return Mat4FromRows(
-		cos(R), -sin(R), 0.f, 0.f,
-		sin(R), cos(R), 0.f, 0.f,
+		cosf(R), -sinf(R), 0.f, 0.f,
+		sinf(R), cosf(R), 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
@@ -2420,8 +2440,7 @@ mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Ne
 		0.f, 0.f, -2.f / FN, -((Far + Near) / FN),
 		0.f, 0.f, 0.f, 1.f);
 }
-mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far)
-{
+mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far) {
 	float Cotangent = 1.f / tanf(FOV * FM_PI32 / 360.f);
 	float NF = Near - Far;
 		
@@ -2432,6 +2451,12 @@ mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far)
 		(Near + Far) / NF,
 		(2 * Near * Far) / NF,
 		0.f, 0.f, -1.f, 0.f);
+}
+mat4 LookAt(v3 Eye, v3 At, v3 Up) {
+	v3 Forward = Normalize(Eye - At);
+	v3 Right = Cross(Forward, Up); // TODO(docs): We assume that Up is normalized
+	Up = Cross(Forward, Right);
+	return Mat4FromColumns(Right, Up, Forward, Eye);
 }
 
 } // !namespace fm

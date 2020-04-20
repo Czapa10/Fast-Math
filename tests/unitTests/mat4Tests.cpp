@@ -21,17 +21,33 @@ TEST_CASE("mat4 construction and Getters")
 	A = Mat4Diagonal(Diagonal);
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(A, 1.f, 2.f, 3.f, 4.f);
 
-	v4 Row1 = V4(1.f, 2.f, 3.f, 4.f);
-	v4 Row2 = V4(5.f, 6.f, 7.f, 8.f);
-	v4 Row3 = V4(9.f, 10.f, 11.f, 12.f);
-	v4 Row4 = V4(13.f, 14.f, 15.f, 16.f);
-	A = Mat4FromRows(Row1, Row2, Row3, Row4);
-	CHECK_ALL_MATRIX_ENTRIES(A,
-		1.f, 2.f, 3.f, 4.f,
-		5.f, 6.f, 7.f, 8.f,
-		9.f, 10.f, 11.f, 12.f,
-		13.f, 14.f, 15.f, 16.f
-	);
+	{
+		v4 Row1 = V4(1.f, 2.f, 3.f, 4.f);
+		v4 Row2 = V4(5.f, 6.f, 7.f, 8.f);
+		v4 Row3 = V4(9.f, 10.f, 11.f, 12.f);
+		v4 Row4 = V4(13.f, 14.f, 15.f, 16.f);
+		A = Mat4FromRows(Row1, Row2, Row3, Row4);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 2.f, 3.f, 4.f,
+			5.f, 6.f, 7.f, 8.f,
+			9.f, 10.f, 11.f, 12.f,
+			13.f, 14.f, 15.f, 16.f
+		);
+	}
+
+	{
+		v3 Row1 = V3(1.f, 2.f, 3.f);
+		v3 Row2 = V3(4.f, 5.f, 6.f);
+		v3 Row3 = V3(7.f, 8.f, 9.f);
+		v3 Row4 = V3(10.f, 11.f, 12.f);
+		A = Mat4FromRows(Row1, Row2, Row3, Row4);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 2.f, 3.f, 0.f,
+			4.f, 5.f, 6.f, 0.f,
+			7.f, 8.f, 9.f, 0.f,
+			10.f, 11.f, 12.f, 1.f
+		);
+	}
 
 	A = Mat4FromRows(
 		1.f, 2.f, 3.f, 4.f,
@@ -58,17 +74,32 @@ TEST_CASE("mat4 construction and Getters")
 
 	CHECK_VECTOR4(A.GetMainDiagonal(), 1.f, 6.f, 11.f, 16.f);
 
-	v4 Col1 = V4(1.f, 2.f, 3.f, 4.f);
-	v4 Col2 = V4(5.f, 6.f, 7.f, 8.f);
-	v4 Col3 = V4(9.f, 10.f, 11.f, 12.f);
-	v4 Col4 = V4(13.f, 14.f, 15.f, 16.f);
-	A = Mat4FromColumns(Col1, Col2, Col3, Col4);
-	CHECK_ALL_MATRIX_ENTRIES(A,
-		1.f, 5.f, 9.f,  13.f,
-		2.f, 6.f, 10.f, 14.f,
-		3.f, 7.f, 11.f, 15.f,
-		4.f, 8.f, 12.f, 16.f
-	);
+	{
+		v4 Col1 = V4(1.f, 2.f, 3.f, 4.f);
+		v4 Col2 = V4(5.f, 6.f, 7.f, 8.f);
+		v4 Col3 = V4(9.f, 10.f, 11.f, 12.f);
+		v4 Col4 = V4(13.f, 14.f, 15.f, 16.f);
+		A = Mat4FromColumns(Col1, Col2, Col3, Col4);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 5.f, 9.f,  13.f,
+			2.f, 6.f, 10.f, 14.f,
+			3.f, 7.f, 11.f, 15.f,
+			4.f, 8.f, 12.f, 16.f
+		);
+	}
+	{
+		v3 Col1 = V3(1.f, 2.f, 3.f);
+		v3 Col2 = V3(5.f, 6.f, 7.f);
+		v3 Col3 = V3(9.f, 10.f, 11.f);
+		v3 Col4 = V3(13.f, 14.f, 15.f);
+		A = Mat4FromColumns(Col1, Col2, Col3, Col4);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 5.f, 9.f,  13.f,
+			2.f, 6.f, 10.f, 14.f,
+			3.f, 7.f, 11.f, 15.f,
+			0.f, 0.f, 0.f, 1.f
+		);
+	}
 
 	A = Mat4FromColumns(
 		1.f, 2.f, 3.f, 4.f,
@@ -99,8 +130,7 @@ TEST_CASE("mat4 construction and Getters")
 		4.f, 8.f, 12.f, 16.f
 	);
 
-	float* P = ptr(A);
-	CHECK(*P == 1.f);
+	CHECK(*Ptr(A) == 1.f);
 }
 
 TEST_CASE("mat4 setters and Swaps")
@@ -346,4 +376,15 @@ TEST_CASE("mat4 Perspective projection")
 
 	V = V4(5.0f, 5.0f, -5.0f, 1.f);
 	CHECK_VECTOR4(Persp * V, 2.5f, 5.f, -5.f, 5.f);
+}
+
+TEST_CASE("mat4 look at")
+{
+	mat4 ViewMat = LookAt(V3(0.f), V3(0.f, 0.f, 5.f));
+	v4 P = V4(0.f, 2.f, 5.f, 1.f);
+	v4 Res = ViewMat * P;
+	CHECK4(Res.X() == 0.f, Res.Y() == -2.f, Res.Z() == -5.f, Res.W() == 1.f);
+
+	// TODO: Why CHECK_VECTOR4 macro doesn't work here !?
+	// TODO: Make more tests for look at function
 }
