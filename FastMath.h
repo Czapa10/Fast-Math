@@ -84,6 +84,18 @@ struct alignas(16) v2
 	FM_INLINE v2 FM_CALL UU() const { return XX(); }
 	FM_INLINE v2 FM_CALL VV() const { return YY(); }
 #endif
+
+	FM_INLINE void FM_CALL AddX(float);
+	FM_INLINE void FM_CALL AddY(float);
+
+	FM_INLINE void FM_CALL SubX(float);
+	FM_INLINE void FM_CALL SubY(float);
+
+	FM_INLINE void FM_CALL MulX(float);
+	FM_INLINE void FM_CALL MulY(float);
+
+	FM_INLINE void FM_CALL DivX(float);
+	FM_INLINE void FM_CALL DivY(float);
 };
 
 FM_INLINE v2 FM_CALL V2FromMemory(const float*); 
@@ -150,6 +162,18 @@ struct alignas(16) v2d
 	FM_INLINE v2d FM_CALL VU() const { return YX(); }
 	FM_INLINE v2d FM_CALL UU() const { return XX(); }
 	FM_INLINE v2d FM_CALL VV() const { return YY(); }
+
+	FM_INLINE void FM_CALL AddX(double);
+	FM_INLINE void FM_CALL AddY(double);
+
+	FM_INLINE void FM_CALL SubX(double);
+	FM_INLINE void FM_CALL SubY(double);
+
+	FM_INLINE void FM_CALL MulX(double);
+	FM_INLINE void FM_CALL MulY(double);
+
+	FM_INLINE void FM_CALL DivX(double);
+	FM_INLINE void FM_CALL DivY(double);
 };
 
 FM_INLINE v2d FM_CALL V2dFromMemory(const double*);
@@ -197,6 +221,9 @@ struct alignas(16) v2i
 {
 	__m128i M;
 
+	FM_INLINE void FM_CALL SetX(int32_t);
+	FM_INLINE void FM_CALL SetY(int32_t);
+
 	FM_INLINE int32_t FM_CALL X() const;
 	FM_INLINE int32_t FM_CALL U() const { return X(); }
 	FM_INLINE int32_t FM_CALL Left() const { return X(); }
@@ -215,8 +242,17 @@ struct alignas(16) v2i
 	FM_INLINE v2i FM_CALL UU() const { return XX(); }
 	FM_INLINE v2i FM_CALL VV() const { return YY(); }
 
-	FM_INLINE void FM_CALL SetX(int32_t);
-	FM_INLINE void FM_CALL SetY(int32_t);
+	FM_INLINE void FM_CALL AddX(int32_t);
+	FM_INLINE void FM_CALL AddY(int32_t);
+
+	FM_INLINE void FM_CALL SubX(int32_t);
+	FM_INLINE void FM_CALL SubY(int32_t);
+
+	FM_INLINE void FM_CALL MulX(int32_t);
+	FM_INLINE void FM_CALL MulY(int32_t);
+
+	FM_INLINE void FM_CALL DivX(int32_t);
+	FM_INLINE void FM_CALL DivY(int32_t);
 };
 FM_INLINE v2i FM_CALL V2iFromMemory(const int32_t*);
 FM_INLINE v2i FM_CALL V2i(int32_t X, int32_t Y);
@@ -278,6 +314,18 @@ struct alignas(16) v2u
 	FM_INLINE v2u FM_CALL VU() const { return YX(); }
 	FM_INLINE v2u FM_CALL UU() const { return XX(); }
 	FM_INLINE v2u FM_CALL VV() const { return YY(); }
+
+	FM_INLINE void FM_CALL AddX(uint32_t);
+	FM_INLINE void FM_CALL AddY(uint32_t);
+
+	FM_INLINE void FM_CALL SubX(uint32_t);
+	FM_INLINE void FM_CALL SubY(uint32_t);
+
+	FM_INLINE void FM_CALL MulX(uint32_t);
+	FM_INLINE void FM_CALL MulY(uint32_t);
+
+	FM_INLINE void FM_CALL DivX(uint32_t);
+	FM_INLINE void FM_CALL DivY(uint32_t);
 };
 
 FM_INLINE v2u FM_CALL V2uFromMemory(const uint32_t*); 
@@ -702,7 +750,7 @@ operator == and !=
 namespace fm {
 
 /////////////////////////////////////////
-// fast math int32_ternal helper functions //
+// fast math internal helper functions //
 /////////////////////////////////////////
 namespace priv {
 	FM_INLINE __m128 FM_CALL SetX(__m128 m, float x) {
@@ -837,7 +885,31 @@ FM_INLINE void FM_CALL v2::SetX(float X) {
 }
 FM_INLINE void FM_CALL v2::SetY(float Y) { 
 	M = priv::SetY(M, Y);
-}  
+}
+FM_INLINE void FM_CALL v2::AddX(float X) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v2::AddY(float Y) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v2::SubX(float X) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v2::SubY(float Y) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v2::MulX(float X) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v2::MulY(float Y) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
+FM_INLINE void FM_CALL v2::DivX(float X) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v2::DivY(float Y) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
 FM_INLINE void FM_CALL Store(float* Mem, v2 V) {
 	Mem[0] = V.X();
 	Mem[1] = V.Y();
@@ -987,6 +1059,30 @@ FM_INLINE v2d FM_CALL v2d::XX() const {
 }
 FM_INLINE v2d FM_CALL v2d::YY() const {
 	return V2d(_mm_unpackhi_pd(M, M));
+}
+FM_INLINE void FM_CALL v2d::AddX(double X) {
+	M = _mm_add_pd(M, _mm_set_pd(0.f, X));
+}
+FM_INLINE void FM_CALL v2d::AddY(double Y) {
+	M = _mm_add_pd(M, _mm_set_pd(Y, 0.f));
+}
+FM_INLINE void FM_CALL v2d::SubX(double X) {
+	M = _mm_sub_pd(M, _mm_set_pd(0.f, X));
+}
+FM_INLINE void FM_CALL v2d::SubY(double Y) {
+	M = _mm_sub_pd(M, _mm_set_pd(Y, 0.f));
+}
+FM_INLINE void FM_CALL v2d::MulX(double X) {
+	M = _mm_mul_pd(M, _mm_set_pd(1.f, X));
+}
+FM_INLINE void FM_CALL v2d::MulY(double Y) {
+	M = _mm_mul_pd(M, _mm_set_pd(Y, 1.f));
+}
+FM_INLINE void FM_CALL v2d::DivX(double X) {
+	M = _mm_div_pd(M, _mm_set_pd(1.f, X));
+}
+FM_INLINE void FM_CALL v2d::DivY(double Y) {
+	M = _mm_div_pd(M, _mm_set_pd(Y, 1.f));
 }
 FM_INLINE void FM_CALL Store(double* Mem, v2d V) { 
 	_mm_storeu_pd(Mem, V.M); 
@@ -1146,6 +1242,24 @@ FM_INLINE v2i FM_CALL v2i::XX() const {
 FM_INLINE v2i FM_CALL v2i::YY() const {
 	return V2i(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 1, 1)));
 }
+FM_INLINE void FM_CALL v2i::AddX(int32_t X) {
+	M = _mm_add_epi32(M, _mm_set_epi32(0, 0, 0, X));
+}
+FM_INLINE void FM_CALL v2i::AddY(int32_t Y) {
+	M = _mm_add_epi32(M, _mm_set_epi32(0, 0, Y, 0));
+}
+FM_INLINE void FM_CALL v2i::SubX(int32_t X) {
+	M = _mm_sub_epi32(M, _mm_set_epi32(0, 0, 0, X));
+}
+FM_INLINE void FM_CALL v2i::SubY(int32_t Y) {
+	M = _mm_sub_epi32(M, _mm_set_epi32(0, 0, Y, 0));
+}
+FM_INLINE void FM_CALL v2i::DivX(int32_t XDivider) {
+	SetX(X() / XDivider);
+}
+FM_INLINE void FM_CALL v2i::DivY(int32_t YDivider) {
+	SetY(Y() / YDivider);
+}
 FM_INLINE void FM_CALL Store(int32_t* Mem, v2i V) {
 	Mem[0] = V.X();
 	Mem[1] = V.Y();
@@ -1230,6 +1344,12 @@ FM_INLINE v2i FM_CALL operator*(int32_t Scalar, v2i V) {
 	V.M =_mm_mullo_epi32(V.M, _mm_set1_epi32(Scalar)); 
 	return V; 
 }
+FM_INLINE void FM_CALL v2i::MulX(int32_t X) {
+	M = _mm_mullo_epi32(M, _mm_set_epi32(1, 1, 1, X));
+}
+FM_INLINE void FM_CALL v2i::MulY(int32_t Y) {
+	M = _mm_mullo_epi32(M, _mm_set_epi32(1, 1, Y, 1));
+}
 FM_INLINE v2i FM_CALL HadamardMul(v2i A, v2i B) {
 	A.M = _mm_mullo_epi32(A.M, B.M); 
 	return A; 
@@ -1306,6 +1426,12 @@ FM_INLINE v2i FM_CALL abs(v2i v) {
 	VArr[1] = abs(VArr[1]);
 	return V2i(VArr);
 }
+FM_INLINE void FM_CALL v2i::MulX(int32_t XMultiplier) {
+	SetX(X() * XMultiplier);
+}
+FM_INLINE void FM_CALL v2i::MulY(int32_t YMultiplier) {
+	SetY(Y() * YMultiplier);
+}
 #endif
 
 ////////////////
@@ -1350,6 +1476,24 @@ FM_INLINE v2u FM_CALL v2u::XX() const {
 }
 FM_INLINE v2u FM_CALL v2u::YY() const { 
 	return V2u(_mm_shuffle_epi32(M, _MM_SHUFFLE(3, 2, 1, 1)));
+}
+FM_INLINE void FM_CALL v2u::AddX(uint32_t X) {
+	M = _mm_add_epi32(M, _mm_set_epi32(0, 0, 0, X));
+}
+FM_INLINE void FM_CALL v2u::AddY(uint32_t Y) {
+	M = _mm_add_epi32(M, _mm_set_epi32(0, 0, Y, 0));
+}
+FM_INLINE void FM_CALL v2u::SubX(uint32_t X) {
+	M = _mm_sub_epi32(M, _mm_set_epi32(0, 0, 0, X));
+}
+FM_INLINE void FM_CALL v2u::SubY(uint32_t Y) {
+	M = _mm_sub_epi32(M, _mm_set_epi32(0, 0, Y, 0));
+}
+FM_INLINE void FM_CALL v2u::DivX(uint32_t XDivider) {
+	SetX(X() / XDivider);
+}
+FM_INLINE void FM_CALL v2u::DivY(uint32_t YDivider) {
+	SetY(Y() / YDivider);
 }
 FM_INLINE void FM_CALL Store(uint32_t* Mem, v2u V) {
 	Mem[0] = V.X();
@@ -1418,6 +1562,12 @@ FM_INLINE v2u FM_CALL LesserOrEqualMask(v2u A, v2u B) {
 	__m128i eq = _mm_cmpeq_epi32(A.M, B.M);
 	A.M = _mm_or_si128(lt, eq);
 	return A;
+}
+FM_INLINE void FM_CALL v2u::MulX(uint32_t XMultiplier) {
+	SetX(X() * XMultiplier);
+}
+FM_INLINE void FM_CALL v2u::MulY(uint32_t YMultiplier) {
+	SetY(Y() * YMultiplier);
 }
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL v2u::SetX(uint32_t X) {
