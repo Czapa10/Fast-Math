@@ -700,51 +700,52 @@ FM_INLINE v4 FM_CALL operator*(mat4, v4);
 FM_INLINE mat4 FM_CALL operator*(mat4, float Scalar);
 FM_INLINE mat4 FM_CALL operator*(float Scalar, mat4);
 FM_INLINE mat4 FM_CALL operator/(mat4, float Scalar);
-FM_INLINE mat4 FM_CALL Transpose(mat4);
+FM_INLINE void FM_CALL Transpose(mat4*);
 FM_INLINE mat4 FM_CALL SwapColumns(mat4, uint32_t Col1Index, uint32_t Col2Index);
 FM_INLINE mat4 FM_CALL SwapRows(mat4, uint32_t Row1Index, uint32_t Row2Index);
 
 FM_INLINE mat4 FM_CALL Mat4Translation(float X, float Y, float Z); 
 FM_INLINE mat4 FM_CALL Mat4Translation(v3 Translation);
-FM_INLINE mat4 FM_CALL Translate(mat4, float X, float Y, float Z); 
-FM_INLINE mat4 FM_CALL Translate(mat4, v3 Translation);
+FM_INLINE void FM_CALL Translate(mat4*, float X, float Y, float Z); 
+FM_INLINE void FM_CALL Translate(mat4*, v3 Translation);
 
 FM_INLINE mat4 FM_CALL Mat4Scale(float Scalar); 
 FM_INLINE mat4 FM_CALL Mat4Scale(float ScalarX, float ScalarY, float ScalarZ); 
 FM_INLINE mat4 FM_CALL Mat4Scale(v3 Scalar);
-FM_INLINE mat4 FM_CALL Scale(mat4, float Scalar); 
-FM_INLINE mat4 FM_CALL Scale(mat4, float X, float Y, float Z); 
-FM_INLINE mat4 FM_CALL Scale(mat4, v3 Scalar);
+FM_INLINE void FM_CALL Scale(mat4*, float Scalar); 
+FM_INLINE void FM_CALL Scale(mat4*, float X, float Y, float Z); 
+FM_INLINE void FM_CALL Scale(mat4*, v3 Scalar);
 
 FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ); 
 FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, v3 Axis);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisDegrees(float Degrees);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisDegrees(float Degrees);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisDegrees(float Degrees);
-FM_INLINE mat4 FM_CALL RotateDegrees(mat4, float Degrees, float AxisX, float AxisY, float AxisZ); 
-FM_INLINE mat4 FM_CALL RotateDegrees(mat4, float Degrees, v3 Axis);
-FM_INLINE mat4 FM_CALL RotateAroundXAxisDegrees(mat4, float Degrees);
-FM_INLINE mat4 FM_CALL RotateAroundYAxisDegrees(mat4, float Degrees);
-FM_INLINE mat4 FM_CALL RotateAroundZAxisDegrees(mat4, float Degrees);
+FM_INLINE void FM_CALL RotateDegrees(mat4*, float Degrees, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE void FM_CALL RotateDegrees(mat4*, float Degrees, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE void FM_CALL RotateDegrees(mat4*, float Degrees, v3 Axis);
+FM_INLINE void FM_CALL RotateAroundXAxisDegrees(mat4*, float Degrees);
+FM_INLINE void FM_CALL RotateAroundYAxisDegrees(mat4*, float Degrees);
+FM_INLINE void FM_CALL RotateAroundZAxisDegrees(mat4*, float Degrees);
 FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY, float AxisZ); 
 FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, v3 Axis);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundXAxisRadians(float Radians);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundYAxisRadians(float Radians);
 FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisRadians(float Radians);
-FM_INLINE mat4 FM_CALL RotateRadians(mat4, float Radians, float AxisX, float AxisY, float AxisZ); 
-FM_INLINE mat4 FM_CALL RotateRadians(mat4, float Radians, v3 Axis);
-FM_INLINE mat4 FM_CALL RotateAroundXAxisRadians(mat4, float Radians);
-FM_INLINE mat4 FM_CALL RotateAroundYAxisRadians(mat4, float Radians);
-FM_INLINE mat4 FM_CALL RotateAroundZAxisRadians(mat4, float Radians);
+FM_INLINE void FM_CALL RotateRadians(mat4*, float Radians, float AxisX, float AxisY, float AxisZ); 
+FM_INLINE void FM_CALL RotateRadians(mat4*, float Radians, v3 Axis);
+FM_INLINE void FM_CALL RotateAroundXAxisRadians(mat4*, float Radians);
+FM_INLINE void FM_CALL RotateAroundYAxisRadians(mat4*, float Radians);
+FM_INLINE void FM_CALL RotateAroundZAxisRadians(mat4*, float Radians);
 
 FM_INLINE mat4 FM_CALL Mat4ShearXAxis(float Y, float Z); 
 FM_INLINE mat4 FM_CALL Mat4ShearYAxis(float X, float Z);
 FM_INLINE mat4 FM_CALL Mat4ShearZAxis(float X, float Y);
 FM_INLINE mat4 FM_CALL Mat4Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
-FM_INLINE mat4 FM_CALL ShearXAxis(mat4, float Y, float Z); 
-FM_INLINE mat4 FM_CALL ShearYAxis(mat4, float X, float Z); 
-FM_INLINE mat4 FM_CALL ShearZAxis(mat4, float X, float Y); 
-FM_INLINE mat4 FM_CALL Shear(mat4, float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+FM_INLINE void FM_CALL ShearXAxis(mat4*, float Y, float Z); 
+FM_INLINE void FM_CALL ShearYAxis(mat4*, float X, float Z); 
+FM_INLINE void FM_CALL ShearZAxis(mat4*, float X, float Y); 
+FM_INLINE void FM_CALL Shear(mat4*, float XY, float XZ, float YX, float YZ, float ZX, float ZY);
 
 mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far);
 mat4 Mat4Perspective(float FOV, float AspectRatio, float near, float Far);
@@ -2496,9 +2497,8 @@ FM_INLINE mat4 FM_CALL operator/(mat4 M, float Scalar) {
 		M.Columns[Col] = _mm_div_ps(M.Columns[Col], ScalarM);
 	return M;
 }
-FM_INLINE mat4 FM_CALL Transpose(mat4 M) {
-	_MM_TRANSPOSE4_PS(M.Columns[0], M.Columns[1], M.Columns[2], M.Columns[3]);
-	return M;
+FM_INLINE void FM_CALL Transpose(mat4* M) {
+	_MM_TRANSPOSE4_PS(M->Columns[0], M->Columns[1], M->Columns[2], M->Columns[3]);
 }
 FM_INLINE mat4 FM_CALL Mat4Translation(float X, float Y, float Z) {
 	return Mat4FromRows(
@@ -2514,13 +2514,11 @@ FM_INLINE mat4 FM_CALL Mat4Translation(v3 Translation) {
 		0.f, 0.f, 1.f, Translation.Z(),
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL Translate(mat4 M, float X, float Y, float Z) {
-	M.Columns[3] = _mm_add_ps(M.Columns[3], _mm_set_ps(0.f, Z, Y, X));
-	return M;
+FM_INLINE void FM_CALL Translate(mat4* M, float X, float Y, float Z) {
+	M->Columns[3] = _mm_add_ps(M->Columns[3], _mm_set_ps(0.f, Z, Y, X));
 }
-FM_INLINE mat4 FM_CALL Translate(mat4 M, v3 Translation) {
-	M.Columns[3] = _mm_add_ps(M.Columns[3], Translation.M);
-	return M;
+FM_INLINE void FM_CALL Translate(mat4* M, v3 Translation) {
+	M->Columns[3] = _mm_add_ps(M->Columns[3], Translation.M);
 }
 FM_INLINE mat4 FM_CALL Mat4Scale(float Scalar) {
 	return Mat4Diagonal(Scalar, Scalar, Scalar, 1.f);
@@ -2531,22 +2529,20 @@ FM_INLINE mat4 FM_CALL Mat4Scale(float ScalarX, float ScalarY, float ScalarZ) {
 FM_INLINE mat4 FM_CALL Mat4Scale(v3 Scalar) {
 	return Mat4Diagonal(Scalar.X(), Scalar.Y(), Scalar.Z(), 1.f); 
 }
-FM_INLINE mat4 FM_CALL Scale(mat4 M, float Scalar) {
-	return Scale(M, Scalar, Scalar, Scalar);
+FM_INLINE void FM_CALL Scale(mat4* M, float Scalar) {
+	Scale(M, Scalar, Scalar, Scalar);
 }
-FM_INLINE mat4 FM_CALL Scale(mat4 M, float X, float Y, float Z) {
-	v4 MainDiag = M.GetMainDiagonal();
+FM_INLINE void FM_CALL Scale(mat4* M, float X, float Y, float Z) {
+	v4 MainDiag = M->GetMainDiagonal();
 	v4 ScalarVec = V4(X, Y, Z, 1.f);
 	MainDiag = HadamardMul(MainDiag, ScalarVec);
-	M.SetMainDiagonal(MainDiag);
-	return M;
+	M->SetMainDiagonal(MainDiag);
 }
-FM_INLINE mat4 FM_CALL Scale(mat4 M, v3 Scalar) {
-	v4 MainDiag = M.GetMainDiagonal();
+FM_INLINE void FM_CALL Scale(mat4* M, v3 Scalar) {
+	v4 MainDiag = M->GetMainDiagonal();
 	MainDiag.M = _mm_mul_ps(MainDiag.M, Scalar.M);
 	MainDiag.M = priv::SetW(MainDiag.M, 1.f);
-	M.SetMainDiagonal(MainDiag);
-	return M;
+	M->SetMainDiagonal(MainDiag);
 }
 FM_INLINE mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ) {
 	float R = DegreesToRadians(Degrees);
@@ -2568,25 +2564,25 @@ FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisDegrees(float Degrees) {
 	float R = DegreesToRadians(Degrees);
 	return Mat4RotationAroundZAxisRadians(R);
 }
-FM_INLINE mat4 FM_CALL RotateDegrees(mat4 M, float Degrees, float AxisX, float AxisY, float AxisZ) {
+FM_INLINE void FM_CALL RotateDegrees(mat4* M, float Degrees, float AxisX, float AxisY, float AxisZ) {
 	float R = DegreesToRadians(Degrees);
-	return RotateRadians(M, R, AxisX, AxisY, AxisZ);
+	RotateRadians(M, R, AxisX, AxisY, AxisZ);
 } 
-FM_INLINE mat4 FM_CALL RotateDegrees(mat4 M, float Degrees, v3 Axis) {
+FM_INLINE void FM_CALL RotateDegrees(mat4* M, float Degrees, v3 Axis) {
 	float R = DegreesToRadians(Degrees);
-	return RotateRadians(M, R, Axis);
+	RotateRadians(M, R, Axis);
 }
-FM_INLINE mat4 FM_CALL RotateAroundXAxisDegrees(mat4 M, float Degrees) {
-	float r = DegreesToRadians(Degrees);
-	return RotateAroundXAxisRadians(M, r);
+FM_INLINE void FM_CALL RotateAroundXAxisDegrees(mat4* M, float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	RotateAroundXAxisRadians(M, R);
 }
-FM_INLINE mat4 FM_CALL RotateAroundYAxisDegrees(mat4 M, float Degrees) {
-	float r = DegreesToRadians(Degrees);
-	return RotateAroundYAxisRadians(M, r);
+FM_INLINE void FM_CALL RotateAroundYAxisDegrees(mat4* M, float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	RotateAroundYAxisRadians(M, R);
 }
-FM_INLINE mat4 FM_CALL RotateAroundZAxisDegrees(mat4 M, float Degrees) {
-	float r = DegreesToRadians(Degrees);
-	return RotateAroundZAxisRadians(M, r);
+FM_INLINE void FM_CALL RotateAroundZAxisDegrees(mat4* M, float Degrees) {
+	float R = DegreesToRadians(Degrees);
+	RotateAroundZAxisRadians(M, R);
 }
 FM_INLINE mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY, float AxisZ) {
 	v3 Normalized = Normalize(V3(AxisX, AxisY, AxisZ));
@@ -2635,25 +2631,20 @@ FM_INLINE mat4 FM_CALL Mat4RotationAroundZAxisRadians(float R) {
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL RotateRadians(mat4 M, float Radians, float AxisX, float AxisY, float AxisZ) {
-	mat4 RotMat = Mat4RotationRadians(Radians, AxisX, AxisY, AxisZ);
-	return M * RotMat;
+FM_INLINE void FM_CALL RotateRadians(mat4* M, float Radians, float AxisX, float AxisY, float AxisZ) {
+	*M = *M * Mat4RotationRadians(Radians, AxisX, AxisY, AxisZ);
 }
-FM_INLINE mat4 FM_CALL RotateRadians(mat4 M, float Radians, v3 Axis) {
-	mat4 RotMat = Mat4RotationRadians(Radians, Axis);
-	return M * RotMat;
+FM_INLINE void FM_CALL RotateRadians(mat4* M, float Radians, v3 Axis) {
+	*M = *M * Mat4RotationRadians(Radians, Axis);
 }
-FM_INLINE mat4 FM_CALL RotateAroundXAxisRadians(mat4 M, float Radians) {
-	mat4 RotMat = Mat4RotationAroundXAxisRadians(Radians);
-	return M * RotMat;	
+FM_INLINE void FM_CALL RotateAroundXAxisRadians(mat4* M, float Radians) {
+	*M = *M * Mat4RotationAroundXAxisRadians(Radians);	
 }
-FM_INLINE mat4 FM_CALL RotateAroundYAxisRadians(mat4 M, float Radians) {
-	mat4 RotMat = Mat4RotationAroundYAxisRadians(Radians);
-	return M * RotMat;
+FM_INLINE void FM_CALL RotateAroundYAxisRadians(mat4* M, float Radians) {
+	*M = *M * Mat4RotationAroundYAxisRadians(Radians);
 }
-FM_INLINE mat4 FM_CALL RotateAroundZAxisRadians(mat4 M, float Radians) {
-	mat4 RotMat = Mat4RotationAroundZAxisRadians(Radians);
-	return M * RotMat;
+FM_INLINE void FM_CALL RotateAroundZAxisRadians(mat4* M, float Radians) {
+	*M = *M * Mat4RotationAroundZAxisRadians(Radians);
 }
 FM_INLINE mat4 FM_CALL Mat4ShearXAxis(float Y, float Z) {
 	return Mat4FromRows(
@@ -2683,21 +2674,17 @@ FM_INLINE mat4 FM_CALL Mat4Shear(float XY, float XZ, float YX, float YZ, float Z
 		XZ, YZ, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_INLINE mat4 FM_CALL ShearXAxis(mat4 M, float Y, float Z) {
-	mat4 ShearMat = Mat4ShearXAxis(Y, Z);
-	return M * ShearMat;
+FM_INLINE void FM_CALL ShearXAxis(mat4* M, float Y, float Z) {
+	*M = *M * Mat4ShearXAxis(Y, Z);
 }
-FM_INLINE mat4 FM_CALL ShearYAxis(mat4 M, float X, float Z) {
-	mat4 ShearMat = Mat4ShearYAxis(X, Z);
-	return M * ShearMat;
+FM_INLINE void FM_CALL ShearYAxis(mat4* M, float X, float Z) {
+	*M = *M * Mat4ShearYAxis(X, Z);
 } 
-FM_INLINE mat4 FM_CALL ShearZAxis(mat4 M, float X, float Y) {
-	mat4 ShearMat = Mat4ShearZAxis(X, Y);
-	return M * ShearMat;
+FM_INLINE void FM_CALL ShearZAxis(mat4* M, float X, float Y) {
+	*M = *M * Mat4ShearZAxis(X, Y);
 } 
-FM_INLINE mat4 FM_CALL Shear(mat4 M, float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
-	mat4 ShearMat = Mat4Shear(XY, XZ, YX, YZ, ZX, ZY);
-	return M * ShearMat;
+FM_INLINE void FM_CALL Shear(mat4* M, float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
+	*M = *M * Mat4Shear(XY, XZ, YX, YZ, ZX, ZY);
 }
 mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far) {
 	float RL = Right - Left;

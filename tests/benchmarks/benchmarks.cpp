@@ -139,6 +139,12 @@ int32_t main()
 		Benchmark("v2u scalar multiplication", A * 5.0, Res);
 		Benchmark("v2u Hadamard multiplication", HadamardMul(A, B), Res);
 	}
+
+	// mat4
+	{
+		mat4 I = Mat4Identity();
+		BenchmarkNoAssign("RotateDegrees()", RotateDegrees(&I, 50.f, 1.f, 0.5f, 0.f), I);
+	}
 }
 
 

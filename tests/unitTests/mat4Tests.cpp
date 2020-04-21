@@ -253,8 +253,8 @@ TEST_CASE("mat4 operations")
 	v4 V = V4(1.f, 2.f, 3.f, 4.f);
 	CHECK_V4(A * V, 30.f, 70.f, 110.f, 150.f);
 
-	mat4 TransposedA = Transpose(A);
-	CHECK_ALL_MATRIX_ENTRIES(TransposedA,
+	Transpose(&A);
+	CHECK_ALL_MATRIX_ENTRIES(A,
 		1.f, 5.f, 9.f,  13.f,
 		2.f, 6.f, 10.f, 14.f,
 		3.f, 7.f, 11.f, 15.f,
@@ -276,10 +276,10 @@ TEST_CASE("mat4 Transformations")
 	Trans = Mat4Translation(V3(1.f, 2.f, 3.f));
 	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
-	Trans = Translate(Trans, -5.f, -3.f, 0.f);
+	Translate(&Trans, -5.f, -3.f, 0.f);
 	CHECK_V4(Trans * V0, -4.f, -1.f, 3.f, 1.f);
 
-	Trans = Translate(Trans, V3(5.f, 3.f, 0.f));
+	Translate(&Trans, V3(5.f, 3.f, 0.f));
 	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	// Scale
@@ -289,13 +289,13 @@ TEST_CASE("mat4 Transformations")
 	Scal = Mat4Scale(5.f, 4.f, 3.f);
 	CHECK_V4(Scal * V1, 5.f, 4.f, 3.f, 1.f);
 
-	Scal = Scale(Scal, 2.f);
+	Scale(&Scal, 2.f);
 	CHECK_V4(Scal * V1, 10.f, 8.f, 6.f, 1.f);
 
-	Scal = Scale(Scal, 0.5f, 0.25f, 1.f);
+	Scale(&Scal, 0.5f, 0.25f, 1.f);
 	CHECK_V4(Scal * V1, 5.f, 2.f, 6.f, 1.f);
 
-	Scal = Scale(Scal, V3(-1.f, 2.f, 3.f));
+	Scale(&Scal, V3(-1.f, 2.f, 3.f));
 	CHECK_V4(Scal * V1;, -5.f, 4.f, 18.f, 1.f);
 
 	// Rotate
@@ -327,6 +327,8 @@ TEST_CASE("mat4 Transformations")
 
 	Rot = Mat4RotationAroundZAxisDegrees(90.f);
 	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	
+	// TODO: Rotate test are missing
 
 	// Shear
 	She = Mat4ShearXAxis(3.f, 1.f);
@@ -347,16 +349,16 @@ TEST_CASE("mat4 Transformations")
 		0.f, 1.f, 1.f, 4.f,
 		0.f, 0.f, 0.f, 1.f);
 
-	She = ShearXAxis(She, 1.f, 2.f);
+	ShearXAxis(&She, 1.f, 2.f);
 	CHECK_V4(She * V123, 0.f, 7.f, 12.f, 1.f);
 
-	She = ShearYAxis(She, 3.f, 4.f);
+	ShearYAxis(&She, 3.f, 4.f);
 	CHECK_V4(She * V123, 0.f, 19.f, 38.f, 1.f);
 
-	She = ShearZAxis(She, 5.f, 6.f);
+	ShearZAxis(&She, 5.f, 6.f);
 	CHECK_V4(She * V123, -18.f, 175.f, 335.f, 1.f);
 
-	She = Shear(She, -1.f, -2.f, -3.f, 1.f, 2.f, 3.f);
+	Shear(&She, -1.f, -2.f, -3.f, 1.f, 2.f, 3.f);
 	CHECK_V4(She * V123, -26.f, 231.f, 447.f, 1.f);
 }
 
