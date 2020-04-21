@@ -74,10 +74,6 @@ TEST_CASE("v4 operations")
 	v4 AddAsignmentRes = A;
 	AddAsignmentRes += B;
 	CHECK_VECTOR4(AddAsignmentRes, 3.f, 7.f, -1.f, 1.f);
-	CHECK(AddAsignmentRes.X() == 3.f);
-	CHECK(AddAsignmentRes.Y() == 7.f);
-	CHECK(AddAsignmentRes.Z() == -1.f);
-	CHECK(AddAsignmentRes.W() == 1.f);
 
 	v4 SubAssignmentRes = A;
 	SubAssignmentRes -= B;

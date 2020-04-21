@@ -793,29 +793,29 @@ FM_INLINE double DegreesToRadians(double Degrees) {
 // v2 impl //
 /////////////
 FM_INLINE v2 FM_CALL V2FromMemory(const float* V) {
-	v2 Res;
-	Res.M = _mm_set_ps(0.f, 0.f, V[1], V[0]); 
-	return Res;
+	v2 R;
+	R.M = _mm_set_ps(0.f, 0.f, V[1], V[0]); 
+	return R;
 } 
 FM_INLINE v2 FM_CALL V2(float X, float Y) {
-	v2 Res;
-	Res.M = _mm_set_ps(0.f, 0.f, Y, X); 
-	return Res;
+	v2 R;
+	R.M = _mm_set_ps(0.f, 0.f, Y, X); 
+	return R;
 }
 FM_INLINE v2 FM_CALL V2(float XY) {
-	v2 Res;
-	Res.M = _mm_set1_ps(XY); 
-	return Res;
+	v2 R;
+	R.M = _mm_set1_ps(XY); 
+	return R;
 }
 FM_INLINE v2 FM_CALL V2(__m128 M) {
-	v2 Res;
-	Res.M = M;
-	return Res;
+	v2 R;
+	R.M = M;
+	return R;
 }
 FM_INLINE v2 FM_CALL V2() {
-	v2 Res;
-	Res.M = _mm_setzero_ps(); 
-	return Res;
+	v2 R;
+	R.M = _mm_setzero_ps(); 
+	return R;
 }
 FM_INLINE float FM_CALL v2::X() const { 
 	return priv::GetX(M); 
@@ -949,29 +949,29 @@ FM_INLINE v2 FM_CALL LesserOrEqualMask(v2 A, v2 B) {
 // v2d impl //
 //////////////
 FM_INLINE v2d FM_CALL V2dFromMemory(const double* V) {
-	v2d Res;
-	Res.M = _mm_set_pd(V[1], V[0]); 
-	return Res;
+	v2d R;
+	R.M = _mm_set_pd(V[1], V[0]); 
+	return R;
 }
 FM_INLINE v2d FM_CALL V2d(double X, double Y) {
-	v2d Res;
-	Res.M = _mm_set_pd(Y, X); 
-	return Res;
+	v2d R;
+	R.M = _mm_set_pd(Y, X); 
+	return R;
 }
 FM_INLINE v2d FM_CALL V2d(double A) {
-	v2d Res;
-	Res.M = _mm_set1_pd(A);
-	return Res;
+	v2d R;
+	R.M = _mm_set1_pd(A);
+	return R;
 }
 FM_INLINE v2d FM_CALL V2d(__m128d M) {
-	v2d Res;
-	Res.M = M;
-	return Res;
+	v2d R;
+	R.M = M;
+	return R;
 }
 FM_INLINE v2d FM_CALL V2d() {
-	v2d Res;
-	Res.M = _mm_setzero_pd(); 
-	return Res;
+	v2d R;
+	R.M = _mm_setzero_pd(); 
+	return R;
 }
 FM_INLINE double FM_CALL v2d::X() const {
 	return _mm_cvtsd_f64(M);
@@ -1107,29 +1107,29 @@ FM_INLINE v2d FM_CALL LesserOrEqualMask(v2d A, v2d B) {
 // v2i impl //
 ////////////////
 FM_INLINE v2i FM_CALL V2iFromMemory(const int32_t* V) {
-	v2i Res;
-	Res.M = _mm_set_epi32(0, 0, V[1], V[0]); 
-	return Res;
+	v2i R;
+	R.M = _mm_set_epi32(0, 0, V[1], V[0]); 
+	return R;
 }
 FM_INLINE v2i FM_CALL V2i(int32_t X, int32_t Y) {
-	v2i Res;
-	Res.M = _mm_set_epi32(0, 0, Y, X); 
-	return Res;
+	v2i R;
+	R.M = _mm_set_epi32(0, 0, Y, X); 
+	return R;
 }
 FM_INLINE v2i FM_CALL V2i(int32_t A) { 
-	v2i Res;
-	Res.M = _mm_set1_epi32(A); 
-	return Res;
+	v2i R;
+	R.M = _mm_set1_epi32(A); 
+	return R;
 }
 FM_INLINE v2i FM_CALL V2i(__m128i M) {
-	v2i Res;
-	Res.M = M;
-	return Res;
+	v2i R;
+	R.M = M;
+	return R;
 }
 FM_INLINE v2i FM_CALL V2i() {
-	v2i Res;
-	Res.M = _mm_setzero_si128();
-	return Res;
+	v2i R;
+	R.M = _mm_setzero_si128();
+	return R;
 }
 FM_INLINE int32_t FM_CALL v2i::X() const { 
 	return _mm_cvtsi128_si32(M); 
@@ -1312,29 +1312,29 @@ FM_INLINE v2i FM_CALL abs(v2i v) {
 // v2u impl //
 ////////////////
 FM_INLINE v2u FM_CALL V2uFromMemory(const uint32_t* V) {
-	v2u Res;
-	Res.M = _mm_set_epi32(0, 0, V[1], V[0]); 
-	return Res;
+	v2u R;
+	R.M = _mm_set_epi32(0, 0, V[1], V[0]); 
+	return R;
 }
 FM_INLINE v2u FM_CALL V2u(uint32_t x, uint32_t y) {
-	v2u Res;
-	Res.M = _mm_set_epi32(0, 0, y, x); 
-	return Res;
+	v2u R;
+	R.M = _mm_set_epi32(0, 0, y, x); 
+	return R;
 }
 FM_INLINE v2u FM_CALL V2u(uint32_t a) {
-	v2u Res;
-	Res.M = _mm_set1_epi32(a); 
-	return Res;
+	v2u R;
+	R.M = _mm_set1_epi32(a); 
+	return R;
 } 
 FM_INLINE v2u FM_CALL V2u(__m128i m) {
-	v2u Res;
-	Res.M = m;
-	return Res;
+	v2u R;
+	R.M = m;
+	return R;
 } 
 FM_INLINE v2u FM_CALL V2u() {
-	v2u Res;
-	Res.M = _mm_setzero_si128(); 
-	return Res;
+	v2u R;
+	R.M = _mm_setzero_si128(); 
+	return R;
 }
 FM_INLINE uint32_t FM_CALL v2u::X() const {
 	return (uint32_t)_mm_cvtsi128_si32(M); 
@@ -1500,29 +1500,29 @@ FM_INLINE v2u FM_CALL Max(v2u A, v2u B) {
 // v3 impl //
 ///////////////
 FM_INLINE v3 FM_CALL V3FromMemory(float* V) {
-	v3 Res;
-	Res.M = _mm_set_ps(0, V[2], V[1], V[0]);
-	return Res;
+	v3 R;
+	R.M = _mm_set_ps(0, V[2], V[1], V[0]);
+	return R;
 }
 FM_INLINE v3 FM_CALL V3(float X, float Y, float Z) {
-	v3 Res;
-	Res.M = _mm_set_ps(0, Z, Y, X); 
-	return Res;
+	v3 R;
+	R.M = _mm_set_ps(0, Z, Y, X); 
+	return R;
 }
 FM_INLINE v3 FM_CALL V3(float A) {
-	v3 Res;
-	Res.M = _mm_set1_ps(A);
-	return Res;
+	v3 R;
+	R.M = _mm_set1_ps(A);
+	return R;
 }
 FM_INLINE v3 FM_CALL V3(__m128 M) {
-	v3 Res;
-	Res.M = M;
-	return Res;
+	v3 R;
+	R.M = M;
+	return R;
 }
 FM_INLINE v3 FM_CALL V3() {
-	v3 Res;
-	Res.M = _mm_setzero_ps();
-	return Res;
+	v3 R;
+	R.M = _mm_setzero_ps();
+	return R;
 }
 FM_INLINE void FM_CALL v3::SetX(float X) {
 	M = priv::SetX(M, X); 
@@ -1766,36 +1766,36 @@ FM_INLINE v3 FM_CALL LesserOrEqualMask(v3 A, v3 B) {
 // v4 impl //
 ///////////////
 FM_INLINE v4 FM_CALL V4FromMemory(const float* V) {
-	v4 Res;
-	Res.M = _mm_set_ps(V[3], V[2], V[1], V[0]);	
-	return Res;
+	v4 R;
+	R.M = _mm_set_ps(V[3], V[2], V[1], V[0]);	
+	return R;
 } 
 FM_INLINE v4 FM_CALL V4(v3 V, float W) {
-	v4 Res;
+	v4 R;
 	V.M = _mm_shuffle_ps(V.M, V.M, _MM_SHUFFLE(2, 1, 0, 0));
-	Res.M = _mm_move_ss(V.M, _mm_set_ss(W));
-	Res.M = _mm_shuffle_ps(Res.M, Res.M, _MM_SHUFFLE(0, 3, 2, 1));
-	return Res;
+	R.M = _mm_move_ss(V.M, _mm_set_ss(W));
+	R.M = _mm_shuffle_ps(R.M, R.M, _MM_SHUFFLE(0, 3, 2, 1));
+	return R;
 }
 FM_INLINE v4 FM_CALL V4(float X, float Y, float Z, float W) {
-	v4 Res;
-	Res.M = _mm_set_ps(W, Z, Y, X);
-	return Res;
+	v4 R;
+	R.M = _mm_set_ps(W, Z, Y, X);
+	return R;
 }
 FM_INLINE v4 FM_CALL V4(float A) {
-	v4 Res;
-	Res.M = _mm_set1_ps(A);
-	return Res;
+	v4 R;
+	R.M = _mm_set1_ps(A);
+	return R;
 }
 FM_INLINE v4 FM_CALL V4(__m128 M) {
-	v4 Res;
-	Res.M = M;
-	return Res;
+	v4 R;
+	R.M = M;
+	return R;
 } 
 FM_INLINE v4 FM_CALL V4() {
-	v4 Res;
-	Res.M = _mm_setzero_ps();
-	return Res;
+	v4 R;
+	R.M = _mm_setzero_ps();
+	return R;
 }
 FM_INLINE void FM_CALL v4::SetX(float X) {
 	M = priv::SetX(M, X); 
@@ -2023,12 +2023,12 @@ FM_INLINE void FM_CALL mat4::SwapRows(uint32_t Row1Index, uint32_t Row2Index) {
 	SetRow(Row1Index, Row2);
 }
 FM_INLINE v4 FM_CALL mat4::GetMainDiagonal() {
-	v4 Res;
-	Res.SetX(priv::GetX(Columns[0]));
-	Res.SetY(priv::GetY(Columns[1]));
-	Res.SetZ(priv::GetZ(Columns[2]));
-	Res.SetW(priv::GetW(Columns[3]));
-	return Res;
+	v4 R;
+	R.SetX(priv::GetX(Columns[0]));
+	R.SetY(priv::GetY(Columns[1]));
+	R.SetZ(priv::GetZ(Columns[2]));
+	R.SetW(priv::GetW(Columns[3]));
+	return R;
 }
 FM_INLINE void FM_CALL mat4::SetMainDiagonal(float x, float y, float z, float w) {
 	Columns[0] = priv::SetX(Columns[0], x);
@@ -2040,64 +2040,64 @@ FM_INLINE void FM_CALL mat4::SetMainDiagonal(v4 V) {
 	SetMainDiagonal(V.X(), V.Y(), V.Z(), V.W());
 }
 FM_INLINE mat4 FM_CALL Mat4FromColumnMajorMemory(float* Mem) {
-	mat4 Res;
+	mat4 R;
 	for(int32_t i = 0; i < 4; ++i)
-		Res.Columns[i] = _mm_load_ps(Mem + i*4);
-	return Res;
+		R.Columns[i] = _mm_load_ps(Mem + i*4);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4() {
-	mat4 Res;
-	Res.Columns[0] = _mm_setzero_ps();
-	Res.Columns[1] = _mm_setzero_ps();
-	Res.Columns[2] = _mm_setzero_ps();
-	Res.Columns[3] = _mm_setzero_ps();
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setzero_ps();
+	R.Columns[1] = _mm_setzero_ps();
+	R.Columns[2] = _mm_setzero_ps();
+	R.Columns[3] = _mm_setzero_ps();
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4Identity() {
 	return Mat4Diagonal(1.f);
 }
 FM_INLINE mat4 FM_CALL Mat4Diagonal(float Diag) {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(Diag, 0.f, 0.f, 0.f);
-	Res.Columns[1] = _mm_setr_ps(0.f, Diag, 0.f, 0.f);
-	Res.Columns[2] = _mm_setr_ps(0.f, 0.f, Diag, 0.f);
-	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, Diag);
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(Diag, 0.f, 0.f, 0.f);
+	R.Columns[1] = _mm_setr_ps(0.f, Diag, 0.f, 0.f);
+	R.Columns[2] = _mm_setr_ps(0.f, 0.f, Diag, 0.f);
+	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, Diag);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4Diagonal(float DiagX, float DiagY, float DiagZ, float DiagW) {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(DiagX, 0.f, 0.f, 0.f);
-	Res.Columns[1] = _mm_setr_ps(0.f, DiagY, 0.f, 0.f);
-	Res.Columns[2] = _mm_setr_ps(0.f, 0.f, DiagZ, 0.f);
-	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, DiagW);
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(DiagX, 0.f, 0.f, 0.f);
+	R.Columns[1] = _mm_setr_ps(0.f, DiagY, 0.f, 0.f);
+	R.Columns[2] = _mm_setr_ps(0.f, 0.f, DiagZ, 0.f);
+	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, DiagW);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4Diagonal(v4 Diag) {
 	// TODO: What is going on with Diag.X() Diag.Y()... 
-	mat4 Res;
+	mat4 R;
 	float* V = (float*)(&Diag);
-	Res.Columns[0] = _mm_set_ps(0.f, 0.f, 0.f, V[0]);
-	Res.Columns[1] = _mm_set_ps(0.f, 0.f, V[1], 0.f);
-	Res.Columns[2] = _mm_set_ps(0.f, V[2], 0.f, 0.f);
-	Res.Columns[3] = _mm_set_ps(V[3], 0.f, 0.f, 0.f);
-	return Res;
+	R.Columns[0] = _mm_set_ps(0.f, 0.f, 0.f, V[0]);
+	R.Columns[1] = _mm_set_ps(0.f, 0.f, V[1], 0.f);
+	R.Columns[2] = _mm_set_ps(0.f, V[2], 0.f, 0.f);
+	R.Columns[3] = _mm_set_ps(V[3], 0.f, 0.f, 0.f);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4) {
-	mat4 Res;
-	Res.Columns[0] = Col1.M;
-	Res.Columns[1] = Col2.M;
-	Res.Columns[2] = Col3.M;
-	Res.Columns[3] = Col4.M;
-	return Res;
+	mat4 R;
+	R.Columns[0] = Col1.M;
+	R.Columns[1] = Col2.M;
+	R.Columns[2] = Col3.M;
+	R.Columns[3] = Col4.M;
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromColumns(v3 Col1, v3 Col2, v3 Col3, v3 Col4) {
-	mat4 Res;
-	Res.Columns[0] = Col1.M;
-	Res.Columns[1] = Col2.M;
-	Res.Columns[2] = Col3.M;
-	Res.Columns[3] = Col4.M;
-	Res.SetRow(3, 0.f, 0.f, 0.f, 1.f);
-	return Res;
+	mat4 R;
+	R.Columns[0] = Col1.M;
+	R.Columns[1] = Col2.M;
+	R.Columns[2] = Col3.M;
+	R.Columns[3] = Col4.M;
+	R.SetRow(3, 0.f, 0.f, 0.f, 1.f);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromColumns(
 	float E11, float E21, float E31, float E41,
@@ -2105,28 +2105,28 @@ FM_INLINE mat4 FM_CALL Mat4FromColumns(
     float E13, float E23, float E33, float E43,
     float E14, float E24, float E34, float E44) 
 {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
-	Res.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
-	Res.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
-	Res.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
+	R.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
+	R.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
+	R.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4) {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
-	Res.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
-	Res.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
-	Res.Columns[3] = _mm_setr_ps(Row1.W(), Row2.W(), Row3.W(), Row4.W());
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
+	R.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
+	R.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
+	R.Columns[3] = _mm_setr_ps(Row1.W(), Row2.W(), Row3.W(), Row4.W());
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromRows(v3 Row1, v3 Row2, v3 Row3, v3 Row4) {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
-	Res.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
-	Res.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
-	Res.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, 1.f);
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
+	R.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
+	R.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
+	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, 1.f);
+	return R;
 }
 FM_INLINE mat4 FM_CALL Mat4FromRows(
 	float E11, float E12, float E13, float E14,
@@ -2134,12 +2134,12 @@ FM_INLINE mat4 FM_CALL Mat4FromRows(
     float E31, float E32, float E33, float E34,
     float E41, float E42, float E43, float E44)
 {
-	mat4 Res;
-	Res.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
-	Res.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
-	Res.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
-	Res.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
-	return Res;
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(E11, E21, E31, E41);
+	R.Columns[1] = _mm_setr_ps(E12, E22, E32, E42);
+	R.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
+	R.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
+	return R;
 }
 FM_INLINE void FM_CALL Store(float* Mem, mat4 Mat) {
 	for(int32_t Col = 0; Col < 4; ++Col)
@@ -2164,37 +2164,37 @@ FM_INLINE mat4 FM_CALL operator*(mat4 A, mat4 B) {
 		
 	Row = _mm_setr_ps(priv::GetX(A.Columns[0]), priv::GetX(A.Columns[1]),
 	                  priv::GetX(A.Columns[2]), priv::GetX(A.Columns[3]));
-	float Res11 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
-	float Res12 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
-	float Res13 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
-	float Res14 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
+	float R11 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float R12 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float R13 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float R14 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
 	Row = _mm_setr_ps(priv::GetY(A.Columns[0]), priv::GetY(A.Columns[1]),
 	                  priv::GetY(A.Columns[2]), priv::GetY(A.Columns[3]));
-	float Res21 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
-	float Res22 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
-	float Res23 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
-	float Res24 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
+	float R21 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float R22 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float R23 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float R24 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
 	Row = _mm_setr_ps(priv::GetZ(A.Columns[0]), priv::GetZ(A.Columns[1]),
 	                  priv::GetZ(A.Columns[2]), priv::GetZ(A.Columns[3]));
-	float Res31 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
-	float Res32 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
-	float Res33 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
-	float Res34 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
+	float R31 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float R32 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float R33 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float R34 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
 	Row = _mm_setr_ps(priv::GetW(A.Columns[0]), priv::GetW(A.Columns[1]),
 	                  priv::GetW(A.Columns[2]), priv::GetW(A.Columns[3]));
-	float Res41 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
-	float Res42 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
-	float Res43 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
-	float Res44 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
+	float R41 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[0]));
+	float R42 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[1]));
+	float R43 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[2]));
+	float R44 = priv::SumOfElements(_mm_mul_ps(Row, B.Columns[3]));
 		
 	return Mat4FromColumns(
-		Res11, Res21, Res31, Res41,
-	    Res12, Res22, Res32, Res42,
-		Res13, Res23, Res33, Res43,
-		Res14, Res24, Res34, Res44);
+		R11, R21, R31, R41,
+	    R12, R22, R32, R42,
+		R13, R23, R33, R43,
+		R14, R24, R34, R44);
 }
 FM_INLINE v4 FM_CALL operator*(mat4 M, v4 V) {
 	__m128 Row1 = _mm_setr_ps(priv::GetX(M.Columns[0]), priv::GetX(M.Columns[1]),
@@ -2205,11 +2205,11 @@ FM_INLINE v4 FM_CALL operator*(mat4 M, v4 V) {
 	                          priv::GetZ(M.Columns[2]), priv::GetZ(M.Columns[3]));
 	__m128 Row4 = _mm_setr_ps(priv::GetW(M.Columns[0]), priv::GetW(M.Columns[1]),
 	                          priv::GetW(M.Columns[2]), priv::GetW(M.Columns[3]));
-	float ResX = priv::SumOfElements(_mm_mul_ps(Row1, V.M)); 
-	float ResY = priv::SumOfElements(_mm_mul_ps(Row2, V.M)); 
-	float ResZ = priv::SumOfElements(_mm_mul_ps(Row3, V.M)); 
-	float ResW = priv::SumOfElements(_mm_mul_ps(Row4, V.M));
-	return V4(ResX, ResY, ResZ, ResW);
+	float X = priv::SumOfElements(_mm_mul_ps(Row1, V.M)); 
+	float Y = priv::SumOfElements(_mm_mul_ps(Row2, V.M)); 
+	float Z = priv::SumOfElements(_mm_mul_ps(Row3, V.M)); 
+	float W = priv::SumOfElements(_mm_mul_ps(Row4, V.M));
+	return V4(X, Y, Z, W);
 }
 FM_INLINE mat4 FM_CALL operator*(mat4 M, float Scalar) {
 	__m128 ScalarM = _mm_set1_ps(Scalar);
