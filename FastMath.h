@@ -370,6 +370,22 @@ struct alignas(16) v3
 	FM_INLINE void FM_CALL SetY(float Y);
 	FM_INLINE void FM_CALL SetZ(float Z);
 
+	FM_INLINE void FM_CALL AddX(float X);
+	FM_INLINE void FM_CALL AddY(float Y);
+	FM_INLINE void FM_CALL AddZ(float Z);
+
+	FM_INLINE void FM_CALL SubX(float X);
+	FM_INLINE void FM_CALL SubY(float Y);
+	FM_INLINE void FM_CALL SubZ(float Z);
+
+	FM_INLINE void FM_CALL MulX(float X);
+	FM_INLINE void FM_CALL MulY(float Y);
+	FM_INLINE void FM_CALL MulZ(float Z);
+
+	FM_INLINE void FM_CALL DivX(float X);
+	FM_INLINE void FM_CALL DivY(float Y);
+	FM_INLINE void FM_CALL DivZ(float Z);
+
 	FM_INLINE float FM_CALL X() const;
 	FM_INLINE float FM_CALL U() const { return X(); }
 	FM_INLINE float FM_CALL R() const { return X(); }
@@ -1682,6 +1698,42 @@ FM_INLINE void FM_CALL v3::SetY(float Y) {
 }
 FM_INLINE void FM_CALL v3::SetZ(float Z) {
 	M = priv::SetZ(M, Z);
+}
+FM_INLINE void FM_CALL v3::AddX(float X) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v3::AddY(float Y) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v3::AddZ(float Z) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, Z, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v3::SubX(float X) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v3::SubY(float Y) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v3::SubZ(float Z) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, Z, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v3::MulX(float X) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v3::MulY(float Y) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
+FM_INLINE void FM_CALL v3::MulZ(float Z) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, Z, 1.f, 1.f));
+}
+FM_INLINE void FM_CALL v3::DivX(float X) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v3::DivY(float Y) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
+FM_INLINE void FM_CALL v3::DivZ(float Z) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, Z, 1.f, 1.f));
 }
 FM_INLINE void FM_CALL Store(float* Mem, v3 V) {
 	Mem[0] = V.X();

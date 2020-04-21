@@ -629,6 +629,28 @@ TEST_CASE("v3 operations")
 	CHECK(LerpRes.X() == 2.f);
 	CHECK(LerpRes.Y() == 3.5f);
 	CHECK(LerpRes.Z() == 4.5f);
+
+	v3 J = V3();
+
+	J.AddX(1.f);
+	J.AddY(2.f);
+	J.AddZ(-3.f);
+	CHECK_V3(J, 1.f, 2.f, -3.f);
+
+	J.SubX(3.f);
+	J.SubY(1.f);
+	J.SubZ(-6.f);
+	CHECK_V3(J, -2.f, 1.f, 3.f);
+
+	J.MulX(2.f);
+	J.MulY(4.f);
+	J.MulZ(-3.f);
+	CHECK_V3(J, -4.f, 4.f, -9.f);
+
+	J.DivX(2.f);
+	J.DivY(-4.f);
+	J.DivZ(-2.f);
+	CHECK_V3(J, -2.f, -1.f, 4.5f);
 }
 
 TEST_CASE("v3 Comparisons")

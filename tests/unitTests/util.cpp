@@ -31,6 +31,7 @@ static char binaryOutput[128];
 #define FloatCmp(x) doctest::Approx(x).epsilon(0.01)
 
 #define CHECK4(A, B, C, D) CHECK(A); CHECK(B); CHECK(C); CHECK(D);
+#define CHECK3(A, B, C) CHECK(A); CHECK(B); CHECK(C);
 
 #define LOG_V2(V) \
 	INFO("a == (" << V.X() << ", " << V.Y() << ")");
@@ -52,6 +53,14 @@ static char binaryOutput[128];
 	CHECK(R.U() == _X); CHECK(R.V() == _Y); \
 	CHECK(R.Left() == _X); CHECK(R.Top() == _Y); \
 	CHECK(R.Width() == _X); CHECK(R.Height() == _Y); }
+
+#define CHECK_V3(_V, _X, _Y, _Z) {\
+	auto _Res = _V; \
+	CHECK3(_Res.X() == _X, _Res.Y() == _Y, _Res.Z() == _Z) };
+
+#define CHECK_V3_APPROX(_V, _X, _Y, _Z) { \
+	auto _Res = _V; \
+	CHECK3(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z)); }
 
 #define CHECK_VECTOR4(_V, _X, _Y, _Z, _W) {\
 	auto _Res = _V; \
