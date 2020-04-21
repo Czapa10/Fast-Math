@@ -1,143 +1,143 @@
 #define ANKERL_NANOBENCH_IMPLEMENT
-#include "nanobench.h"
+#include "nanoBench.h"
 
 #define FM_IMPLEMENTATION
 #include "../../FastMath.h"
 
 using namespace fm;
 
-#define benchmark(name, expression, result) bench.run(name, [&]{result = expression;}).doNotOptimizeAway(result);
-#define benchmarkNoAssign(name, expression, result) bench.run(name, [&]{expression;}).doNotOptimizeAway(result);
+#define Benchmark(name, expRession, Result) Bench.run(name, [&]{Result = expRession;}).doNotOptimizeAway(Result);
+#define BenchmarkNoAssign(name, expRession, Result) Bench.run(name, [&]{expRession;}).doNotOptimizeAway(Result);
 
-int main() 
+int32_t main() 
 {
-	ankerl::nanobench::Bench bench;
+	ankerl::nanobench::Bench Bench;
 
 	// utility functions
 	{
 		float aF = 5.f;
 		float bF = -2.f;
-		float resF;
+		float ResF;
 
 		double aD = 5.0;
 		double bD = -2.0;
-		double resD;
+		double ResD;
 
-		int aI = 5;
-		int bI = -2;
-		int resI;
+		int32_t aI = 5;
+		int32_t bI = -2;
+		int32_t ResI;
 
-		unsigned aU = 5;
-		unsigned bU = 2;
-		unsigned resU;
+		uint32_t aU = 5;
+		uint32_t bU = 2;
+		uint32_t ResU;
 
-		benchmark("min float", min(aF, bF), resF);
-		benchmark("max float", max(aF, bF), resF);
-		benchmark("min double", min(aD, bD), resD);
-		benchmark("max double", max(aD, bD), resD);
-		benchmark("min int", min(aI, bI), resI);
-		benchmark("max int", max(aI, bI), resI);
-		benchmark("min unsigned", min(aU, bU), resU);
-		benchmark("max unsigned", max(aU, bU), resU);
+		Benchmark("Min float", Min(aF, bF), ResF);
+		Benchmark("Max float", Max(aF, bF), ResF);
+		Benchmark("Min double", Min(aD, bD), ResD);
+		Benchmark("Max double", Max(aD, bD), ResD);
+		Benchmark("Min int32_t", Min(aI, bI), ResI);
+		Benchmark("Max int32_t", Max(aI, bI), ResI);
+		Benchmark("Min uint32_t", Min(aU, bU), ResU);
+		Benchmark("Max uint32_t", Max(aU, bU), ResU);
 	}
 
-	// vec2
+	// v2
 	{
-		vec2 a = makeVec2(1.f, 2.f);
-		vec2 b = makeVec2(-5.f, 10.f);
-		vec2 res;
-		float res2;
+		v2 A = V2(1.f, 2.f);
+		v2 B = V2(-5.f, 10.f);
+		v2 Res;
+		float Res2;
 
-		benchmarkNoAssign("vec2 setX", res.setX(5.f), res);
-		benchmarkNoAssign("vec2 setY", res.setY(5.f), res);
+		BenchmarkNoAssign("v2 SetX", Res.SetX(5.f), Res);
+		BenchmarkNoAssign("v2 SetY", Res.SetY(5.f), Res);
 
-		benchmark("vec2 x()", a.x(), res2);
-		benchmark("vec2 u()", a.u(), res2);
-		benchmark("vec2 y()", a.y(), res2);
-		benchmark("vec2 v()", a.v(), res2);
-		benchmark("vec2 yx()", a.yx(), res);
-		benchmark("vec2 xx()", a.xx(), res);
-		benchmark("vec2 yy()", a.yy(), res);
+		Benchmark("v2 x()", A.X(), Res2);
+		Benchmark("v2 u()", A.U(), Res2);
+		Benchmark("v2 y()", A.Y(), Res2);
+		Benchmark("v2 v()", A.V(), Res2);
+		Benchmark("v2 yx()", A.YX(), Res);
+		Benchmark("v2 xx()", A.XX(), Res);
+		Benchmark("v2 yy()", A.YY(), Res);
 
-		float arr[2] = {1.f, 2.f};
-		__m128 m = _mm_set1_ps(5.f);
-		benchmark("makeVec2FromMemory", makeVec2FromMemory(arr), res);
-		benchmark("makeVec2(x, y)", makeVec2(1.f, 2.f), res);
-		benchmark("makeVec2(a)", makeVec2(5.f), res);
-		benchmark("makeVec2(__m128)", makeVec2(m), res);
-		benchmark("makeZeroVec2", makeZeroVec2(), res);
+		float Arr[2] = {1.f, 2.f};
+		__m128 M = _mm_set1_ps(5.f);
+		Benchmark("V2FromMemory", V2FromMemory(Arr), Res);
+		Benchmark("V2(x, y)", V2(1.f, 2.f), Res);
+		Benchmark("V2(a)", V2(5.f), Res);
+		Benchmark("V2(__m128)", V2(M), Res);
+		Benchmark("V2()", V2(), Res);
 
-		float storage[2];
-		benchmarkNoAssign("vec2 store", store(storage, a), storage);
+		float Storage[2];
+		BenchmarkNoAssign("v2 Store", Store(Storage, A), Storage);
 
-		benchmark("vec2 addition", a + b, res);
-		benchmark("vec2 subtraction", a - b, res);
-		benchmark("vec2 addition with assignement", res += a, res);
-		benchmark("vec2 subtraction with assignement", res -= a, res);
-		benchmark("vec2 hadamard multiplication", hadamardMul(a, b), res);
-		benchmark("vec2 hadamard division", hadamardDiv(a, b), res);
-		benchmark("vec2 scalar multiplication", a * 5.f, res);
-		benchmark("vec2 scalar division", a / 5.f, res);
-		benchmark("vec2 negation", res = -a, res);
-		benchmark("vec2 dot product", dot(a, b), res2);
-		benchmark("vec2 min", min(a, b), res);
-		benchmark("vec2 max", max(a, b), res);
-		benchmark("vec2 abs", abs(a), res);
-		benchmark("vec2 sumOfElements", abs(a), res);
-		benchmark("vec2 length", length(a), res2);
-		benchmark("vec2 lengthSquared", lengthSquared(a), res2);
-		benchmark("vec2 normalize", normalize(a), res);
-		benchmark("vec2 clamp", clamp(a, a, b), res);
-		benchmark("vec2 lerp", lerp(a, b, 0.5f), res);
+		Benchmark("v2 addition", A + B, Res);
+		Benchmark("v2 subtraction", A - B, Res);
+		Benchmark("v2 addition with assignement", Res += A, Res);
+		Benchmark("v2 subtraction with assignement", Res -= A, Res);
+		Benchmark("v2 Hadamard multiplication", HadamardMul(A, B), Res);
+		Benchmark("v2 Hadamard division", HadamardDiv(A, B), Res);
+		Benchmark("v2 scalar multiplication", A * 5.f, Res);
+		Benchmark("v2 scalar division", A / 5.f, Res);
+		Benchmark("v2 negation", Res = -A, Res);
+		Benchmark("v2 dot product", Dot(A, B), Res2);
+		Benchmark("v2 Min", Min(A, B), Res);
+		Benchmark("v2 Max", Max(A, B), Res);
+		Benchmark("v2 Abs", Abs(A), Res);
+		Benchmark("v2 SumOfElements", SumOfElements(A), Res2);
+		Benchmark("v2 Length", Length(A), Res2);
+		Benchmark("v2 LengthSquared", LengthSquared(A), Res2);
+		Benchmark("v2 Normalize", Normalize(A), Res);
+		Benchmark("v2 Clamp", Clamp(A, A, B), Res);
+		Benchmark("v2 Lerp", Lerp(A, B, 0.5f), Res);
 
-		bool res3;
-		benchmark("vec2 ==", a == b, res3);
-		benchmark("vec2 !=", a != b, res3);
-		benchmark("vec2 equalsMask", equalsMask(a, b), res);
-		benchmark("vec2 greaterMask", greaterMask(a, b), res);
-		benchmark("vec2 greaterOrEqualMask", greaterOrEqualMask(a, b), res);
-		benchmark("vec2 lesserMask", lesserMask(a, b), res);
-		benchmark("vec2 lesserOrEqualMask", lesserOrEqualMask(a, b), res);
+		bool Res3;
+		Benchmark("v2 ==", A == B, Res3);
+		Benchmark("v2 !=", A != B, Res3);
+		Benchmark("v2 EqualsMask", EqualsMask(A, B), Res);
+		Benchmark("v2 GreaterMask", GreaterMask(A, B), Res);
+		Benchmark("v2 GreaterOrEqualMask", GreaterOrEqualMask(A, B), Res);
+		Benchmark("v2 LesserMask", LesserMask(A, B), Res);
+		Benchmark("v2 LesserOrEqualMask", LesserOrEqualMask(A, B), Res);
 	}
 
-	// vec2d
+	// v2d
 	{
-		vec2d a = makeVec2d(1.0, 2.0);
-		vec2d b = makeVec2d(-5.0, 10.0);
-		vec2d res;
-		double res2;
+		v2d A = V2d(1.0, 2.0);
+		v2d B = V2d(-5.0, 10.0);
+		v2d Res;
+		double Res2;
 
-		benchmark("vec2d addition", a + b, res);
-		benchmark("vec2d subtraction", a - b, res);
-		benchmark("vec2d scalar multiplication", a * 5.0, res);
-		benchmark("vec2d scalar division", a / 5.0, res);
-		benchmark("vec2d hadamard multiplication", hadamardMul(a, b), res);
-		benchmark("vec2d hadamard division", hadamardDiv(a, b), res);
+		Benchmark("v2d addition", A + B, Res);
+		Benchmark("v2d subtraction", A - B, Res);
+		Benchmark("v2d scalar multiplication", A * 5.0, Res);
+		Benchmark("v2d scalar division", A / 5.0, Res);
+		Benchmark("v2d Hadamard multiplication", HadamardMul(A, B), Res);
+		Benchmark("v2d Hadamard division", HadamardDiv(A, B), Res);
 	}
 
-	// vec2i
+	// v2i
 	{
-		vec2i a = makeVec2i(1, 2);
-		vec2i b = makeVec2i(-5, 10);
-		vec2i res;
-		int res2;
+		v2i A = V2i(1, 2);
+		v2i B = V2i(-5, 10);
+		v2i Res;
+		int32_t Res2;
 
-		benchmark("vec2i addition", a + b, res);
-		benchmark("vec2i subtraction", a - b, res);
-		benchmark("vec2i scalar multiplication", a * 5.0, res);
-		benchmark("vec2i hadamard multiplication", hadamardMul(a, b), res);
+		Benchmark("v2i addition", A + B, Res);
+		Benchmark("v2i subtraction", A - B, Res);
+		Benchmark("v2i scalar multiplication", A * 5.0, Res);
+		Benchmark("v2i Hadamard multiplication", HadamardMul(A, B), Res);
 	}
 
-	// vec2u
+	// v2u
 	{
-		vec2u a = makeVec2u(1, 2);
-		vec2u b = makeVec2u(5, 10);
-		vec2u res;
+		v2u A = V2u(1, 2);
+		v2u B = V2u(5, 10);
+		v2u Res;
 
-		benchmark("vec2u addition", a + b, res);
-		benchmark("vec2u subtraction", a - b, res);
-		benchmark("vec2u scalar multiplication", a * 5.0, res);
-		benchmark("vec2u hadamard multiplication", hadamardMul(a, b), res);
+		Benchmark("v2u addition", A + B, Res);
+		Benchmark("v2u subtraction", A - B, Res);
+		Benchmark("v2u scalar multiplication", A * 5.0, Res);
+		Benchmark("v2u Hadamard multiplication", HadamardMul(A, B), Res);
 	}
 }
 
