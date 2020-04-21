@@ -571,6 +571,26 @@ struct alignas(16) v4
 	FM_INLINE void FM_CALL SetZ(float); 
 	FM_INLINE void FM_CALL SetW(float); 
 
+	FM_INLINE void FM_CALL AddX(float);
+	FM_INLINE void FM_CALL AddY(float); 
+	FM_INLINE void FM_CALL AddZ(float); 
+	FM_INLINE void FM_CALL AddW(float); 
+
+	FM_INLINE void FM_CALL SubX(float);
+	FM_INLINE void FM_CALL SubY(float); 
+	FM_INLINE void FM_CALL SubZ(float); 
+	FM_INLINE void FM_CALL SubW(float); 
+
+	FM_INLINE void FM_CALL MulX(float);
+	FM_INLINE void FM_CALL MulY(float); 
+	FM_INLINE void FM_CALL MulZ(float); 
+	FM_INLINE void FM_CALL MulW(float); 
+
+	FM_INLINE void FM_CALL DivX(float);
+	FM_INLINE void FM_CALL DivY(float); 
+	FM_INLINE void FM_CALL DivZ(float); 
+	FM_INLINE void FM_CALL DivW(float); 
+
 	FM_INLINE float FM_CALL X() const;
 	FM_INLINE float FM_CALL Y() const;
 	FM_INLINE float FM_CALL Z() const;
@@ -2011,6 +2031,54 @@ FM_INLINE void FM_CALL v4::SetZ(float Z) {
 FM_INLINE void FM_CALL v4::SetW(float W) {
 	M = priv::SetW(M, W);
 } 
+FM_INLINE void FM_CALL v4::AddX(float X) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v4::AddY(float Y) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v4::AddZ(float Z) {
+	M = _mm_add_ps(M, _mm_set_ps(0.f, Z, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v4::AddW(float W) {
+	M = _mm_add_ps(M, _mm_set_ps(W, 0.f, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v4::SubX(float X) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, 0.f, X));
+}
+FM_INLINE void FM_CALL v4::SubY(float Y) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, 0.f, Y, 0.f));
+}
+FM_INLINE void FM_CALL v4::SubZ(float Z) {
+	M = _mm_sub_ps(M, _mm_set_ps(0.f, Z, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v4::SubW(float W) {
+	M = _mm_sub_ps(M, _mm_set_ps(W, 0.f, 0.f, 0.f));
+}
+FM_INLINE void FM_CALL v4::MulX(float X) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v4::MulY(float Y) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
+FM_INLINE void FM_CALL v4::MulZ(float Z) {
+	M = _mm_mul_ps(M, _mm_set_ps(1.f, Z, 1.f, 1.f));
+}
+FM_INLINE void FM_CALL v4::MulW(float W) {
+	M = _mm_mul_ps(M, _mm_set_ps(W, 1.f, 1.f, 1.f));
+}
+FM_INLINE void FM_CALL v4::DivX(float X) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, 1.f, X));
+}
+FM_INLINE void FM_CALL v4::DivY(float Y) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, 1.f, Y, 1.f));
+}
+FM_INLINE void FM_CALL v4::DivZ(float Z) {
+	M = _mm_div_ps(M, _mm_set_ps(1.f, Z, 1.f, 1.f));
+}
+FM_INLINE void FM_CALL v4::DivW(float W) {
+	M = _mm_div_ps(M, _mm_set_ps(W, 1.f, 1.f, 1.f));
+}
 FM_INLINE float FM_CALL v4::X() const {
 	return _mm_cvtss_f32(M);
 }

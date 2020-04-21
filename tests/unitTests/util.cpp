@@ -62,21 +62,21 @@ static char binaryOutput[128];
 	auto _Res = _V; \
 	CHECK3(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z)); }
 
-#define CHECK_VECTOR4(_V, _X, _Y, _Z, _W) {\
+#define CHECK_V4(_V, _X, _Y, _Z, _W) {\
 	auto _Res = _V; \
 	CHECK4(_Res.X() == _X, _Res.Y() == _Y, _Res.Z() == _Z, _Res.W() == _W) };
 
-#define CHECK_VECTOR4_APPROX(_V, _X, _Y, _Z, _W) { \
+#define CHECK_V4_APPROX(_V, _X, _Y, _Z, _W) { \
 	auto _Res = _V; \
 	CHECK4(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z), _Res.W() == FloatCmp(_W)); }
 
-#define CHECK_VECTOR4_1(V, A) \
+#define CHECK_V4_1(V, A) \
 	CHECK4(V.X() == A, V.Y() == A, V.Z() == A, V.W() == A);
 
-#define CHECK_VECTOR4_ARRAY(Arr, _X, _Y, _Z, _W) \
+#define CHECK_V4_ARRAY(Arr, _X, _Y, _Z, _W) \
 	CHECK4(Arr[0] == _X, Arr[1] == _Y, Arr[2] == _Z, Arr[3] == _W);
 
-#define CHECK_VECTOR4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
+#define CHECK_V4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
 	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
 	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
 

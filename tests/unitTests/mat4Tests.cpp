@@ -62,17 +62,17 @@ TEST_CASE("mat4 construction and Getters")
 		13.f, 14.f, 15.f, 16.f
 	);
 
-	CHECK_VECTOR4(A.GetColumn(0), 1.f, 5.f, 9.f, 13.f);
-	CHECK_VECTOR4(A.GetColumn(1), 2.f, 6.f, 10.f, 14.f);
-	CHECK_VECTOR4(A.GetColumn(2), 3.f, 7.f, 11.f, 15.f);
-	CHECK_VECTOR4(A.GetColumn(3), 4.f, 8.f, 12.f, 16.f);
+	CHECK_V4(A.GetColumn(0), 1.f, 5.f, 9.f, 13.f);
+	CHECK_V4(A.GetColumn(1), 2.f, 6.f, 10.f, 14.f);
+	CHECK_V4(A.GetColumn(2), 3.f, 7.f, 11.f, 15.f);
+	CHECK_V4(A.GetColumn(3), 4.f, 8.f, 12.f, 16.f);
 
-	CHECK_VECTOR4(A.GetRow(0), 1.f, 2.f, 3.f, 4.f);
-	CHECK_VECTOR4(A.GetRow(1), 5.f, 6.f, 7.f, 8.f);
-	CHECK_VECTOR4(A.GetRow(2), 9.f, 10.f, 11.f, 12.f);
-	CHECK_VECTOR4(A.GetRow(3), 13.f, 14.f, 15.f, 16.f);
+	CHECK_V4(A.GetRow(0), 1.f, 2.f, 3.f, 4.f);
+	CHECK_V4(A.GetRow(1), 5.f, 6.f, 7.f, 8.f);
+	CHECK_V4(A.GetRow(2), 9.f, 10.f, 11.f, 12.f);
+	CHECK_V4(A.GetRow(3), 13.f, 14.f, 15.f, 16.f);
 
-	CHECK_VECTOR4(A.GetMainDiagonal(), 1.f, 6.f, 11.f, 16.f);
+	CHECK_V4(A.GetMainDiagonal(), 1.f, 6.f, 11.f, 16.f);
 
 	{
 		v4 Col1 = V4(1.f, 2.f, 3.f, 4.f);
@@ -251,7 +251,7 @@ TEST_CASE("mat4 operations")
 	);
 
 	v4 V = V4(1.f, 2.f, 3.f, 4.f);
-	CHECK_VECTOR4(A * V, 30.f, 70.f, 110.f, 150.f);
+	CHECK_V4(A * V, 30.f, 70.f, 110.f, 150.f);
 
 	mat4 TransposedA = Transpose(A);
 	CHECK_ALL_MATRIX_ENTRIES(TransposedA,
@@ -271,75 +271,75 @@ TEST_CASE("mat4 Transformations")
 
 	// Translate
 	Trans = Mat4Translation(1.f, 2.f, 3.f);
-	CHECK_VECTOR4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	Trans = Mat4Translation(V3(1.f, 2.f, 3.f));
-	CHECK_VECTOR4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	Trans = Translate(Trans, -5.f, -3.f, 0.f);
-	CHECK_VECTOR4(Trans * V0, -4.f, -1.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, -4.f, -1.f, 3.f, 1.f);
 
 	Trans = Translate(Trans, V3(5.f, 3.f, 0.f));
-	CHECK_VECTOR4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	// Scale
 	Scal = Mat4Scale(5.f);
-	CHECK_VECTOR4(Scal * V1, 5.f, 5.f, 5.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 5.f, 5.f, 1.f);
 
 	Scal = Mat4Scale(5.f, 4.f, 3.f);
-	CHECK_VECTOR4(Scal * V1, 5.f, 4.f, 3.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 4.f, 3.f, 1.f);
 
 	Scal = Scale(Scal, 2.f);
-	CHECK_VECTOR4(Scal * V1, 10.f, 8.f, 6.f, 1.f);
+	CHECK_V4(Scal * V1, 10.f, 8.f, 6.f, 1.f);
 
 	Scal = Scale(Scal, 0.5f, 0.25f, 1.f);
-	CHECK_VECTOR4(Scal * V1, 5.f, 2.f, 6.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 2.f, 6.f, 1.f);
 
 	Scal = Scale(Scal, V3(-1.f, 2.f, 3.f));
-	CHECK_VECTOR4(Scal * V1;, -5.f, 4.f, 18.f, 1.f);
+	CHECK_V4(Scal * V1;, -5.f, 4.f, 18.f, 1.f);
 
 	// Rotate
 	Rot = Mat4RotationDegrees(90.f, 1.f, 0.f, 0.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, V3(1.f, 0.f, 0.f)); 
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationAroundXAxisDegrees(90.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 
 	Rot = Mat4RotationDegrees(90.f, 0.f, 1.f, 0.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, V3(0.f, 1.f, 0.f)); 
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 	Rot = Mat4RotationAroundYAxisDegrees(90.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 
 	Rot = Mat4RotationDegrees(90.f, 0.f, 0.f, 1.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, V3(0.f, 0.f, 1.f)); 
-	CHECK_VECTOR4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationAroundZAxisDegrees(90.f);
-	CHECK_VECTOR4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 	// Shear
 	She = Mat4ShearXAxis(3.f, 1.f);
-	CHECK_VECTOR4(She * V123, 1.f, 5.f, 4.f, 1.f);
+	CHECK_V4(She * V123, 1.f, 5.f, 4.f, 1.f);
 
 	She = Mat4ShearYAxis(3.f, 1.f);
-	CHECK_VECTOR4(She * V123, 7.f, 2.f, 5.f, 1.f);
+	CHECK_V4(She * V123, 7.f, 2.f, 5.f, 1.f);
 
 	She = Mat4ShearZAxis(3.f, 1.f);
-	CHECK_VECTOR4(She * V123, 10.f, 5.f, 3.f, 1.f);
+	CHECK_V4(She * V123, 10.f, 5.f, 3.f, 1.f);
 
 	She = Mat4Shear(1.f, 2.f, 3.f, 4.f, 5.f, 6.f);
-	CHECK_VECTOR4(She * V123, 22.f, 21.f, 13.f, 1.f);
+	CHECK_V4(She * V123, 22.f, 21.f, 13.f, 1.f);
 	
 	She = Mat4FromRows(
 		1.f, -1.f, 0.f, 2.f,
@@ -348,23 +348,23 @@ TEST_CASE("mat4 Transformations")
 		0.f, 0.f, 0.f, 1.f);
 
 	She = ShearXAxis(She, 1.f, 2.f);
-	CHECK_VECTOR4(She * V123, 0.f, 7.f, 12.f, 1.f);
+	CHECK_V4(She * V123, 0.f, 7.f, 12.f, 1.f);
 
 	She = ShearYAxis(She, 3.f, 4.f);
-	CHECK_VECTOR4(She * V123, 0.f, 19.f, 38.f, 1.f);
+	CHECK_V4(She * V123, 0.f, 19.f, 38.f, 1.f);
 
 	She = ShearZAxis(She, 5.f, 6.f);
-	CHECK_VECTOR4(She * V123, -18.f, 175.f, 335.f, 1.f);
+	CHECK_V4(She * V123, -18.f, 175.f, 335.f, 1.f);
 
 	She = Shear(She, -1.f, -2.f, -3.f, 1.f, 2.f, 3.f);
-	CHECK_VECTOR4(She * V123, -26.f, 231.f, 447.f, 1.f);
+	CHECK_V4(She * V123, -26.f, 231.f, 447.f, 1.f);
 }
 
 TEST_CASE("mat4 Orthographic projection")
 {
 	mat4 Ortho = Mat4Orthographic(-10.f, 10.f, -5.f, 5.f, 0.f, -10.f);
 	v4 V = V4(5.f, 5.f, -5.f, 1.f);
-	CHECK_VECTOR4_APPROX(Ortho * V, 0.5f, 1.f, -2.f, 1.f);
+	CHECK_V4_APPROX(Ortho * V, 0.5f, 1.f, -2.f, 1.f);
 }
 
 TEST_CASE("mat4 Perspective projection")
@@ -372,10 +372,10 @@ TEST_CASE("mat4 Perspective projection")
 	mat4 Persp = Mat4Perspective(90.0f, 2.0f, 5.0f, 15.0f);
 
 	v4 V = V4(5.0f, 5.0f, -15.0f, 1.f);
-	CHECK_VECTOR4(Persp * V, 2.5f, 5.f, 15.f, 15.f);
+	CHECK_V4(Persp * V, 2.5f, 5.f, 15.f, 15.f);
 
 	V = V4(5.0f, 5.0f, -5.0f, 1.f);
-	CHECK_VECTOR4(Persp * V, 2.5f, 5.f, -5.f, 5.f);
+	CHECK_V4(Persp * V, 2.5f, 5.f, -5.f, 5.f);
 }
 
 TEST_CASE("mat4 look at")
@@ -385,6 +385,6 @@ TEST_CASE("mat4 look at")
 	v4 Res = ViewMat * P;
 	CHECK4(Res.X() == 0.f, Res.Y() == -2.f, Res.Z() == -5.f, Res.W() == 1.f);
 
-	// TODO: Why CHECK_VECTOR4 macro doesn't work here !?
+	// TODO: Why CHECK_V4 macro doesn't work here !?
 	// TODO: Make more tests for look at function
 }
