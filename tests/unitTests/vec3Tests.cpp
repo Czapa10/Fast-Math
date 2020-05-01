@@ -9,9 +9,9 @@
 
 using namespace fm;
 
-TEST_CASE("v3 construction and getters")
+TEST_CASE("vec3 construction and getters")
 {
-	v3 A = V3(1.f, 5.f, -3.f);
+	vec3 A = Vec3(1.f, 5.f, -3.f);
 	CHECK(A.X() == 1.f);
 	CHECK(A.U() == 1.f);
 	CHECK(A.R() == 1.f);
@@ -28,18 +28,18 @@ TEST_CASE("v3 construction and getters")
 	CHECK(Storage[1] == 5.f);
 	CHECK(Storage[2] == -3.f);
 
-	v3 B = V3(2.f);
+	vec3 B = Vec3(2.f);
 	CHECK(B.X() == 2.f);
 	CHECK(B.Y() == 2.f);
 	CHECK(B.Z() == 2.f);
 
-	v3 C = V3();
+	vec3 C = Vec3();
 	CHECK(C.X() == 0.f);
 	CHECK(C.Y() == 0.f);
 	CHECK(C.Z() == 0.f);
 
 	float Arr[3] = {1.f, 2.f, 3.f};
-	v3 D = V3FromMemory(Arr);
+	vec3 D = Vec3FromMemory(Arr);
 	REQUIRE(D.X() == 1.f);
 	REQUIRE(D.Y() == 2.f);
 	REQUIRE(D.Z() == 3.f);
@@ -51,7 +51,7 @@ TEST_CASE("v3 construction and getters")
 	CHECK(*PY == 2.f);
 	CHECK(*PZ == 3.f);
 
-	v2 E;
+	vec2 E;
 
 	E = D.XY();
 	CHECK(E.X() == 1.f);
@@ -143,7 +143,7 @@ TEST_CASE("v3 construction and getters")
 	CHECK(E.X() == 3.f);
 	CHECK(E.Y() == 3.f);
 
-	v3 F;
+	vec3 F;
 
 	F = D.XYZ();
 	CHECK(F.X() == 1.f);
@@ -497,9 +497,9 @@ TEST_CASE("v3 construction and getters")
 	CHECK(F.Z() == 3.f);
 }
 
-TEST_CASE("v3 Setters")
+TEST_CASE("vec3 Setters")
 {
-	v3 A;
+	vec3 A;
 	A.SetX(-1.f);
 	A.SetY(2.f);
 	A.SetZ(-3.f);
@@ -507,7 +507,7 @@ TEST_CASE("v3 Setters")
 	CHECK(A.Y() == 2.f);
 	CHECK(A.Z() == -3.f);
 
-	v3 B;
+	vec3 B;
 	B.SetY(2.f);
 	B.SetX(-1.f);
 	B.SetZ(-3.f);
@@ -516,10 +516,10 @@ TEST_CASE("v3 Setters")
 	CHECK(B.Z() == -3.f);
 }
 
-TEST_CASE("v3 operations")
+TEST_CASE("vec3 operations")
 {
-	v3 A = V3(2.f, 3.f, 4.f); 	
-	v3 B = V3(-2.f, 5.f, 1.f); 	
+	vec3 A = Vec3(2.f, 3.f, 4.f); 	
+	vec3 B = Vec3(-2.f, 5.f, 1.f); 	
 
 	auto AddRes = A + B;
 	CHECK(AddRes.X() == 0.f);
@@ -593,15 +593,15 @@ TEST_CASE("v3 operations")
 	CHECK(NormalizedB.Y() == FloatCmp(B.Y() / sqrt(30)));
 	CHECK(NormalizedB.Z() == FloatCmp(B.Z() / sqrt(30)));
 	
-	v3 C = V3(1.f, 0.f, 0.f);
-	v3 D = V3(0.f, 1.f, 0.f);
+	vec3 C = Vec3(1.f, 0.f, 0.f);
+	vec3 D = Vec3(0.f, 1.f, 0.f);
 	auto CrossRes = Cross(C, D);
 	CHECK(CrossRes.X() == 0.f);
 	CHECK(CrossRes.Y() == 0.f);
 	CHECK(CrossRes.Z() == 1.f);
 
-	v3 E = V3(2,3,4);
-	v3 F = V3(5,6,7);
+	vec3 E = Vec3(2,3,4);
+	vec3 F = Vec3(5,6,7);
 	auto CrossRes2 = Cross(E, F);
 	CHECK(CrossRes2.X() == -3.f);
 	CHECK(CrossRes2.Y() == 6.f);
@@ -612,15 +612,15 @@ TEST_CASE("v3 operations")
 	CHECK(Length(B) == FloatCmp(sqrt(30.f)));
 	CHECK(LengthSquared(B) == 30.f);
 
-	v3 Min = V3(-1.f, 7.f, -5.f);
-	v3 Max = V3(4.f, 8.f, -1.f);
-	v3 ClampRes = Clamp(B, Min, Max);
+	vec3 Min = Vec3(-1.f, 7.f, -5.f);
+	vec3 Max = Vec3(4.f, 8.f, -1.f);
+	vec3 ClampRes = Clamp(B, Min, Max);
 	CHECK(ClampRes.X() == -1.f);
 	CHECK(ClampRes.Y() == 7.f);
 	CHECK(ClampRes.Z() == -1.f);
 
-	v3 G = V3(0.f, 2.f, 3.f);
-	v3 H = V3(4.f, 5.f, 6.f);
+	vec3 G = Vec3(0.f, 2.f, 3.f);
+	vec3 H = Vec3(4.f, 5.f, 6.f);
 	auto LerpRes = Lerp(G, H, 0.5f);
 	CHECK(LerpRes.X() == 2.f);
 	CHECK(LerpRes.Y() == 3.5f);
@@ -630,33 +630,33 @@ TEST_CASE("v3 operations")
 	CHECK(LerpRes.Y() == 3.5f);
 	CHECK(LerpRes.Z() == 4.5f);
 
-	v3 J = V3();
+	vec3 J = Vec3();
 
 	J.AddX(1.f);
 	J.AddY(2.f);
 	J.AddZ(-3.f);
-	CHECK_V3(J, 1.f, 2.f, -3.f);
+	CHECK_VEC3(J, 1.f, 2.f, -3.f);
 
 	J.SubX(3.f);
 	J.SubY(1.f);
 	J.SubZ(-6.f);
-	CHECK_V3(J, -2.f, 1.f, 3.f);
+	CHECK_VEC3(J, -2.f, 1.f, 3.f);
 
 	J.MulX(2.f);
 	J.MulY(4.f);
 	J.MulZ(-3.f);
-	CHECK_V3(J, -4.f, 4.f, -9.f);
+	CHECK_VEC3(J, -4.f, 4.f, -9.f);
 
 	J.DivX(2.f);
 	J.DivY(-4.f);
 	J.DivZ(-2.f);
-	CHECK_V3(J, -2.f, -1.f, 4.5f);
+	CHECK_VEC3(J, -2.f, -1.f, 4.5f);
 }
 
-TEST_CASE("v3 Comparisons")
+TEST_CASE("vec3 Comparisons")
 {
-	v3 A = V3(1.f, 2.f, 4.f);
-	v3 B = V3(1.f, 3.f, -5.f);
+	vec3 A = Vec3(1.f, 2.f, 4.f);
+	vec3 B = Vec3(1.f, 3.f, -5.f);
 
 	CHECK(A == A);
 	CHECK(A != B);

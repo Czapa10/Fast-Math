@@ -43,6 +43,19 @@ int32_t main()
 
 	// v2
 	{
+		vec2 A = Vec2(1.f, 2.f);
+		vec2 B = Vec2(-5.f, 10.f);
+		vec2 Res;
+		float Res2;
+
+		Benchmark("vec2 addition", A + B, Res);
+		Benchmark("vec2 subtraction", A - B, Res);
+		Benchmark("vec2 scalar multiplication", A * 5.f, Res);
+		Benchmark("vec2 scalar division", A / 5.f, Res);
+	}
+
+	// v2
+	{
 		v2 A = V2(1.f, 2.f);
 		v2 B = V2(-5.f, 10.f);
 		v2 Res;

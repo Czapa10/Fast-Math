@@ -30,53 +30,83 @@ static char binaryOutput[128];
 
 #define FloatCmp(x) doctest::Approx(x).epsilon(0.01)
 
+#define CHECK2(A, B) CHECK(A); CHECK(B);
 #define CHECK4(A, B, C, D) CHECK(A); CHECK(B); CHECK(C); CHECK(D);
 #define CHECK3(A, B, C) CHECK(A); CHECK(B); CHECK(C);
 
-#define LOG_V2(V) \
-	INFO("a == (" << V.X() << ", " << V.Y() << ")");
+#define CHECK_ARRAY2(Arr, _X, _Y) \
+	CHECK2(Arr[0] == _X, Arr[1] == _Y);
+
+#define CHECK_ARRAY3(Arr, _X, _Y, _Z) \
+	CHECK3(Arr[0] == _X, Arr[1] == _Y, Arr[2] == _Z);
 
 #define CHECK_V2(_V, _X, _Y) {\
-	auto R = _V; \
-	CHECK(R.X() == _X); CHECK(R.Y() == _Y); }
+	auto _R = _V; \
+	CHECK2(_R.X == _X, _R.Y == _Y); }
 
 #define CHECK_V2_APPROX(_V, _X, _Y) {\
 	auto R = _V; \
-	CHECK(R.X() == FloatCmp(_X)); CHECK(R.Y() == FloatCmp(_Y)); }
+	CHECK2(R.X == FloatCmp(_X), R.Y == FloatCmp(_Y)); }
 
-#define CHECK_V2_ARRAY(Arr, _X, _Y) \
-	CHECK(Arr[0] == _X); CHECK(Arr[1] == _Y);
-
-#define CHECK_V2_ALL_ALIASES(_V, _X, _Y) { \
+#define CHECK_V2_ALL_ALIASES(_V, _X, _Y) {\
 	auto R = _V; \
-	CHECK(R.X() == _X); CHECK(R.Y() == _Y); \
-	CHECK(R.U() == _X); CHECK(R.V() == _Y); \
-	CHECK(R.Left() == _X); CHECK(R.Top() == _Y); \
-	CHECK(R.Width() == _X); CHECK(R.Height() == _Y); }
+	CHECK2(R.X == _X, R.Y == _Y); \
+	CHECK2(R.U == _X, R.V == _Y); \
+	CHECK2(R.Left == _X, R.Top == _Y); \
+	CHECK2(R.Left == _X, R.Right == _Y); \
+	CHECK2(R.Width == _X, R.Height == _Y); \
+	CHECK2(R.W == _X, R.H == _Y); \
+	CHECK2(R[0] == _X, R[1] == _Y); }
 
 #define CHECK_V3(_V, _X, _Y, _Z) {\
+	auto R = _V; \
+	CHECK3(R.X == _X, R.Y == _Y, R.Z == _Z); }
+
+#define CHECK_V3_APPROX(_V, _X, _Y, _Z) {\
+	auto R = _V; \
+	CHECK3(R.X == FloatCmp(_X), R.Y == FloatCmp(_Y), R.Z == FloatCmp(_Z)); }
+
+#define LOG_VEC2(V) \
+	INFO("a == (" << V.X() << ", " << V.Y() << ")");
+
+#define CHECK_VEC2(_V, _X, _Y) {\
+	auto R = _V; \
+	CHECK2(R.X() == _X, R.Y() == _Y); }
+
+#define CHECK_VEC2_APPROX(_V, _X, _Y) {\
+	auto R = _V; \
+	CHECK2(R.X() == FloatCmp(_X), R.Y() == FloatCmp(_Y)); }
+
+#define CHECK_VEC2_ALL_ALIASES(_V, _X, _Y) { \
+	auto R = _V; \
+	CHECK2(R.X() == _X, R.Y() == _Y); \
+	CHECK2(R.U() == _X, R.V() == _Y); \
+	CHECK2(R.Left() == _X, R.Top() == _Y); \
+	CHECK2(R.Width() == _X, R.Height() == _Y); }
+
+#define CHECK_VEC3(_V, _X, _Y, _Z) {\
 	auto _Res = _V; \
 	CHECK3(_Res.X() == _X, _Res.Y() == _Y, _Res.Z() == _Z) };
 
-#define CHECK_V3_APPROX(_V, _X, _Y, _Z) { \
+#define CHECK_VEC3_APPROX(_V, _X, _Y, _Z) { \
 	auto _Res = _V; \
 	CHECK3(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z)); }
 
-#define CHECK_V4(_V, _X, _Y, _Z, _W) {\
+#define CHECK_VEC4(_V, _X, _Y, _Z, _W) {\
 	auto _Res = _V; \
 	CHECK4(_Res.X() == _X, _Res.Y() == _Y, _Res.Z() == _Z, _Res.W() == _W) };
 
-#define CHECK_V4_APPROX(_V, _X, _Y, _Z, _W) { \
+#define CHECK_VEC4_APPROX(_V, _X, _Y, _Z, _W) { \
 	auto _Res = _V; \
 	CHECK4(_Res.X() == FloatCmp(_X), _Res.Y() == FloatCmp(_Y), _Res.Z() == FloatCmp(_Z), _Res.W() == FloatCmp(_W)); }
 
-#define CHECK_V4_1(V, A) \
+#define CHECK_VEC4_1(V, A) \
 	CHECK4(V.X() == A, V.Y() == A, V.Z() == A, V.W() == A);
 
-#define CHECK_V4_ARRAY(Arr, _X, _Y, _Z, _W) \
+#define CHECK_VEC4_ARRAY(Arr, _X, _Y, _Z, _W) \
 	CHECK4(Arr[0] == _X, Arr[1] == _Y, Arr[2] == _Z, Arr[3] == _W);
 
-#define CHECK_V4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
+#define CHECK_VEC4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
 	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
 	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
 
