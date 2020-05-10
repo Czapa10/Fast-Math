@@ -30,6 +30,11 @@ like this:
 #include <emmintrin.h>
 #include <stdint.h>
 
+#ifdef _MSC_VER
+	__pragma(warning(push))
+	__pragma(warning(disable : 4201))
+#endif
+
 // TODO:  FM_INLINE work on all compilers
 
 #define FM_INLINE __forceinline
@@ -199,6 +204,93 @@ FM_INLINE v3 Lerp(v3 A, v3 B, float T);
 
 FM_INLINE bool operator==(v3, v3); 
 FM_INLINE bool operator!=(v3, v3); 
+
+
+union v4
+{
+	struct 
+	{
+		union 
+		{
+			v3 XYZ;
+			struct { float X, Y, Z; };
+		};
+		float W;
+	};
+
+	struct
+	{
+		union 
+		{
+			v3 RGB;
+			struct { float R, G, B; };
+		};
+		float A;
+	};
+
+	struct {
+		v2 XY;
+		float Placeholder1_;
+		float Placeholder2_;
+	};
+
+	struct {
+		float Placeholder3_;
+		v2 YZ;
+		float Placeholder4_;
+	};
+
+	struct {
+		float Placeholder5_;
+		float Placeholder6_;
+		v2 ZW;
+	};
+
+	float Elements[4];
+
+	FM_INLINE float& operator[](const int& Index) {
+		return Elements[Index];
+	}
+
+	FM_INLINE v3 ZXY(); 
+};
+
+FM_INLINE v4 V4FromMemory(float*);
+FM_INLINE v4 V4(float X, float Y, float Z, float W);
+FM_INLINE v4 V4(v3 XYZ, float W);
+FM_INLINE v4 V4(float XYZW);
+FM_INLINE v4 V4();
+
+FM_INLINE void Store(float* Mem, v4 V); 
+
+FM_INLINE float* Ptr(v4& V) { return &V.X; }
+FM_INLINE float* PtrY(v4& V) { return &V.Y; }
+FM_INLINE float* PtrZ(v4& V) { return &V.Z; }
+FM_INLINE float* PtrW(v4& V) { return &V.W; }
+
+FM_INLINE v4 operator+(v4, v4); 
+FM_INLINE v4 operator-(v4, v4);
+FM_INLINE v4& operator+=(v4&, v4);
+FM_INLINE v4& operator-=(v4&, v4);
+FM_INLINE v4 HadamardMul(v4, v4);
+FM_INLINE v4 HadamardDiv(v4, v4);
+FM_INLINE v4 operator*(v4 V, float  Scalar);
+FM_INLINE v4 operator*(float Scalar, v4 V);
+FM_INLINE v4 operator/(v4 V, float Scalar);
+FM_INLINE v4 operator-(v4); 
+FM_INLINE float Dot(v4, v4); 
+FM_INLINE v4 Min(v4, v4); 
+FM_INLINE v4 Max(v4, v4); 
+FM_INLINE v4 Normalize(v4);
+FM_INLINE v4 Abs(v4);
+FM_INLINE float SumOfElements(v4);
+FM_INLINE float Length(v4);
+FM_INLINE float LengthSquared(v4); 
+FM_INLINE v4 Clamp(v4 V, v4 Min, v4 Max); 
+FM_INLINE v4 Lerp(v4 A, v4 B, float T);
+
+FM_INLINE bool operator==(v4, v4); 
+FM_INLINE bool operator!=(v4, v4); 
 
 
 struct alignas(16) vec2
@@ -1189,15 +1281,11 @@ FM_INLINE v3 operator-(v3 A, v3 B) {
 	return R;
 }
 FM_INLINE v3& operator+=(v3& A, v3 B) {
-	A.X += B.X;
-	A.Y += B.Y;
-	A.Z += B.Z;
+	A = A + B;
 	return A;
 }
 FM_INLINE v3& operator-=(v3& A, v3 B) {
-	A.X -= B.X;
-	A.Y -= B.Y;
-	A.Z -= B.Z;
+	A = A - B;
 	return A;
 }
 FM_INLINE v3 HadamardMul(v3 A, v3 B) {
@@ -1283,8 +1371,167 @@ FM_INLINE bool operator==(v3 A, v3 B) {
 	return A.X == B.X && A.Y == B.Y && A.Z == B.Z;
 }
 FM_INLINE bool operator!=(v3 A, v3 B) {
-	return A.X != B.X || A.Y != B.Y || A.Z != B.Z;
+	return !(A == B);
 }
+
+/////////////
+// v4 impl //
+/////////////
+FM_INLINE v4 V4FromMemory(float* Mem) {
+	v4 R;
+	R[0] = Mem[0];
+	R[1] = Mem[1];
+	R[2] = Mem[2];
+	R[3] = Mem[3];
+	return R;
+}
+FM_INLINE v4 V4(float X, float Y, float Z, float W) {
+	v4 R;
+	R.X = X;
+	R.Y = Y;
+	R.Z = Z;
+	R.W = W;
+	return R;
+}
+FM_INLINE v4 V4(v3 XYZ, float W) {
+	v4 R;
+	R.X = XYZ.X;
+	R.Y = XYZ.Y;
+	R.Z = XYZ.Z;
+	R.W = W;
+	return R;
+}
+FM_INLINE v4 V4(float XYZW) {
+	v4 R;
+	R.X = XYZW;
+	R.Y = XYZW;
+	R.Z = XYZW;
+	R.W = XYZW;
+	return R;
+}
+FM_INLINE v4 V4() {
+	return {};
+}
+FM_INLINE void Store(float* Mem, v4 V) {
+	Mem[0] = V.X;
+	Mem[1] = V.Y;
+	Mem[2] = V.Z;
+	Mem[3] = V.W;
+}
+FM_INLINE v4 operator+(v4 A, v4 B) {
+	v4 R;
+	R.X = A.X + B.X;
+	R.Y = A.Y + B.Y;
+	R.Z = A.Z + B.Z;
+	R.W = A.W + B.W;
+	return R;
+} 
+FM_INLINE v4 operator-(v4 A, v4 B) {
+	v4 R;
+	R.X = A.X - B.X;
+	R.Y = A.Y - B.Y;
+	R.Z = A.Z - B.Z;
+	R.W = A.W - B.W;
+	return R;
+}
+FM_INLINE v4& operator+=(v4& A, v4 B) {
+	A = A + B;
+	return A;
+}
+FM_INLINE v4& operator-=(v4& A, v4 B) {
+	A = A - B;
+	return A;
+}
+FM_INLINE v4 HadamardMul(v4 A, v4 B) {
+	v4 R;
+	R.X = A.X * B.X;
+	R.Y = A.Y * B.Y;
+	R.Z = A.Z * B.Z;
+	R.W = A.W * B.W;
+	return R;
+}
+FM_INLINE v4 HadamardDiv(v4 A, v4 B) {
+	v4 R;
+	R.X = A.X / B.X;
+	R.Y = A.Y / B.Y;
+	R.Z = A.Z / B.Z;
+	R.W = A.W / B.W;
+	return R;
+}
+FM_INLINE v4 operator*(v4 V, float  Scalar) {
+	V.X *= Scalar;
+	V.Y *= Scalar;
+	V.Z *= Scalar;
+	V.W *= Scalar;
+	return V;
+}
+FM_INLINE v4 operator*(float Scalar, v4 V) {
+	return V * Scalar;
+}
+FM_INLINE v4 operator/(v4 V, float Scalar) {
+	V.X /= Scalar;
+	V.Y /= Scalar;
+	V.Z /= Scalar;
+	V.W /= Scalar;
+	return V;
+}
+FM_INLINE v4 operator-(v4 V) {
+	V.X = -V.X;
+	V.Y = -V.Y;
+	V.Z = -V.Z;
+	V.W = -V.W;
+	return V;
+} 
+FM_INLINE float Dot(v4 A, v4 B) {
+	return A.X * B.X + A.Y * B.Y + A.Z * B.Z + A.W * B.W;
+} 
+FM_INLINE v4 Min(v4 A, v4 B) {
+	v4 R;
+	R.X = Min(A.X, B.X);
+	R.Y = Min(A.Y, B.Y);
+	R.Z = Min(A.Z, B.Z);
+	R.W = Min(A.W, B.W);
+	return R;
+} 
+FM_INLINE v4 Max(v4 A, v4 B) {
+	v4 R;
+	R.X = Max(A.X, B.X);
+	R.Y = Max(A.Y, B.Y);
+	R.Z = Max(A.Z, B.Z);
+	R.W = Max(A.W, B.W);
+	return R;
+}
+FM_INLINE v4 Normalize(v4 V) {
+	return V / Length(V);
+}
+FM_INLINE v4 Abs(v4 V) {
+	V.X = Abs(V.X);
+	V.Y = Abs(V.Y);
+	V.Z = Abs(V.Z);
+	V.W = Abs(V.W);
+	return V;
+}
+FM_INLINE float SumOfElements(v4 V) {
+	return V.X + V.Y + V.Z + V.W;
+}
+FM_INLINE float Length(v4 V) {
+	return sqrtf(Dot(V, V));
+}
+FM_INLINE float LengthSquared(v4 V) {
+	return Dot(V, V);
+} 
+FM_INLINE v4 Clamp(v4 V, v4 MinV, v4 MaxV) {
+	return Min(Max(V, MinV), MaxV);
+} 
+FM_INLINE v4 Lerp(v4 A, v4 B, float T) {
+	return A + (B - A) * T;
+}
+FM_INLINE bool operator==(v4 A, v4 B) {
+	return A.X == B.X && A.Y == B.Y && A.Z == B.Z && A.W == B.W;
+} 
+FM_INLINE bool operator!=(v4 A, v4 B) {
+	return !(A == B);
+} 
 
 ///////////////
 // vec2 impl //
@@ -3141,5 +3388,10 @@ mat4 Mat4LookAt(vec3 Eye, vec3 At, vec3 Up) {
 #endif
 
 #endif // FM_IMPLEMENTATION
+
+#ifdef _MSC_VER
+	__pragma(warning(pop))
+#endif
+
 #endif // FM_IMPLEMENTATION_ALREADY_DEFINED
 

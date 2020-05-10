@@ -16,9 +16,9 @@ TEST_CASE("vec4 construction and getters")
 
 	float Storage[4];
 	Store(Storage, A);
-	CHECK_VEC4_ARRAY(Storage, 1.f, 2.f, 3.f, 4.f);
+	CHECK_ARRAY4(Storage, 1.f, 2.f, 3.f, 4.f);
 	Store16ByteAligned(Storage, A);
-	CHECK_VEC4_ARRAY(Storage, 1.f, 2.f, 3.f, 4.f);
+	CHECK_ARRAY4(Storage, 1.f, 2.f, 3.f, 4.f);
 
 	CHECK_VEC4(Vec4(5.f), 5.f, 5.f, 5.f, 5.f); 
 	CHECK_VEC4(Vec4(), 0.f, 0.f, 0.f, 0.f); 

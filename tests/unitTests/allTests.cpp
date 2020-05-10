@@ -4,5 +4,6 @@
 #include "vec4Tests.cpp"
 #include "v2Tests.cpp"
 #include "v3Tests.cpp"
+#include "v4Tests.cpp"
 #include "mat4Tests.cpp"
 
