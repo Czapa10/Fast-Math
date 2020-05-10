@@ -385,7 +385,7 @@ TEST_CASE("mat4 look at")
 	mat4 ViewMat = Mat4LookAt(Vec3(0.f), Vec3(0.f, 0.f, 5.f));
 	vec4 P = Vec4(0.f, 2.f, 5.f, 1.f);
 	vec4 Res = ViewMat * P;
-	CHECK4(Res.X() == 0.f, Res.Y() == -2.f, Res.Z() == -5.f, Res.W() == 1.f);
+	CHECK4(Res.X() == 0.f, Res.Y() == 2.f, Res.Z() == -5.f, Res.W() == 1.f);
 
 	// TODO: Why CHECK_VEC4 macro doesn't work here !?
 	// TODO: Make more tests for look at function

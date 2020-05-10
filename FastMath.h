@@ -851,6 +851,7 @@ FM_INLINE mat4 FM_CALL operator*(mat4, float Scalar);
 FM_INLINE mat4 FM_CALL operator*(float Scalar, mat4);
 FM_INLINE mat4 FM_CALL operator/(mat4, float Scalar);
 FM_INLINE void FM_CALL Transpose(mat4*);
+FM_INLINE mat4 FM_CALL Transpose(mat4);
 FM_INLINE mat4 FM_CALL SwapColumns(mat4, uint32_t Col1Index, uint32_t Col2Index);
 FM_INLINE mat4 FM_CALL SwapRows(mat4, uint32_t Row1Index, uint32_t Row2Index);
 
@@ -2911,6 +2912,10 @@ FM_INLINE mat4 FM_CALL operator/(mat4 M, float Scalar) {
 FM_INLINE void FM_CALL Transpose(mat4* M) {
 	_MM_TRANSPOSE4_PS(M->Columns[0], M->Columns[1], M->Columns[2], M->Columns[3]);
 }
+FM_INLINE mat4 FM_CALL Transpose(mat4 M) {
+	_MM_TRANSPOSE4_PS(M.Columns[0], M.Columns[1], M.Columns[2], M.Columns[3]);
+	return M;
+}
 FM_INLINE mat4 FM_CALL Mat4Translation(float X, float Y, float Z) {
 	return Mat4FromRows(
 		1.f, 0.f, 0.f, X,
@@ -3121,10 +3126,12 @@ mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far) {
 		0.f, 0.f, -1.f, 0.f);
 }
 mat4 Mat4LookAt(vec3 Eye, vec3 At, vec3 Up) {
-	vec3 Forward = Normalize(Eye - At);
+	vec3 Forward = Normalize(At - Eye);
 	vec3 Right = Cross(Forward, Up); // TODO(docs): We assume that Up is normalized
-	Up = Cross(Forward, Right);
-	return Mat4FromColumns(Right, Up, Forward, Eye);
+	Up = Cross(Right, Forward);
+	return Mat4FromColumns(
+		Right, Up, -Forward,
+		Vec3(-Dot(Right, Eye), -Dot(Up, Eye), Dot(Forward, Eye)));
 }
 
 } // !namespace fm
