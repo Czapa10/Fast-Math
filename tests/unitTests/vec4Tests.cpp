@@ -29,10 +29,15 @@ TEST_CASE("vec4 construction and getters")
 	vec4 B = Vec4(Vec3(1.f, 2.f, 3.f), 4.f);
 	CHECK_VEC4(B, 1.f, 2.f, 3.f, 4.f);
 
+	// NOTE: Accessing simd types directly (without intrinsics) is slow
 	CHECK(*Ptr(B) == 1.f);
 	CHECK(*PtrY(B) == 2.f);
 	CHECK(*PtrZ(B) == 3.f);
 	CHECK(*PtrW(B) == 4.f);
+	CHECK(B[0] == 1.f);
+	CHECK(B[1] == 2.f);
+	CHECK(B[2] == 3.f);
+	CHECK(B[3] == 4.f);
 }
 
 TEST_CASE("vec4 setters")

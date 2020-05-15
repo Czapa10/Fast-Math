@@ -31,6 +31,10 @@ TEST_CASE("v4 construction and getters")
 	CHECK(*PtrY(B) == 2.f);
 	CHECK(*PtrZ(B) == 3.f);
 	CHECK(*PtrW(B) == 4.f);
+	CHECK(B[0] == 1.f);
+	CHECK(B[1] == 2.f);
+	CHECK(B[2] == 3.f);
+	CHECK(B[3] == 4.f);
 }
 
 TEST_CASE("v4 operations")

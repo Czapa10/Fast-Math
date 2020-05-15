@@ -130,7 +130,12 @@ TEST_CASE("mat4 construction and Getters")
 		4.f, 8.f, 12.f, 16.f
 	);
 
+	// NOTE: Accessing simd types directly (without intrinsics) is slow
 	CHECK(*Ptr(A) == 1.f);
+	CHECK(A[0] == 1.f);
+	CHECK(A[1] == 2.f);
+	CHECK(A[4] == 5.f);
+	CHECK(A[5] == 6.f);
 }
 
 TEST_CASE("mat4 setters and Swaps")

@@ -39,9 +39,13 @@ TEST_CASE("vec2 construction and getters")
 	CHECK(A.VV().U() == 4.5f);
 	CHECK(A.VV().V() == 4.5f);
 
+	// NOTE: Accessing simd types directly (without intrinsics) is slow
 	vec2 P = Vec2(-1.f, 2.f);
 	CHECK(*Ptr(P) == -1.f);
 	CHECK(*PtrY(P) == 2.f);
+
+	CHECK(P[0] == -1.f);
+	CHECK(P[1] == 2.f);
 }
 
 TEST_CASE("vec2 setters")

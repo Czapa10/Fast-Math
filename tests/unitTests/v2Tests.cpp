@@ -27,6 +27,8 @@ TEST_CASE("v2 construction and getters")
 	v2 P = V2(-1.f, 2.f);
 	CHECK(*Ptr(P) == -1.f);
 	CHECK(*PtrY(P) == 2.f);
+	CHECK(P[0] == -1.f);
+	CHECK(P[1] == 2.f);
 }
 
 TEST_CASE("v2 operations")

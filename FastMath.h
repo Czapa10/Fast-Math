@@ -85,7 +85,7 @@ union v2
 	};
 	float Elements[2];
 
-	FM_INLINE float& operator[](const int& Index) {
+	FM_INLINE float& operator[](const uint32_t& Index) {
 		return Elements[Index];
 	}
 };
@@ -162,7 +162,7 @@ union v3
 	};
 	float Elements[3];
 
-	FM_INLINE float& operator[](const int& Index) {
+	FM_INLINE float& operator[](const uint32_t& Index) {
 		return Elements[Index];
 	}
 
@@ -248,7 +248,7 @@ union v4
 
 	float Elements[4];
 
-	FM_INLINE float& operator[](const int& Index) {
+	FM_INLINE float& operator[](const uint32_t& Index) {
 		return Elements[Index];
 	}
 
@@ -331,6 +331,10 @@ struct alignas(16) vec2
 
 	FM_INLINE void FM_CALL DivX(float);
 	FM_INLINE void FM_CALL DivY(float);
+	
+	FM_INLINE float& operator[](const uint32_t& Index) {
+		return *((float*)(&M) + Index);
+	}
 };
 
 FM_INLINE vec2 FM_CALL Vec2FromMemory(const float*); 
@@ -758,6 +762,10 @@ struct alignas(16) vec3
 	FM_INLINE vec3 FM_CALL GGG() const { return YYY(); }
 	FM_INLINE vec3 FM_CALL BBB() const { return ZZZ(); }
 #endif
+
+	FM_INLINE float& operator[](const uint32_t& Index) {
+		return *((float*)(&M) + Index);
+	}
 };
 
 FM_INLINE vec3 FM_CALL Vec3FromMemory(float*);
@@ -841,6 +849,10 @@ struct alignas(16) vec4
 	FM_INLINE float FM_CALL G() const { return Y(); }
 	FM_INLINE float FM_CALL B() const { return Z(); }
 	FM_INLINE float FM_CALL A() const { return W(); }
+
+	FM_INLINE float& operator[](const uint32_t& Index) {
+		return *((float*)(&M) + Index);
+	}
 };
 FM_INLINE vec4 FM_CALL Vec4FromMemory(const float*); 
 FM_INLINE vec4 FM_CALL Vec4(vec3 V, float W); 
@@ -888,7 +900,6 @@ FM_INLINE vec4 FM_CALL LesserMask(vec4, vec4);
 FM_INLINE vec4 FM_CALL LesserOrEqualMask(vec4, vec4);
 
 
-
 struct alignas(16) mat4
 {
 	__m128 Columns[4];
@@ -906,6 +917,10 @@ struct alignas(16) mat4
 	FM_INLINE vec4 FM_CALL GetMainDiagonal();
 	FM_INLINE void FM_CALL SetMainDiagonal(float X, float Y, float Z, float W); 
 	FM_INLINE void FM_CALL SetMainDiagonal(vec4);
+
+	FM_INLINE float& operator[](const uint32_t& Index) {
+		return *((float*)(Columns) + Index);
+	}
 };
 
 FM_INLINE mat4 FM_CALL Mat4FromColumnMajorMemory(float*); 

@@ -41,6 +41,9 @@ TEST_CASE("v3 construction and getters")
 	CHECK(*Ptr(P) == 1.f);
 	CHECK(*PtrY(P) == 2.f);
 	CHECK(*PtrZ(P) == 3.f);
+	CHECK(P[0] == 1.f);
+	CHECK(P[1] == 2.f);
+	CHECK(P[2] == 3.f);
 }
 
 TEST_CASE("v3 operations")

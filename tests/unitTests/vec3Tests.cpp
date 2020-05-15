@@ -44,12 +44,13 @@ TEST_CASE("vec3 construction and getters")
 	REQUIRE(D.Y() == 2.f);
 	REQUIRE(D.Z() == 3.f);
 
-	float* PX = Ptr(D);
-	float* PY = PtrY(D);
-	float* PZ = PtrZ(D);
-	CHECK(*PX == 1.f);
-	CHECK(*PY == 2.f);
-	CHECK(*PZ == 3.f);
+	// NOTE: Accessing simd types directly (without intrinsics) is slow
+	CHECK(*Ptr(D) == 1.f);
+	CHECK(*PtrY(D) == 2.f);
+	CHECK(*PtrZ(D) == 3.f);
+	CHECK(D[0] == 1.f);
+	CHECK(D[1] == 2.f);
+	CHECK(D[2] == 3.f);
 
 	vec2 E;
 
