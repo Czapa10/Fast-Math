@@ -40,6 +40,14 @@ like this:
 #define FM_INLINE __forceinline
 #define FM_CALL __vectorcall
 
+#ifdef NDEBUG
+	#define FM_ASSERT(expression) if(!expression) (*(int32_t*)0 = 0);
+	#define FM_ERROR() (*(int32_t*)0 = 0);
+#else
+	#define FM_ASSERT(expression) 
+	#define FM_ERROR() 
+#endif
+
 #define FM_PI32 3.14159265359f
 #define FM_PI64 3.14159265358979323846
 
@@ -86,6 +94,7 @@ union v2
 	float Elements[2];
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index == 0 || Index == 1);
 		return Elements[Index];
 	}
 };
@@ -163,6 +172,7 @@ union v3
 	float Elements[3];
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index >= 0 && Index <= 2);
 		return Elements[Index];
 	}
 
@@ -249,6 +259,7 @@ union v4
 	float Elements[4];
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index >= 0 && Index <= 3);
 		return Elements[Index];
 	}
 
@@ -333,6 +344,7 @@ struct alignas(16) vec2
 	FM_INLINE void FM_CALL DivY(float);
 	
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index == 0 || Index == 1);
 		return *((float*)(&M) + Index);
 	}
 };
@@ -344,6 +356,7 @@ FM_INLINE vec2 FM_CALL Vec2(__m128);
 FM_INLINE vec2 FM_CALL Vec2();
 
 FM_INLINE void FM_CALL Store(float* Mem, vec2 V);
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, vec2 V);
 
 FM_INLINE float* Ptr(vec2& V) { return (float*)(&V); }
 FM_INLINE float* PtrY(vec2& V) { return (float*)(&V) + 1; }
@@ -764,6 +777,7 @@ struct alignas(16) vec3
 #endif
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index >= 0 && Index <= 2);
 		return *((float*)(&M) + Index);
 	}
 };
@@ -851,6 +865,7 @@ struct alignas(16) vec4
 	FM_INLINE float FM_CALL A() const { return W(); }
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index >= 0 && Index <= 3);
 		return *((float*)(&M) + Index);
 	}
 };
@@ -919,6 +934,7 @@ struct alignas(16) mat4
 	FM_INLINE void FM_CALL SetMainDiagonal(vec4);
 
 	FM_INLINE float& operator[](const uint32_t& Index) {
+		FM_ASSERT(Index >= 0 && Index <= 15);
 		return *((float*)(Columns) + Index);
 	}
 };
@@ -1033,9 +1049,6 @@ operator == and !=
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 	#include <smmintrin.h>
 #endif
-
-#define FM_ASSERT(expression) if(!expression) (*(int32_t*)0 = 0);
-#define FM_ERROR() (*(int32_t*)0 = 0);
 
 #ifdef _MSC_VER
 	#pragma warning(push)
@@ -1625,6 +1638,10 @@ FM_INLINE void FM_CALL Store(float* Mem, vec2 V) {
 	Mem[0] = V.X();
 	Mem[1] = V.Y();
 } 
+FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, vec2 V) {
+	FM_ASSERT(Mem % 16 == 0);
+	_mm_store_ps(Mem, V.M);
+}
 FM_INLINE vec2 FM_CALL operator+(vec2 A, vec2 B) {
 	A.M = _mm_add_ps(A.M, B.M);
 	return A; 
@@ -1728,9 +1745,9 @@ FM_INLINE vec2 FM_CALL LesserOrEqualMask(vec2 A, vec2 B) {
 	return A;
 }
 
-//////////////
+////////////////
 // vec2d impl //
-//////////////
+////////////////
 FM_INLINE vec2d FM_CALL Vec2dFromMemory(const double* V) {
 	vec2d R;
 	R.M = _mm_set_pd(V[1], V[0]); 
@@ -1799,6 +1816,7 @@ FM_INLINE void FM_CALL Store(double* Mem, vec2d V) {
 	_mm_storeu_pd(Mem, V.M); 
 } 
 FM_INLINE void FM_CALL Store16ByteAligned(double* Mem, vec2d V) {
+	FM_ASSERT(Mem % 16 == 0);
 	_mm_store_pd(Mem, V.M); 
 }
 FM_INLINE void FM_CALL vec2d::SetX(double X) {
@@ -2770,6 +2788,7 @@ FM_INLINE void FM_CALL Store(float* Mem, vec4 V) {
 	_mm_storeu_ps(Mem, V.M);
 }
 FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, vec4 V) {
+	FM_ASSERT(Mem % 16 == 0);
 	_mm_store_ps(Mem, V.M);
 }
 FM_INLINE vec4 FM_CALL operator+(vec4 A, vec4 B) {
@@ -2877,20 +2896,25 @@ FM_INLINE vec4 FM_CALL LesserOrEqualMask(vec4 A, vec4 B) {
 // mat4 impl //
 ///////////////
 FM_INLINE vec4 FM_CALL mat4::GetColumn(uint32_t Index) {
+	FM_ASSERT(Index >= 0 && Index <= 3);
 	return Vec4(Columns[Index]);
 }
 FM_INLINE void FM_CALL mat4::SetColumn(uint32_t Index, vec4 Col) {
+	FM_ASSERT(Index >= 0 && Index <= 3);
 	Columns[Index] = Col.M;
 }
 FM_INLINE void FM_CALL mat4::SetColumn(uint32_t Index, float X, float Y, float Z, float W) {
+	FM_ASSERT(Index >= 0 && Index <= 3);
 	Columns[Index] = _mm_set_ps(W, Z, Y, X);
 }
 FM_INLINE void FM_CALL mat4::SwapColumns(uint32_t Col1Index, uint32_t Col2Index) {
+	FM_ASSERT(Col1Index >= 0 && Col1Index <= 3 && Col1Index >= 0 && Col1Index <= 3);
 	__m128 Temp = Columns[Col1Index];
 	Columns[Col1Index] = Columns[Col2Index];
 	Columns[Col2Index] = Temp;
 }
 vec4 FM_CALL mat4::GetRow(uint32_t Index) {
+	FM_ASSERT(Index >= 0 && Index <= 3);
 	switch(Index)
 	{
 		case 0: {
@@ -2923,6 +2947,7 @@ vec4 FM_CALL mat4::GetRow(uint32_t Index) {
 	}
 }
 void FM_CALL mat4::SetRow(uint32_t Index, vec4 Row) {
+	FM_ASSERT(Index >= 0 && Index <= 3);
 	switch(Index)
 	{
 		case 0: {
@@ -2962,6 +2987,7 @@ FM_INLINE void FM_CALL mat4::SetRow(uint32_t Index, float X, float Y, float Z, f
 	SetRow(Index, Vec4(X, Y, Z, W));
 }
 FM_INLINE void FM_CALL mat4::SwapRows(uint32_t Row1Index, uint32_t Row2Index) {
+	FM_ASSERT(Row1Index >= 0 && Row2Index <= 3 && Row1Index >= 0 && Row2Index <= 3);
 	vec4 Row1 = GetRow(Row1Index);
 	vec4 Row2 = GetRow(Row2Index);
 	SetRow(Row2Index, Row1);
@@ -3091,6 +3117,7 @@ FM_INLINE void FM_CALL Store(float* Mem, mat4 Mat) {
 		_mm_storeu_ps(Mem + Col*4, Mat.Columns[Col]);
 }
 FM_INLINE void FM_CALL Store16ByteAligned(float* Mem, mat4 Mat) {
+	FM_ASSERT(Mem % 16 == 0);
 	for(int32_t Col = 0; Col < 4; ++Col)
 		_mm_store_ps(Mem + Col*4, Mat.Columns[Col]);
 }

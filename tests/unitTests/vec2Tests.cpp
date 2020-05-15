@@ -14,9 +14,11 @@ TEST_CASE("vec2 construction and getters")
 	vec2 A = Vec2(-3.f, 4.5f);
 	CHECK_VEC2_ALL_ALIASES(A, -3.f, 4.5f);
 
-	float Arr[2];
+	float Arr[2], Arr2[2];
 	Store(Arr, A);
 	CHECK_ARRAY2(Arr, -3.f, 4.5f);
+	Store16ByteAligned(Arr2, A);
+	CHECK_ARRAY2(Arr2, -3.f, 4.5f);
 
 	CHECK_VEC2(Vec2(1.f), 1.f, 1.f);
 	CHECK_VEC2(Vec2(), 0.f, 0.f);
