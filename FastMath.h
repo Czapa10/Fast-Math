@@ -117,7 +117,9 @@ FM_INLINE v2 HadamardMul(v2, v2);
 FM_INLINE v2 HadamardDiv(v2, v2);
 FM_INLINE v2 operator*(v2 V, float Scalar);
 FM_INLINE v2 operator*(float Scalar, v2 V);
+FM_INLINE v2& operator*=(v2& V, float Scalar);
 FM_INLINE v2 operator/(v2 V, float Scalar); 
+FM_INLINE v2& operator/=(v2& V, float Scalar); 
 FM_INLINE v2 operator-(v2); 
 FM_INLINE float Dot(v2, v2); 
 FM_INLINE v2 Min(v2, v2); 
@@ -196,9 +198,11 @@ FM_INLINE v3& operator+=(v3&, v3);
 FM_INLINE v3& operator-=(v3&, v3);
 FM_INLINE v3 HadamardMul(v3, v3);
 FM_INLINE v3 HadamardDiv(v3, v3);
-FM_INLINE v3 operator*(v3 V, float  Scalar);
+FM_INLINE v3 operator*(v3 V, float Scalar);
 FM_INLINE v3 operator*(float Scalar, v3 V);
+FM_INLINE v3& operator*=(v3& V, float Scalar);
 FM_INLINE v3 operator/(v3 V, float Scalar);
+FM_INLINE v3& operator/=(v3& V, float Scalar);
 FM_INLINE v3 operator-(v3); 
 FM_INLINE v3 Cross(v3, v3); 
 FM_INLINE float Dot(v3, v3); 
@@ -285,9 +289,11 @@ FM_INLINE v4& operator+=(v4&, v4);
 FM_INLINE v4& operator-=(v4&, v4);
 FM_INLINE v4 HadamardMul(v4, v4);
 FM_INLINE v4 HadamardDiv(v4, v4);
-FM_INLINE v4 operator*(v4 V, float  Scalar);
+FM_INLINE v4 operator*(v4 V, float Scalar);
 FM_INLINE v4 operator*(float Scalar, v4 V);
+FM_INLINE v4& operator*=(v4& V, float Scalar);
 FM_INLINE v4 operator/(v4 V, float Scalar);
+FM_INLINE v4& operator/=(v4& V, float Scalar);
 FM_INLINE v4 operator-(v4); 
 FM_INLINE float Dot(v4, v4); 
 FM_INLINE v4 Min(v4, v4); 
@@ -369,7 +375,9 @@ FM_INLINE vec2 FM_CALL HadamardMul(vec2, vec2);
 FM_INLINE vec2 FM_CALL HadamardDiv(vec2, vec2);
 FM_INLINE vec2 FM_CALL operator*(vec2 V, float Scalar);
 FM_INLINE vec2 FM_CALL operator*(float Scalar, vec2 V);
+FM_INLINE vec2& FM_CALL operator*=(vec2& V, float Scalar);
 FM_INLINE vec2 FM_CALL operator/(vec2 V, float Scalar); 
+FM_INLINE vec2& FM_CALL operator/=(vec2& V, float Scalar); 
 FM_INLINE vec2 FM_CALL operator-(vec2); 
 FM_INLINE float FM_CALL Dot(vec2, vec2); 
 FM_INLINE vec2 FM_CALL Min(vec2, vec2); 
@@ -449,7 +457,9 @@ FM_INLINE vec2d FM_CALL HadamardMul(vec2d, vec2d);
 FM_INLINE vec2d FM_CALL HadamardDiv(vec2d, vec2d);
 FM_INLINE vec2d FM_CALL operator*(vec2d V, double Scalar);
 FM_INLINE vec2d FM_CALL operator*(double Scalar, vec2d V);
+FM_INLINE vec2d& FM_CALL operator*=(vec2d& V, double Scalar);
 FM_INLINE vec2d FM_CALL operator/(vec2d V, double Scalar);
+FM_INLINE vec2d& FM_CALL operator/=(vec2d& V, double Scalar);
 FM_INLINE vec2d FM_CALL operator-(vec2d); 
 FM_INLINE double FM_CALL Dot(vec2d, vec2d); 
 FM_INLINE vec2d FM_CALL Min(vec2d, vec2d); 
@@ -519,14 +529,15 @@ FM_INLINE void FM_CALL Store(int32_t* Mem, vec2i V);
 FM_INLINE int32_t* Ptr(const vec2i& V) { return (int32_t*)(&V); }
 FM_INLINE int32_t* PtrY(const vec2i& V) { return (int32_t*)(&V) + 1; }
 
-FM_INLINE vec2i FM_CALL operator+(vec2i A, vec2i B);
-FM_INLINE vec2i FM_CALL operator-(vec2i A, vec2i B); 
-FM_INLINE vec2i& FM_CALL operator+=(vec2i& a, vec2i B);
-FM_INLINE vec2i& FM_CALL operator-=(vec2i& a, vec2i B);
-FM_INLINE vec2i FM_CALL HadamardMul(vec2i A, vec2i B);
-FM_INLINE vec2i FM_CALL operator*(vec2i v, int32_t Scalar); 
-FM_INLINE vec2i FM_CALL operator*(int32_t Scalar, vec2i v);
-FM_INLINE vec2i FM_CALL operator-(vec2i v); 
+FM_INLINE vec2i FM_CALL operator+(vec2i, vec2i);
+FM_INLINE vec2i FM_CALL operator-(vec2i, vec2i); 
+FM_INLINE vec2i& FM_CALL operator+=(vec2i&, vec2i);
+FM_INLINE vec2i& FM_CALL operator-=(vec2i&, vec2i);
+FM_INLINE vec2i FM_CALL HadamardMul(vec2i, vec2i);
+FM_INLINE vec2i FM_CALL operator*(vec2i V, int32_t Scalar); 
+FM_INLINE vec2i FM_CALL operator*(int32_t Scalar, vec2i V);
+FM_INLINE vec2i& FM_CALL operator*=(vec2i& V, int32_t Scalar); 
+FM_INLINE vec2i FM_CALL operator-(vec2i); 
 FM_INLINE vec2i FM_CALL Min(vec2i, vec2i); 
 FM_INLINE vec2i FM_CALL Max(vec2i, vec2i); 
 FM_INLINE vec2i FM_CALL Abs(vec2i); 
@@ -601,6 +612,7 @@ FM_INLINE vec2u& FM_CALL operator-=(vec2u&, vec2u);
 FM_INLINE vec2u FM_CALL HadamardMul(vec2u, vec2u);
 FM_INLINE vec2u FM_CALL operator*(vec2u V, uint32_t Scalar); 
 FM_INLINE vec2u FM_CALL operator*(uint32_t Scalar, vec2u V);
+FM_INLINE vec2u& FM_CALL operator*=(vec2u& V, uint32_t Scalar); 
 FM_INLINE vec2u FM_CALL Min(vec2u, vec2u); 
 FM_INLINE vec2u FM_CALL Max(vec2u, vec2u); 
 FM_INLINE uint32_t FM_CALL SumOfElements(vec2u);
@@ -800,9 +812,11 @@ FM_INLINE vec3& FM_CALL operator+=(vec3&, vec3);
 FM_INLINE vec3& FM_CALL operator-=(vec3&, vec3);
 FM_INLINE vec3 FM_CALL HadamardMul(vec3, vec3);
 FM_INLINE vec3 FM_CALL HadamardDiv(vec3, vec3);
-FM_INLINE vec3 FM_CALL operator*(vec3 V, float  Scalar);
+FM_INLINE vec3 FM_CALL operator*(vec3 V, float Scalar);
 FM_INLINE vec3 FM_CALL operator*(float Scalar, vec3 V);
+FM_INLINE vec3& FM_CALL operator*=(vec3& V, float Scalar);
 FM_INLINE vec3 FM_CALL operator/(vec3 V, float Scalar);
+FM_INLINE vec3& FM_CALL operator/=(vec3& V, float Scalar);
 FM_INLINE vec3 FM_CALL operator-(vec3); 
 FM_INLINE vec3 FM_CALL Cross(vec3, vec3); 
 FM_INLINE float FM_CALL Dot(vec3, vec3); 
@@ -892,7 +906,9 @@ FM_INLINE vec4 FM_CALL HadamardMul(vec4, vec4);
 FM_INLINE vec4 FM_CALL HadamardDiv(vec4, vec4);
 FM_INLINE vec4 FM_CALL operator*(vec4 V, float Scalar);
 FM_INLINE vec4 FM_CALL operator*(float Scalar, vec4 V);
+FM_INLINE vec4& FM_CALL operator*=(vec4& V, float Scalar);
 FM_INLINE vec4 FM_CALL operator/(vec4 V, float Scalar);
+FM_INLINE vec4& FM_CALL operator/=(vec4& V, float Scalar);
 FM_INLINE vec4 FM_CALL operator-(vec4); 
 FM_INLINE vec4 FM_CALL Cross(vec4, vec4); 
 FM_INLINE float FM_CALL Dot(vec4, vec4); 
@@ -1215,11 +1231,19 @@ FM_INLINE v2 operator*(v2 V, float Scalar) {
 FM_INLINE v2 operator*(float Scalar, v2 V) {
 	return V * Scalar;
 }
+FM_INLINE v2& operator*=(v2& V, float Scalar) {
+	V = V * Scalar;	
+	return V;
+}
 FM_INLINE v2 operator/(v2 V, float Scalar) {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	return V;
 }
+FM_INLINE v2& operator/=(v2& V, float Scalar) {
+	V = V / Scalar;
+	return V;
+} 
 FM_INLINE v2 operator-(v2 V) {
 	V.X = -V.X;
 	V.Y = -V.Y;
@@ -1339,10 +1363,18 @@ FM_INLINE v3 operator*(v3 V, float Scalar) {
 FM_INLINE v3 operator*(float Scalar, v3 V) {
 	return V * Scalar;
 }
+FM_INLINE v3& operator*=(v3& V, float Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE v3 operator/(v3 V, float Scalar) {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	V.Z /= Scalar;
+	return V;
+}
+FM_INLINE v3& operator/=(v3& V, float Scalar) {
+	V = V / Scalar;
 	return V;
 }
 FM_INLINE v3 operator-(v3 V) {
@@ -1496,11 +1528,19 @@ FM_INLINE v4 operator*(v4 V, float  Scalar) {
 FM_INLINE v4 operator*(float Scalar, v4 V) {
 	return V * Scalar;
 }
+FM_INLINE v4& operator*=(v4& V, float Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE v4 operator/(v4 V, float Scalar) {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	V.Z /= Scalar;
 	V.W /= Scalar;
+	return V;
+}
+FM_INLINE v4& operator/=(v4& V, float Scalar) {
+	V = V / Scalar;
 	return V;
 }
 FM_INLINE v4 operator-(v4 V) {
@@ -1674,10 +1714,18 @@ FM_INLINE vec2 FM_CALL operator*(float Scalar, vec2 V) {
 	V.M = _mm_mul_ps(V.M, _mm_set1_ps(Scalar));
 	return V; 
 }
+FM_INLINE vec2& FM_CALL operator*=(vec2& V, float Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE vec2 FM_CALL operator/(vec2 V, float Scalar) {
 	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
 	return V; 
 }
+FM_INLINE vec2& FM_CALL operator/=(vec2& V, float Scalar) {
+	V = V / Scalar;
+	return V;
+} 
 FM_INLINE vec2 FM_CALL operator-(vec2 V) {
 	V.M = _mm_sub_ps(_mm_setzero_ps(), V.M);
 	return V;
@@ -1857,9 +1905,17 @@ FM_INLINE vec2d FM_CALL operator*(double Scalar, vec2d V) {
 	V.M = _mm_mul_pd(V.M, _mm_set1_pd(Scalar));
 	return V; 
 } 
+FM_INLINE vec2d& FM_CALL operator*=(vec2d& V, double Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE vec2d FM_CALL operator/(vec2d V, double Scalar) {
 	V.M = _mm_div_pd(V.M, _mm_set1_pd(Scalar));
 	return V; 
+}
+FM_INLINE vec2d& FM_CALL operator/=(vec2d& V, double Scalar) {
+	V = V / Scalar;
+	return V;
 }
 FM_INLINE vec2d FM_CALL operator-(vec2d V) {
 	V.M = _mm_sub_pd(_mm_setzero_pd(), V.M);
@@ -2058,6 +2114,10 @@ FM_INLINE vec2i FM_CALL LesserOrEqualMask(vec2i A, vec2i B) {
 	A.M = _mm_or_si128(LT, EQ);
 	return A;
 }
+FM_INLINE vec2i& FM_CALL operator*=(vec2i& V, int32_t Scalar) {
+	V = V * Scalar;
+	return V;
+} 
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2i::SetX(int32_t X) {
 	M = _mm_insert_epi32(M, X, 0);
@@ -2298,6 +2358,10 @@ FM_INLINE void FM_CALL vec2u::MulX(uint32_t XMultiplier) {
 FM_INLINE void FM_CALL vec2u::MulY(uint32_t YMultiplier) {
 	SetY(Y() * YMultiplier);
 }
+FM_INLINE vec2u& FM_CALL operator*=(vec2u& V, uint32_t Scalar) {
+	V = V * Scalar;
+	return V;
+} 
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 FM_INLINE void FM_CALL vec2u::SetX(uint32_t X) {
 	M = _mm_insert_epi32(M, (int32_t)X, 0);
@@ -2603,8 +2667,16 @@ FM_INLINE vec3 FM_CALL operator*(vec3 V, float Scalar) {
 FM_INLINE vec3 FM_CALL operator*(float Scalar, vec3 V) {
 	return V * Scalar;
 }
+FM_INLINE vec3& FM_CALL operator*=(vec3& V, float Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE vec3 FM_CALL operator/(vec3 V, float Scalar) {
 	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
+}
+FM_INLINE vec3& FM_CALL operator/=(vec3& V, float Scalar) {
+	V = V / Scalar;
 	return V;
 }
 FM_INLINE vec3 FM_CALL operator-(vec3 V) {
@@ -2822,8 +2894,16 @@ FM_INLINE vec4 FM_CALL operator*(vec4 V, float Scalar) {
 FM_INLINE vec4 FM_CALL operator*(float Scalar, vec4 V) {
 	return V * Scalar;
 }
+FM_INLINE vec4& FM_CALL operator*=(vec4& V, float Scalar) {
+	V = V * Scalar;
+	return V;
+}
 FM_INLINE vec4 FM_CALL operator/(vec4 V, float Scalar) {
 	V.M = _mm_div_ps(V.M, _mm_set1_ps(Scalar));
+	return V;
+}
+FM_INLINE vec4& FM_CALL operator/=(vec4& V, float Scalar) {
+	V = V / Scalar;
 	return V;
 }
 FM_INLINE vec4 FM_CALL operator-(vec4 V) {

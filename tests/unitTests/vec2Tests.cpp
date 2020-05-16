@@ -68,50 +68,18 @@ TEST_CASE("vec2 operations")
 	vec2 A = Vec2(2.f, 4.f);	
 	vec2 B = Vec2(-5.f, 3.f);	
 
-	vec2 AddRes = A + B; 
-	CHECK_VEC2(AddRes, -3.f, 7.f);
-
-	vec2 SubRes = A - B;
-	CHECK_VEC2(SubRes, 7.f, 1.f);
-
-	vec2 AddAsignmentRes = A;
-	AddAsignmentRes += B;
-	CHECK_VEC2(AddAsignmentRes, -3.f, 7.f);
-
-	vec2 SubAsignmentRes = A;
-	SubAsignmentRes -= B;
-	CHECK_VEC2(SubAsignmentRes, 7.f, 1.f);
-
-	vec2 ScalarMulRes1 = A * 4.5f;
-	CHECK_VEC2(ScalarMulRes1, 9.f, 18.f);
-
-	vec2 ScalarMulRes2 = 4.5f * A;
-	CHECK_VEC2(ScalarMulRes2, 9.f, 18.f);
-
-	vec2 ScalarDivRes = A / 2.f;
-	CHECK_VEC2(ScalarDivRes, 1.f, 2.f);
-
-	vec2 HadamardMulRes = HadamardMul(A, B);
-	CHECK_VEC2(HadamardMulRes, -10.f, 12.f);
-
-	vec2 HadamardDivRes = HadamardDiv(A, B);
-	CHECK_VEC2(HadamardDivRes, 2.f / -5.f, 4.f / 3.f);
-
-	vec2 NegatedB = -B;
-	CHECK_VEC2(NegatedB, 5.f, -3.f); 
-
-	vec2 MinRes = Min(A, B);
-	CHECK_VEC2(MinRes, -5.f, 3.f); 
-
-	vec2 MaxRes = Max(A, B);
-	CHECK_VEC2(MaxRes, 2.f, 4.f); 
-
-	vec2 AbsoluteB = Abs(B);
-	CHECK_VEC2(AbsoluteB, 5.f, 3.f); 
-
-	vec2 NormalizedB = Normalize(B);
-	CHECK_VEC2_APPROX(NormalizedB, B.X() / sqrt(34.f), B.Y() / sqrt(34.f)); 
-
+	CHECK_VEC2(A + B, -3.f, 7.f);
+	CHECK_VEC2(A - B, 7.f, 1.f);
+	CHECK_VEC2(A * 4.5f, 9.f, 18.f);
+	CHECK_VEC2(4.5f * A, 9.f, 18.f);
+	CHECK_VEC2(A / 2.f, 1.f, 2.f);
+	CHECK_VEC2(HadamardMul(A, B), -10.f, 12.f);
+	CHECK_VEC2(HadamardDiv(A, B), 2.f / -5.f, 4.f / 3.f);
+	CHECK_VEC2(-B, 5.f, -3.f); 
+	CHECK_VEC2(Min(A, B), -5.f, 3.f); 
+	CHECK_VEC2(Max(A, B), 2.f, 4.f); 
+	CHECK_VEC2(Abs(B), 5.f, 3.f); 
+	CHECK_VEC2_APPROX(Normalize(B), B.X() / sqrt(34.f), B.Y() / sqrt(34.f)); 
 	CHECK(Dot(A, B) == 2.f);
 	CHECK(SumOfElements(B) == -2.f);
 	CHECK(Length(B) == FloatCmp(sqrt(34.f)));
@@ -124,29 +92,34 @@ TEST_CASE("vec2 operations")
 
 	vec2 C = Vec2(0.f, 0.f);
 	vec2 D = Vec2(2.f, 4.f);
-	vec2 LerpRes = Lerp(C, D, 0.5f);
-	CHECK_VEC2(LerpRes, 1.f, 2.f);
+	CHECK_VEC2(Lerp(C, D, 0.5f), 1.f, 2.f);
+	CHECK_VEC2(Lerp(D, C, 0.5f), 1.f, 2.f);
 
-	LerpRes = Lerp(D, C, 0.5f);
-	CHECK_VEC2(LerpRes, 1.f, 2.f);
+	vec2 E = A;
+	E += B;
+	CHECK_VEC2(E, -3.f, 7.f);
 
-	vec2 E = Vec2();
+	vec2 F = A;
+	F -= B;
+	CHECK_VEC2(F, 7.f, 1.f);
 
-	E.AddX(2.f);
-	E.AddY(-4.f);
-	CHECK_VEC2(E, 2.f, -4.f);
+	vec2 G = Vec2();
+
+	G.AddX(2.f);
+	G.AddY(-4.f);
+	CHECK_VEC2(G, 2.f, -4.f);
 	
-	E.SubX(4.f);
-	E.SubY(-5.f);
-	CHECK_VEC2(E, -2.f, 1.f);
+	G.SubX(4.f);
+	G.SubY(-5.f);
+	CHECK_VEC2(G, -2.f, 1.f);
 	
-	E.MulX(2.f);
-	E.MulY(-3.f);
-	CHECK_VEC2(E, -4.f, -3.f);
+	G.MulX(2.f);
+	G.MulY(-3.f);
+	CHECK_VEC2(G, -4.f, -3.f);
 	
-	E.DivX(4.f);
-	E.DivY(-2.f);
-	CHECK_VEC2(E, -1.f, 1.5f);
+	G.DivX(4.f);
+	G.DivY(-2.f);
+	CHECK_VEC2(G, -1.f, 1.5f);
 }
 
 TEST_CASE("vec2 Comparisons")

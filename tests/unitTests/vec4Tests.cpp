@@ -62,68 +62,41 @@ TEST_CASE("vec4 operations")
 	vec4 A = Vec4(1.f, 3.f, 5.f, -7.f);
 	vec4 B = Vec4(2.f, 4.f, -6.f, 8.f);
 
-	vec4 AddRes = A + B;
-	CHECK_VEC4(AddRes, 3.f, 7.f, -1.f, 1.f);
-
-	vec4 SubRes = A - B;
-	CHECK_VEC4(SubRes, -1.f, -1.f, 11.f, -15.f);
-
-	vec4 AddAsignmentRes = A;
-	AddAsignmentRes += B;
-	CHECK_VEC4(AddAsignmentRes, 3.f, 7.f, -1.f, 1.f);
-
-	vec4 SubAssignmentRes = A;
-	SubAssignmentRes -= B;
-	CHECK_VEC4(SubAssignmentRes, -1.f, -1.f, 11.f, -15.f);
-
-	vec4 ScalarMulRes1 = A * 2.f;
-	CHECK_VEC4(ScalarMulRes1, 2.f, 6.f, 10.f, -14.f);
-
-	vec4 ScalarMulRes2 = 2.f * A;
-	CHECK_VEC4(ScalarMulRes2, 2.f, 6.f, 10.f, -14.f);
-
-	vec4 ScalarDivRes = A / 2.f;
-	CHECK_VEC4(ScalarDivRes, 0.5f, 1.5f, 2.5f, -3.5f);
-
-	vec4 MulRes = HadamardMul(A, B);
-	CHECK_VEC4(MulRes, 2.f, 12.f, -30.f, -56.f);
-
-	vec4 DivRes = HadamardDiv(A, B);
-	CHECK_VEC4_APPROX(DivRes, 0.5f, 0.75f, -0.83, -0.875);
-
-	vec4 NegatedB = -B;
-	CHECK_VEC4(NegatedB, -2.f, -4.f, 6.f, -8.f);
-
-	vec4 MinRes = Min(A, B);
-	CHECK_VEC4(MinRes, 1.f, 3.f, -6.f, -7.f);
-
-	vec4 MaxRes = Max(A, B);
-	CHECK_VEC4(MaxRes, 2.f, 4.f, 5.f, 8.f);
-
-	vec4 AbsoluteB = Abs(B);
-	CHECK_VEC4(AbsoluteB, 2.f, 4.f, 6.f, 8.f);
-
-	vec4 NormalizedB = Normalize(B);
-	CHECK_VEC4_APPROX(NormalizedB,
-		B.X() / sqrt(120), B.Y() / sqrt(120), B.Z() / sqrt(120), B.W() / sqrt(120));
-
+	CHECK_VEC4(A + B, 3.f, 7.f, -1.f, 1.f);
+	CHECK_VEC4(A - B, -1.f, -1.f, 11.f, -15.f);
+	CHECK_VEC4(A * 2.f, 2.f, 6.f, 10.f, -14.f);
+	CHECK_VEC4(2.f * A, 2.f, 6.f, 10.f, -14.f);
+	CHECK_VEC4(A / 2.f, 0.5f, 1.5f, 2.5f, -3.5f);
+	CHECK_VEC4(HadamardMul(A, B), 2.f, 12.f, -30.f, -56.f);
+	CHECK_VEC4_APPROX(HadamardDiv(A, B), 0.5f, 0.75f, -0.83, -0.875);
+	CHECK_VEC4(-B, -2.f, -4.f, 6.f, -8.f);
+	CHECK_VEC4(Min(A, B), 1.f, 3.f, -6.f, -7.f);
+	CHECK_VEC4(Max(A, B), 2.f, 4.f, 5.f, 8.f);
+	CHECK_VEC4(Abs(B), 2.f, 4.f, 6.f, 8.f);
+	CHECK_VEC4_APPROX(Normalize(B), B.X() / sqrt(120), B.Y() / sqrt(120), B.Z() / sqrt(120), B.W() / sqrt(120));
 	CHECK(Dot(A, B) == -72.f);
 	CHECK(SumOfElements(B) == 8.f);
 	CHECK(Length(B) == FloatCmp(sqrt(120.f)));
 	CHECK(LengthSquared(B) == 120.f);
+	CHECK_VEC4(Clamp(Vec4(1.f, 3.f, 5.f, -7.f), Vec4(2.f, 2.f, 2.f, 2.f), Vec4(5.f, 5.f, 3.f, 2.f)), 2.f, 3.f, 3.f, 2.f);
+	CHECK_VEC4(Lerp(Vec4(0.f, 2.f, 3.f, 0.f), Vec4(4.f, 5.f, 6.f, 100.f), 0.5f), 2.f, 3.5f, 4.5f, 50.f);
+	CHECK_VEC4(Lerp(Vec4(4.f, 5.f, 6.f, 100.f), Vec4(0.f, 2.f, 3.f, 0.f), 0.5f), 2.f, 3.5f, 4.5f, 50.f);
 
-	vec4 C = Vec4(1.f, 3.f, 5.f, -7.f);
-	vec4 Min = Vec4(2.f, 2.f, 2.f, 2.f);
-	vec4 Max = Vec4(5.f, 5.f, 3.f, 2.f);
-	vec4 ClampRes = Clamp(C, Min, Max);
-	CHECK_VEC4(ClampRes, 2.f, 3.f, 3.f, 2.f);
+	vec4 C = A;
+	C += B;
+	CHECK_VEC4(C, 3.f, 7.f, -1.f, 1.f);
 
-	vec4 G = Vec4(0.f, 2.f, 3.f, 0.f);
-	vec4 H = Vec4(4.f, 5.f, 6.f, 100.f);
-	auto LerpRes = Lerp(G, H, 0.5f);
-	CHECK_VEC4(LerpRes, 2.f, 3.5f, 4.5f, 50.f);
-	LerpRes = Lerp(H, G, 0.5f);
-	CHECK_VEC4(LerpRes, 2.f, 3.5f, 4.5f, 50.f);
+	vec4 D = A;
+	D -= B;
+	CHECK_VEC4(D, -1.f, -1.f, 11.f, -15.f);
+
+	vec4 E = A;
+	E *= 2.f;
+	CHECK_VEC4(E, 2.f, 6.f, 10.f, -14.f); 
+
+	vec4 F = A;
+	F /= 2.f;
+	CHECK_VEC4(F, 0.5f, 1.5f, 2.5f, -3.5f); 
 
 	vec4 J = Vec4();
 

@@ -74,4 +74,20 @@ TEST_CASE("v3 operations")
 	CHECK_V3(Lerp(V3(4.f, 5.f, 6.f), V3(0.f, 2.f, 3.f), 0.5f), 2.f, 3.5f, 4.5f);
 	CHECK(A == A);
 	CHECK(A != B);
+
+	v3 C = A;
+	C += B;
+	CHECK_V3(C, 0.f, 8.f, 5.f); 
+
+	v3 D = A;
+	D -= B;
+	CHECK_V3(D, 4.f, -2.f, 3.f); 
+
+	v3 E = V3(2.f, 3.f, -4.f);
+	E *= 2.f;
+	CHECK_V3(E, 4.f, 6.f, -8.f);
+
+	v3 G = V3(3.f, 2.f, -1.f);
+	G /= 2.f;
+	CHECK_V3(G, 1.5f, 1.f, -0.5f);
 }

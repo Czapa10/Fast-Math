@@ -58,11 +58,19 @@ TEST_CASE("v2 operations")
 	CHECK(A == A);
 	CHECK(A != B);
 
-	v2 AddAsignmentRes = A;
-	AddAsignmentRes += B;
-	CHECK_V2(AddAsignmentRes, -3.f, 7.f);
+	v2 C = A;
+	C += B;
+	CHECK_V2(C, -3.f, 7.f);
 
-	v2 SubAsignmentRes = A;
-	SubAsignmentRes -= B;
-	CHECK_V2(SubAsignmentRes, 7.f, 1.f);
+	v2 D = A;
+	D -= B;
+	CHECK_V2(D, 7.f, 1.f);
+
+	v2 E = V2(2.f, -3.f);
+	E *= 2.f;
+	CHECK_V2(E, 4.f, -6.f);
+
+	v2 G = V2(3.f, -2.f);
+	G /= 2.f;
+	CHECK_V2(G, 1.5f, -1.f);
 }

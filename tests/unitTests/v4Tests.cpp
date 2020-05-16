@@ -45,14 +45,6 @@ TEST_CASE("v4 operations")
 	CHECK_V4(A + B, 3.f, 7.f, -1.f, 1.f);
 	CHECK_V4(A - B, -1.f, -1.f, 11.f, -15.f);
 
-	v4 AddAsignmentRes = A;
-	AddAsignmentRes += B;
-	CHECK_V4(AddAsignmentRes, 3.f, 7.f, -1.f, 1.f);
-
-	v4 AssignmentRes = A;
-	AssignmentRes -= B;
-	CHECK_V4(AssignmentRes, -1.f, -1.f, 11.f, -15.f);
-
 	CHECK_V4(A * 2.f, 2.f, 6.f, 10.f, -14.f);
 	CHECK_V4(2.f * A, 2.f, 6.f, 10.f, -14.f);
 	CHECK_V4(A / 2.f, 0.5f, 1.5f, 2.5f, -3.5f);
@@ -82,30 +74,20 @@ TEST_CASE("v4 operations")
 	CHECK_V4(Lerp(G, H, 0.5f), 2.f, 3.5f, 4.5f, 50.f);
 	CHECK_V4(Lerp(H, G, 0.5f), 2.f, 3.5f, 4.5f, 50.f);
 
-	v4 J = V4();
+	v4 I = A;
+	I += B;
+	CHECK_V4(I, 3.f, 7.f, -1.f, 1.f);
 
-	J.X += 1.f;
-	J.Y += 2.f;
-	J.Z += -3.f;
-	J.W += -4.f;
-	CHECK_V4(J, 1.f, 2.f, -3.f, -4.f);
+	v4 J = A;
+	J -= B;
+	CHECK_V4(J, -1.f, -1.f, 11.f, -15.f);
 
-	J.X -= 3.f;
-	J.Y -= 1.f;
-	J.Z -= -6.f;
-	J.W -= 2.f;
-	CHECK_V4(J, -2.f, 1.f, 3.f, -6.f);
+	v4 K = V4(2.f, 3.f, -4.f, -5.f);
+	K *= 2.f;
+	CHECK_V4(K, 4.f, 6.f, -8.f, -10.f);
 
-	J.X *= 2.f;
-	J.Y *= 4.f;
-	J.Z *= -3.f;
-	J.W *= 0.5f;
-	CHECK_V4(J, -4.f, 4.f, -9.f, -3.f);
-
-	J.X /= 2.f;
-	J.Y /= -4.f;
-	J.Z /= -2.f;
-	J.W /= 3.f;
-	CHECK_V4(J, -2.f, -1.f, 4.5f, -1.f);
+	v4 L = V4(3.f, 2.f, -1.f, -0.5f);
+	L /= 2.f;
+	CHECK_V4(L, 1.5f, 1.f, -0.5f, -0.25f);
 }
 

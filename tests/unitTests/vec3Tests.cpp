@@ -522,114 +522,43 @@ TEST_CASE("vec3 operations")
 	vec3 A = Vec3(2.f, 3.f, 4.f); 	
 	vec3 B = Vec3(-2.f, 5.f, 1.f); 	
 
-	auto AddRes = A + B;
-	CHECK(AddRes.X() == 0.f);
-	CHECK(AddRes.Y() == 8.f);
-	CHECK(AddRes.Z() == 5.f);
-
-	auto SubRes = A - B;
-	CHECK(SubRes.X() == 4.f);
-	CHECK(SubRes.Y() == -2.f);
-	CHECK(SubRes.Z() == 3.f);
-
-	auto AddAsignmentRes = A;
-	AddAsignmentRes += B;
-	CHECK(AddAsignmentRes.X() == 0.f);
-	CHECK(AddAsignmentRes.Y() == 8.f);
-	CHECK(AddAsignmentRes.Z() == 5.f);
-
-	auto SubAsignmentRes = A;
-	SubAsignmentRes -= B;
-	CHECK(SubAsignmentRes.X() == 4.f);
-	CHECK(SubAsignmentRes.Y() == -2.f);
-	CHECK(SubAsignmentRes.Z() == 3.f);
-
-	auto ScalarMulRes1 = A * 4.5f;
-	CHECK(ScalarMulRes1.X() == 9.f);
-	CHECK(ScalarMulRes1.Y() == 13.5f);
-	CHECK(ScalarMulRes1.Z() == 18.f);
-
-	auto ScalarMulRes2 = 4.5f * A;
-	CHECK(ScalarMulRes2.X() == 9.f);
-	CHECK(ScalarMulRes2.Y() == 13.5f);
-	CHECK(ScalarMulRes2.Z() == 18.f);
-
-	auto ScalarDivRes = A / 2.f;
-	CHECK(ScalarDivRes.X() == 1.f);
-	CHECK(ScalarDivRes.Y() == 1.5f);
-	CHECK(ScalarDivRes.Z() == 2.f);
-
-	auto HadamardMulRes = HadamardMul(A, B); 
-	CHECK(HadamardMulRes.X() == -4.f);
-	CHECK(HadamardMulRes.Y() == 15.f);
-	CHECK(HadamardMulRes.Z() == 4.f);
-
-	auto HadamardDivRes = HadamardDiv(A, B); 
-	CHECK(HadamardDivRes.X() == -1.f);
-	CHECK(HadamardDivRes.Y() == 0.6f);
-	CHECK(HadamardDivRes.Z() == 4.f);
-
-	auto NegatedB = -B;
-	CHECK(NegatedB.X() == 2.f);
-	CHECK(NegatedB.Y() == -5.f);
-	CHECK(NegatedB.Z() == -1.f);
-
-	auto MinRes = Min(A, B);
-	CHECK(MinRes.X() == -2.f);
-	CHECK(MinRes.Y() == 3.f);
-	CHECK(MinRes.Z() == 1.f);
-
-	auto MaxRes = Max(A, B);
-	CHECK(MaxRes.X() == 2.f);
-	CHECK(MaxRes.Y() == 5.f);
-	CHECK(MaxRes.Z() == 4.f);
-
-	auto AbsoluteB = Abs(B);
-	CHECK(AbsoluteB.X() == 2);
-	CHECK(AbsoluteB.Y() == 5);
-	CHECK(AbsoluteB.Z() == 1);
-
-	auto NormalizedB = Normalize(B);
-	CHECK(NormalizedB.X() == FloatCmp(B.X() / sqrt(30)));
-	CHECK(NormalizedB.Y() == FloatCmp(B.Y() / sqrt(30)));
-	CHECK(NormalizedB.Z() == FloatCmp(B.Z() / sqrt(30)));
-	
-	vec3 C = Vec3(1.f, 0.f, 0.f);
-	vec3 D = Vec3(0.f, 1.f, 0.f);
-	auto CrossRes = Cross(C, D);
-	CHECK(CrossRes.X() == 0.f);
-	CHECK(CrossRes.Y() == 0.f);
-	CHECK(CrossRes.Z() == 1.f);
-
-	vec3 E = Vec3(2,3,4);
-	vec3 F = Vec3(5,6,7);
-	auto CrossRes2 = Cross(E, F);
-	CHECK(CrossRes2.X() == -3.f);
-	CHECK(CrossRes2.Y() == 6.f);
-	CHECK(CrossRes2.Z() == -3.f);
-
+	CHECK_VEC3(A + B, 0.f, 8.f, 5.f);
+	CHECK_VEC3(A - B, 4.f, -2.f, 3.f);
+	CHECK_VEC3(A * 4.5f, 9.f, 13.5f, 18.f);
+	CHECK_VEC3(4.5f * A, 9.f, 13.5f, 18.f);
+	CHECK_VEC3(A / 2.f, 1.f, 1.5f, 2.f);
+	CHECK_VEC3(HadamardMul(A, B), -4.f, 15.f, 4.f);
+	CHECK_VEC3(HadamardDiv(A, B), -1.f, 0.6f, 4.f);
+	CHECK_VEC3(-B, 2.f, -5.f, -1.f);
+	CHECK_VEC3(Min(A, B), -2.f, 3.f, 1.f);
+	CHECK_VEC3(Max(A, B), 2.f, 5.f, 4.f);
+	CHECK_VEC3(Abs(B), 2.f, 5.f, 1.f);
+	CHECK_VEC3_APPROX(Normalize(B), B.X() / sqrt(30), B.Y() / sqrt(30), B.Z() / sqrt(30));
+	CHECK_VEC3(Cross(Vec3(1.f, 0.f, 0.f), Vec3(0.f, 1.f, 0.f)), 0.f, 0.f, 1.f);
+	CHECK_VEC3(Cross(Vec3(2.f, 3.f, 4.f), Vec3(5.f, 6.f, 7.f)), -3.f, 6.f, -3.f);
 	CHECK(Dot(A, B) == 15.f);
 	CHECK(SumOfElements(B) == 4.f);
 	CHECK(Length(B) == FloatCmp(sqrt(30.f)));
 	CHECK(LengthSquared(B) == 30.f);
+	CHECK_VEC3(Clamp(B, Vec3(-1.f, 7.f, -5.f), Vec3(4.f, 8.f, -1.f)), -1.f, 7.f, -1.f);
+	CHECK_VEC3(Lerp(Vec3(0.f, 2.f, 3.f), Vec3(4.f, 5.f, 6.f), 0.5f), 2.f, 3.5f, 4.5f);
+	CHECK_VEC3(Lerp(Vec3(4.f, 5.f, 6.f), Vec3(0.f, 2.f, 3.f), 0.5f), 2.f, 3.5f, 4.5f);
 
-	vec3 Min = Vec3(-1.f, 7.f, -5.f);
-	vec3 Max = Vec3(4.f, 8.f, -1.f);
-	vec3 ClampRes = Clamp(B, Min, Max);
-	CHECK(ClampRes.X() == -1.f);
-	CHECK(ClampRes.Y() == 7.f);
-	CHECK(ClampRes.Z() == -1.f);
+	auto C = A;
+	C += B;
+	CHECK_VEC3(C, 0.f, 8.f, 5.f);
 
-	vec3 G = Vec3(0.f, 2.f, 3.f);
-	vec3 H = Vec3(4.f, 5.f, 6.f);
-	auto LerpRes = Lerp(G, H, 0.5f);
-	CHECK(LerpRes.X() == 2.f);
-	CHECK(LerpRes.Y() == 3.5f);
-	CHECK(LerpRes.Z() == 4.5f);
-	LerpRes = Lerp(H, G, 0.5f);
-	CHECK(LerpRes.X() == 2.f);
-	CHECK(LerpRes.Y() == 3.5f);
-	CHECK(LerpRes.Z() == 4.5f);
+	auto D = A;
+	D -= B;
+	CHECK_VEC3(D, 4.f, -2.f, 3.f);
+	
+	auto E = A;
+	E *= 2.f;
+	CHECK_VEC3(E, 4.f, 6.f, 8.f);
+
+	auto F = A;
+	F /= 2.f;
+	CHECK_VEC3(F, 1.f, 1.5f, 2.f);
 
 	vec3 J = Vec3();
 
