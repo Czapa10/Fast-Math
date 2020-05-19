@@ -26,21 +26,6 @@ TEST_CASE("vec2 construction and getters")
 	float InitArr[] = {-1.f, 2.f};	
 	CHECK_VEC2(Vec2FromMemory(InitArr), -1.f, 2.f);
 
-	CHECK(A.YX().X() == 4.5f);
-	CHECK(A.YX().Y() == -3.f);
-	CHECK(A.VU().U() == 4.5f);
-	CHECK(A.VU().V() == -3.f);
-
-	CHECK(A.XX().X() == -3.f);
-	CHECK(A.XX().Y() == -3.f);
-	CHECK(A.UU().U() == -3.f);
-	CHECK(A.UU().V() == -3.f);
-
-	CHECK(A.YY().X() == 4.5f);
-	CHECK(A.YY().Y() == 4.5f);
-	CHECK(A.VV().U() == 4.5f);
-	CHECK(A.VV().V() == 4.5f);
-
 	// NOTE: Accessing simd types directly (without intrinsics) is slow
 	vec2 P = Vec2(-1.f, 2.f);
 	CHECK(*Ptr(P) == -1.f);
@@ -159,21 +144,6 @@ TEST_CASE("vec2d constructors and getters")
 
 	CHECK_VEC2_ALL_ALIASES(A, -3.0, 4.0);
 
-	CHECK(A.YX().X() == 4.0);
-	CHECK(A.YX().Y() == -3.0);
-	CHECK(A.VU().U() == 4.0);
-	CHECK(A.VU().V() == -3.0);
-
-	CHECK(A.XX().X() == -3.0);
-	CHECK(A.XX().Y() == -3.0);
-	CHECK(A.UU().U() == -3.0);
-	CHECK(A.UU().V() == -3.0);
-
-	CHECK(A.YY().X() == 4.0);
-	CHECK(A.YY().Y() == 4.0);
-	CHECK(A.VV().U() == 4.0);
-	CHECK(A.VV().V() == 4.0);
-
 	double Arr[2];
 	Store16ByteAligned(Arr, A);
 	CHECK_ARRAY2(Arr, -3.0, 4.0);
@@ -194,6 +164,9 @@ TEST_CASE("vec2d constructors and getters")
 	double* PY = PtrY(D);
 	CHECK(*PX == -1.0);
 	CHECK(*PY == 2.0);
+
+	CHECK(D[0] == -1.0);
+	CHECK(D[1] == 2.0);
 }
 
 TEST_CASE("vec2d Setters")
@@ -331,21 +304,6 @@ TEST_CASE("vec2i constructors and getters")
 
 	CHECK_VEC2_ALL_ALIASES(A, -3, 4);
 
-	CHECK(A.YX().X() == 4);
-	CHECK(A.YX().Y() == -3);
-	CHECK(A.VU().U() == 4);
-	CHECK(A.VU().V() == -3);
-
-	CHECK(A.XX().X() == -3);
-	CHECK(A.XX().Y() == -3);
-	CHECK(A.UU().U() == -3);
-	CHECK(A.UU().V() == -3);
-
-	CHECK(A.YY().X() == 4);
-	CHECK(A.YY().Y() == 4);
-	CHECK(A.VV().U() == 4);
-	CHECK(A.VV().V() == 4);
-
 	int32 Arr[2];
 	Store(Arr, A);
 	CHECK_ARRAY2(Arr, -3, 4);
@@ -364,6 +322,9 @@ TEST_CASE("vec2i constructors and getters")
 	int32* PY = PtrY(D);
 	CHECK(*PX == -1);
 	CHECK(*PY == 2);
+
+	CHECK(D[0] == -1);
+	CHECK(D[1] == 2);
 }
 
 TEST_CASE("vec2i Setters")
@@ -488,21 +449,6 @@ TEST_CASE("vec2u constructors and getters")
 
 	CHECK_VEC2_ALL_ALIASES(A, 3, 4);
 
-	CHECK(A.YX().X() == 4);
-	CHECK(A.YX().Y() == 3);
-	CHECK(A.VU().U() == 4);
-	CHECK(A.VU().V() == 3);
-
-	CHECK(A.XX().X() == 3);
-	CHECK(A.XX().Y() == 3);
-	CHECK(A.UU().U() == 3);
-	CHECK(A.UU().V() == 3);
-
-	CHECK(A.YY().X() == 4);
-	CHECK(A.YY().Y() == 4);
-	CHECK(A.VV().U() == 4);
-	CHECK(A.VV().V() == 4);
-
 	vec2u B = Vec2u(1);
 	CHECK_VEC2(B, 1, 1);
 
@@ -524,6 +470,9 @@ TEST_CASE("vec2u constructors and getters")
 	uint32* PY = PtrY(E);
 	CHECK(*PX == 1);
 	CHECK(*PY == 2);
+
+	CHECK(E[0] == 1);
+	CHECK(E[1] == 2);
 }
 
 TEST_CASE("vec2u Setters")
