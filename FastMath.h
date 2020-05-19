@@ -478,6 +478,39 @@ FM_SINL double Abs(double A) {
 FM_SINL int32_t Abs(int32_t A) {
 	return A < 0 ? -A : A;
 }
+FM_SINL void Abs(float* A) {
+	*A = *A < 0 ? -(*A) : *A;
+}
+FM_SINL void Abs(double* A) {
+	*A = *A < 0 ? -(*A) : *A;
+}
+FM_SINL void Abs(int32_t* A) {
+	*A = *A < 0 ? -(*A) : *A;
+}
+FM_SINL float Square(float A) {
+	return A * A;
+}
+FM_SINL double Square(double A) {
+	return A * A;
+}
+FM_SINL int32_t Square(int32_t A) {
+	return A * A;
+}
+FM_SINL uint32_t Square(uint32_t A) {
+	return A * A;
+}
+FM_SINL void Square(float* A) {
+	*A = (*A) * (*A);
+}
+FM_SINL void Square(double* A) {
+	*A = (*A) * (*A);
+}
+FM_SINL void Square(int32_t* A) {
+	*A = (*A) * (*A);
+}
+FM_SINL void Square(uint32_t* A) {
+	*A = (*A) * (*A);
+}
 FM_SINL float RadiansToDegrees(float Radians) {
 	return Radians * 180.f / FM_PI32;
 }
