@@ -7,20 +7,9 @@ Written by Grzegorz "Czapa" Bednorz
 
 YOU HAVE TO
 #define FM_IMPLEMENTATION
-one of C++ files that include this header, BEFORE the include, like this:
+in one of C++ files that include this header, BEFORE the include, like this:
 
 #define FM_IMPLEMENTATION
-#include <FastMath.h>
-
-If you don't need certain functionality you can also define some of these macros:
-FM_EXCLUDE_TEX_COORD_SWIZZLES
-FM_EXCLUDE_COLOR_SWIZZLES
-
-like this:
-
-#define FM_IMPLEMENTATION
-#define FM_EXCLUDE_TEX_COORD_SWIZZLES
-#define FM_EXCLUDE_COLOR_SWIZZLES
 #include <FastMath.h>
 */
 
@@ -694,6 +683,9 @@ FM_SINL float LengthSquared(v2 V) {
 FM_SINL v2 Normalize(v2 V) {
 	return V / Length(V);
 }
+FM_SINL void Normalize(v2* V) {
+	*V =  *V / Length(*V);
+}
 FM_SINL v2 Clamp(v2 V, v2 MinV, v2 MaxV) {
 	return Min(Max(V, MinV), MaxV);
 }
@@ -845,6 +837,9 @@ FM_SINL float LengthSquared(v3 V) {
 } 
 FM_SINL v3 Normalize(v3 V) {
 	return V / Length(V);
+}
+FM_SINL void Normalize(v3* V) {
+	*V = *V / Length(*V);
 }
 FM_SINL v3 Clamp(v3 V, v3 MinV, v3 MaxV) {
 	return Min(Max(V, MinV), MaxV);	
@@ -1029,6 +1024,9 @@ FM_SINL float LengthSquared(v4 V) {
 FM_SINL v4 Normalize(v4 V) {
 	return V / Length(V);
 }
+FM_SINL void Normalize(v4* V) {
+	*V = *V / Length(*V);
+}
 FM_SINL v4 Clamp(v4 V, v4 MinV, v4 MaxV) {
 	return Min(Max(V, MinV), MaxV);
 } 
@@ -1199,6 +1197,9 @@ FM_SINL float FM_CALL LengthSquared(vec2 V) {
 }
 FM_SINL vec2 FM_CALL Normalize(vec2 V) {
 	return V / Length(V);
+}
+FM_SINL void Normalize(vec2* V) {
+	*V = *V / Length(*V);
 }
 FM_SINL vec2 FM_CALL Clamp(vec2 V, vec2 MinV, vec2 MaxV) {
 	return Min(Max(V, MinV), MaxV);
@@ -1391,6 +1392,9 @@ FM_SINL double FM_CALL LengthSquared(vec2d V) {
 }
 FM_SINL vec2d FM_CALL Normalize(vec2d V) {
 	return V / Length(V);
+}
+FM_SINL void Normalize(vec2d* V) {
+	*V = *V / Length(*V);
 }
 FM_SINL vec2d FM_CALL Clamp(vec2d V, vec2d MinV, vec2d MaxV) {
 	return Min(Max(V, MinV), MaxV);
@@ -2065,6 +2069,9 @@ FM_SINL float FM_CALL LengthSquared(vec3 V) {
 FM_SINL vec3 FM_CALL Normalize(vec3 V) {
 	return V / Length(V);
 }
+FM_SINL void Normalize(vec3* V) {
+	*V = *V / Length(*V);
+}
 FM_SINL vec3 FM_CALL Clamp(vec3 V, vec3 MinV, vec3 MaxV) {
 	return Min(Max(V, MinV), MaxV);
 }
@@ -2304,6 +2311,9 @@ FM_SINL float FM_CALL LengthSquared(vec4 V) {
 }
 FM_SINL vec4 FM_CALL Normalize(vec4 V) {
 	return V / Length(V);
+}
+FM_SINL void Normalize(vec4* V) {
+	*V = *V / Length(*V);
 }
 FM_SINL vec4 FM_CALL Clamp(vec4 V, vec4 MinV, vec4 MaxV) {
 	return Min(Max(V, MinV), MaxV);

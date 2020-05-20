@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_CHECKS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -136,6 +135,10 @@ TEST_CASE("vec3 operations")
 	J.DivY(-4.f);
 	J.DivZ(-2.f);
 	CHECK_VEC3(J, -2.f, -1.f, 4.5f);
+
+	vec3 K = Vec3(-2.f, 5.f, 1.f); 	
+	Normalize(&K);
+	CHECK_VEC3_APPROX(Normalize(K), B.X() / sqrt(30), B.Y() / sqrt(30), B.Z() / sqrt(30));
 }
 
 TEST_CASE("vec3 Comparisons")

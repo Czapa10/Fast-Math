@@ -68,7 +68,7 @@ static char binaryOutput[128];
 #define CHECK_V3_APPROX(_V, _X, _Y, _Z) {\
 	auto R = _V; \
 	CHECK3(R.X == FloatCmp(_X), R.Y == FloatCmp(_Y), R.Z == FloatCmp(_Z)); }
-	
+
 #define CHECK_V4(_V, _X, _Y, _Z, _W) {\
 	auto R = _V; \
 	CHECK4(R.X == _X, R.Y == _Y, R.Z == _Z, R.W == _W); }
@@ -76,6 +76,9 @@ static char binaryOutput[128];
 #define CHECK_V4_APPROX(_V, _X, _Y, _Z, _W) {\
 	auto R = _V; \
 	CHECK4(R.X == FloatCmp(_X), R.Y == FloatCmp(_Y), R.Z == FloatCmp(_Z), R.W == FloatCmp(_W)); }
+
+#define CHECK_V4_APPROX_EXPERIMENTAL(_V, _X, _Y, _Z, _W) {\
+	CHECK4(_V.X == FloatCmp(_X), _V.Y == FloatCmp(_Y), _V.Z == FloatCmp(_Z), _V.W == FloatCmp(_W)); }
 
 #define CHECK_V4_ALL_ALIASES(V, _X, _Y, _Z, _W) {\
 	CHECK4(V.X == _X, V.Y == _Y, V.Z == _Z, V.W == _W); \

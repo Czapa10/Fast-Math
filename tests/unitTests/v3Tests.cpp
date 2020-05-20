@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -90,4 +89,8 @@ TEST_CASE("v3 operations")
 	v3 G = V3(3.f, 2.f, -1.f);
 	G /= 2.f;
 	CHECK_V3(G, 1.5f, 1.f, -0.5f);
+
+	v3 F = V3(-2.f, 5.f, 1.f);
+	Normalize(&F);
+	CHECK_V3_APPROX(F, F.X / Length(F), F.Y / Length(F), F.Z / Length(F));
 }

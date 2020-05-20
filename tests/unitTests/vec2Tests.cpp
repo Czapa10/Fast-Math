@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -105,6 +104,10 @@ TEST_CASE("vec2 operations")
 	G.DivX(4.f);
 	G.DivY(-2.f);
 	CHECK_VEC2(G, -1.f, 1.5f);
+
+	vec2 H = Vec2(-5.f, 3.f);
+	Normalize(&H);
+	CHECK_VEC2_APPROX(Normalize(B), B.X() / sqrt(34.f), B.Y() / sqrt(34.f)); 
 }
 
 TEST_CASE("vec2 Comparisons")

@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -123,6 +122,10 @@ TEST_CASE("vec4 operations")
 	J.DivZ(-2.f);
 	J.DivW(3.f);
 	CHECK_VEC4(J, -2.f, -1.f, 4.5f, -1.f);
+
+	vec4 K = Vec4(2.f, 4.f, -6.f, 8.f);
+	Normalize(&K);
+	CHECK_VEC4_APPROX(K, K.X() / Length(K), K.Y() / Length(K), K.Z() / Length(K), K.W() / Length(K));
 }
 
 TEST_CASE("vec4 Comparisons")

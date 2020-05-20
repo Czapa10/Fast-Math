@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#define DOCTEST_CONFIG_SUPER_FAST_ASSERTS 
 #include "doctest.h"
 
 #define FM_IMPLEMENTATION
@@ -89,5 +88,9 @@ TEST_CASE("v4 operations")
 	v4 L = V4(3.f, 2.f, -1.f, -0.5f);
 	L /= 2.f;
 	CHECK_V4(L, 1.5f, 1.f, -0.5f, -0.25f);
+
+	v4 M = V4(2.f, 4.f, -6.f, 8.f);
+	Normalize(&M);
+	CHECK_V4_APPROX(M, M.X / Length(M), M.Y / Length(M), M.Z / Length(M), M.W / Length(M));
 }
 
