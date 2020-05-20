@@ -21,6 +21,31 @@ TEST_CASE("mat4 construction and Getters")
 	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(A, 1.f, 2.f, 3.f, 4.f);
 
 	{
+		float Mem[] = {
+			1.f, 2.f, 3.f, 4.f,
+			5.f, 6.f, 7.f, 8.f,
+			9.f, 10.f, 11.f, 12.f,
+			13.f, 14.f, 15.f, 16.f
+		}; 
+		
+		A = Mat4FromColumnMajorMemory(Mem);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 5.f, 9.f,  13.f,
+			2.f, 6.f, 10.f, 14.f,
+			3.f, 7.f, 11.f, 15.f,
+			4.f, 8.f, 12.f, 16.f
+		);
+		
+		A = Mat4FromRowMajorMemory(Mem);
+		CHECK_ALL_MATRIX_ENTRIES(A,
+			1.f, 2.f, 3.f, 4.f,
+			5.f, 6.f, 7.f, 8.f,
+			9.f, 10.f, 11.f, 12.f,
+			13.f, 14.f, 15.f, 16.f
+		);
+	}
+
+	{
 		vec4 Row1 = Vec4(1.f, 2.f, 3.f, 4.f);
 		vec4 Row2 = Vec4(5.f, 6.f, 7.f, 8.f);
 		vec4 Row3 = Vec4(9.f, 10.f, 11.f, 12.f);
@@ -257,8 +282,27 @@ TEST_CASE("mat4 operations")
 	vec4 V = Vec4(1.f, 2.f, 3.f, 4.f);
 	CHECK_VEC4(A * V, 30.f, 70.f, 110.f, 150.f);
 
-	Transpose(&A);
-	CHECK_ALL_MATRIX_ENTRIES(A,
+	mat4 C = A;
+	C *= 2.f;
+	CHECK_ALL_MATRIX_ENTRIES(C,
+		2.f, 4.f, 6.f, 8.f,
+		10.f, 12.f, 14.f, 16.f,
+		18.f, 20.f, 22.f, 24.f,
+		26.f, 28.f, 30.f, 32.f
+	);
+
+	mat4 D = A;
+	D /= 2.f;
+	CHECK_ALL_MATRIX_ENTRIES(D,
+		0.5f, 1.f, 1.5f, 2.f,
+		2.5f, 3.f, 3.5f, 4.f,
+		4.5f, 5.f, 5.5f, 6.f,
+		6.5f, 7.f, 7.5f, 8.f
+	);
+
+	mat4 E = A;
+	Transpose(&E);
+	CHECK_ALL_MATRIX_ENTRIES(E,
 		1.f, 5.f, 9.f,  13.f,
 		2.f, 6.f, 10.f, 14.f,
 		3.f, 7.f, 11.f, 15.f,

@@ -2415,6 +2415,14 @@ FM_SINL mat4 FM_CALL Mat4FromColumnMajorMemory(float* Mem) {
 		R.Columns[i] = _mm_load_ps(Mem + i*4);
 	return R;
 }
+FM_SINL mat4 FM_CALL Mat4FromRowMajorMemory(float* Mem) {
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(Mem[0], Mem[4], Mem[8], Mem[12]);
+	R.Columns[1] = _mm_setr_ps(Mem[1], Mem[5], Mem[9], Mem[13]);
+	R.Columns[2] = _mm_setr_ps(Mem[2], Mem[6], Mem[10], Mem[14]);
+	R.Columns[3] = _mm_setr_ps(Mem[3], Mem[7], Mem[11], Mem[15]);
+	return R;
+}
 FM_SINL mat4 FM_CALL Mat4() {
 	mat4 R;
 	R.Columns[0] = _mm_setzero_ps();
@@ -2557,10 +2565,18 @@ FM_SINL mat4 FM_CALL operator*(mat4 M, float Scalar) {
 FM_SINL mat4 FM_CALL operator*(float Scalar, mat4 M) {
 	return M * Scalar;
 }
+FM_SINL mat4& FM_CALL operator*=(mat4& M, float Scalar) {
+	M = M * Scalar;	
+	return M;
+}
 FM_SINL mat4 FM_CALL operator/(mat4 M, float Scalar) {
 	__m128 ScalarM = _mm_set1_ps(Scalar);
 	for(uint32_t Col = 0; Col < 4; ++Col)
 		M.Columns[Col] = _mm_div_ps(M.Columns[Col], ScalarM);
+	return M;
+}
+FM_SINL mat4& FM_CALL operator/=(mat4& M, float Scalar) {
+	M = M / Scalar;
 	return M;
 }
 FM_SINL void FM_CALL Transpose(mat4* M) {
