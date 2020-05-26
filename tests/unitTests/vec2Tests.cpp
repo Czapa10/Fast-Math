@@ -32,6 +32,14 @@ TEST_CASE("vec2 construction and getters")
 
 	CHECK(P[0] == -1.f);
 	CHECK(P[1] == 2.f);
+
+	v2 B = V2(1.f, 2.f);
+	vec2 C = B;
+	CHECK_VEC2(C, 1.f, 2.f);
+
+	B = V2(3.f, 4.f);
+	C = B;
+	CHECK_VEC2(C, 3.f, 4.f)
 }
 
 TEST_CASE("vec2 setters")

@@ -205,6 +205,16 @@ struct alignas(16) vec2
 	FM_INL void FM_CALL DivY(float);
 	
 	FM_INL float& operator[](uint32_t Index);
+
+	vec2() = default;
+
+	vec2(v2 V) { 
+		M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
+	}
+	vec2& operator=(v2 V) {
+		M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
+		return *this;
+	}
 };
 
 struct alignas(16) vec2d
@@ -245,6 +255,8 @@ struct alignas(16) vec2d
 	FM_INL void FM_CALL DivY(double);
 	
 	FM_INL double& operator[](uint32_t Index);
+
+	// TODO: Copy constructor and assign operator
 };
 
 struct alignas(16) vec2i
@@ -285,6 +297,8 @@ struct alignas(16) vec2i
 	FM_INL void FM_CALL DivY(int32_t);
 	
 	FM_INL int32_t& operator[](uint32_t Index);
+
+	// TODO: Copy constructor and assign operator
 };
 
 struct alignas(16) vec2u
@@ -325,6 +339,8 @@ struct alignas(16) vec2u
 	FM_INL void FM_CALL DivY(uint32_t);
 	
 	FM_INL uint32_t& operator[](uint32_t Index);
+
+	// TODO: Copy constructor and assign operator
 };
 
 struct alignas(16) vec3
@@ -366,6 +382,15 @@ struct alignas(16) vec3
 	FM_INL vec3 FM_CALL ZXY() const;
 
 	FM_INL float& operator[](uint32_t Index); 
+
+	vec3() = default;
+
+	vec3(v3 V) { 
+		M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
+	}
+	vec3& operator=(v3 V) {
+		M = _mm_set_ps(0.f, V.Z, V.Y, V.X); return *this;
+	}
 };
 
 struct alignas(16) vec4
@@ -408,6 +433,16 @@ struct alignas(16) vec4
 	FM_INL float FM_CALL A() const { return W(); }
 
 	FM_INL float& operator[](uint32_t Index);
+
+	vec4() = default;
+
+	vec4(v4 V) {
+		M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
+	}
+	vec4& operator=(v4 V) {
+		M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
+		return *this;
+	}
 };
 
 struct alignas(16) mat4
