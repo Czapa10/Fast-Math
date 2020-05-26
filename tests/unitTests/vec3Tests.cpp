@@ -58,6 +58,10 @@ TEST_CASE("vec3 construction and getters")
 	E = V3(4.f, 5.f, 6.f);
 	F = E;
 	CHECK_VEC3(F, 4.f, 5.f, 6.f);
+
+	E = V3(7.f, 8.f, 9.f);
+	F = Vec3(E);
+	CHECK_VEC3(F, 7.f, 8.f, 9.f);
 }
 
 TEST_CASE("vec3 Setters")

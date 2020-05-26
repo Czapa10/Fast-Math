@@ -49,14 +49,18 @@ in one of C++ files that include this header, BEFORE the include, like this:
 	#pragma warning(disable : 4715)
 #endif
 
-#define FM_PI32 3.14159265359f
-#define FM_PI64 3.14159265358979323846
-
 namespace fm {
+
+const float Pi = 3.14159265359f;
+const double Pi64 = 3.14159265358979323846;
 
 //////////////////////
 // type definitions //
 //////////////////////
+struct vec2;
+struct vec3;
+struct vec4;
+
 union v2
 {
 	struct {
@@ -80,6 +84,11 @@ union v2
 	float Elements[2];
 
 	FM_INL float& operator[](uint32_t Index); 
+
+	v2() = default;
+	v2(const vec2&);
+	v2& operator=(const vec2&);
+	operator vec2();
 };
 
 union v3
@@ -122,6 +131,11 @@ union v3
 	FM_INL float& operator[](uint32_t Index); 
 
 	FM_INL v3 ZXY(); 
+
+	v3() = default;
+	v3(const vec3&);
+	v3& operator=(const vec3&);
+	operator vec3();
 };
 
 union v4
@@ -169,6 +183,11 @@ union v4
 	FM_INL float& operator[](uint32_t Index); 
 
 	FM_INL v3 ZXY(); 
+
+	v4() = default;
+	v4(const vec4&);
+	v4& operator=(const vec4&);
+	operator vec4();
 };
 
 struct alignas(16) vec2
@@ -207,14 +226,8 @@ struct alignas(16) vec2
 	FM_INL float& operator[](uint32_t Index);
 
 	vec2() = default;
-
-	vec2(v2 V) { 
-		M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
-	}
-	vec2& operator=(v2 V) {
-		M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
-		return *this;
-	}
+	vec2(v2 V);
+	vec2& operator=(v2 V); 
 };
 
 struct alignas(16) vec2d
@@ -384,13 +397,8 @@ struct alignas(16) vec3
 	FM_INL float& operator[](uint32_t Index); 
 
 	vec3() = default;
-
-	vec3(v3 V) { 
-		M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
-	}
-	vec3& operator=(v3 V) {
-		M = _mm_set_ps(0.f, V.Z, V.Y, V.X); return *this;
-	}
+	vec3(v3 V);
+	vec3& operator=(v3 V); 
 };
 
 struct alignas(16) vec4
@@ -435,14 +443,8 @@ struct alignas(16) vec4
 	FM_INL float& operator[](uint32_t Index);
 
 	vec4() = default;
-
-	vec4(v4 V) {
-		M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
-	}
-	vec4& operator=(v4 V) {
-		M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
-		return *this;
-	}
+	vec4(v4 V);
+	vec4& operator=(v4 V);
 };
 
 struct alignas(16) mat4
@@ -465,6 +467,16 @@ struct alignas(16) mat4
 
 	FM_INL float& operator[](uint32_t Index); 
 };
+
+///////////////////////////////////
+// forward function declarations //
+///////////////////////////////////
+FM_SINL void FM_CALL Store(float* Mem, vec2 V); 
+FM_SINL void FM_CALL Store(float* Mem, vec3 V); 
+FM_SINL void FM_CALL Store(float* Mem, vec4 V); 
+FM_SINL vec2 FM_CALL Vec2(v2 V); 
+FM_SINL vec3 FM_CALL Vec3(v3 V); 
+FM_SINL vec4 FM_CALL Vec4(v4 V); 
 
 ///////////////////////
 // utility functions //
@@ -536,16 +548,16 @@ FM_SINL void Square(uint32_t* A) {
 	*A = (*A) * (*A);
 }
 FM_SINL float RadiansToDegrees(float Radians) {
-	return Radians * 180.f / FM_PI32;
+	return Radians * 180.f / Pi;
 }
 FM_SINL double RadiansToDegrees(double Radians) {
-	return Radians * 180.f / FM_PI64;
+	return Radians * 180.f / Pi64;
 }
 FM_SINL float DegreesToRadians(float Degrees) {
-	return Degrees * FM_PI32 / 180.f;
+	return Degrees * Pi / 180.f;
 }
 FM_SINL double DegreesToRadians(double Degrees) {
-	return Degrees * FM_PI64 / 180.f;
+	return Degrees * Pi64 / 180.f;
 }
 
 /////////////////////////////////////////
@@ -610,6 +622,21 @@ FM_SINL v2 V2(float XY) {
 FM_SINL v2 V2() {
 	v2 R{};
 	return R;
+}
+FM_SINL v2 V2(vec2 V) {
+	v2 R;
+	Store(R.Elements, V);
+	return R;
+}
+v2::v2(const vec2& V) {
+	Store(Elements, V);
+}
+v2& v2::operator=(const vec2& Other) {
+	Store(Elements, Other);
+	return *this;
+}
+v2::operator vec2() {
+	return Vec2(*this);
 }
 FM_INL float& v2::operator[](uint32_t Index) {
 	FM_ASSERT(Index == 0 || Index == 1);
@@ -738,16 +765,39 @@ FM_SINL bool operator!=(v2 A, v2 B) {
 // v3 functions //
 //////////////////
 FM_SINL v3 V3FromMemory(float* Mem) {
-	return {Mem[0], Mem[1], Mem[2]};
+	v3 R;
+	R.X = Mem[0];
+	R.Y = Mem[1];
+	R.Z = Mem[2];
+	return R;
 }
 FM_SINL v3 V3(float X, float Y, float Z) {
-	return {X, Y, Z};
+	v3 R;
+	R.X = X;
+	R.Y = Y;
+	R.Z = Z;
+	return R;
 }
 FM_SINL v3 V3(float XYZ) {
-	return {XYZ, XYZ, XYZ};
+	return V3(XYZ, XYZ, XYZ);
 }
 FM_SINL v3 V3() {
 	return {};
+}
+FM_SINL v3 V3(vec3 V) {
+	v3 R;
+	Store(R.Elements, V);
+	return R;
+}
+v3::v3(const vec3& V) {
+	Store(Elements, V);
+}
+v3& v3::operator=(const vec3& Other) {
+	Store(Elements, Other);
+	return *this;
+}
+v3::operator vec3() {
+	return Vec3(*this);
 }
 FM_INL v3 v3::ZXY() { 
 	return V3(Z, X, Y); 
@@ -755,6 +805,11 @@ FM_INL v3 v3::ZXY() {
 FM_INL float& v3::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 2);
 	return Elements[Index];
+}
+FM_SINL void Store(float* Mem, v3 V) {
+	Mem[0] = V.X;
+	Mem[1] = V.Y;
+	Mem[2] = V.Z;
 }
 FM_SINL float* Ptr(v3& V) {
 	return &V.X; 
@@ -764,11 +819,6 @@ FM_SINL float* PtrY(v3& V) {
 }
 FM_SINL float* PtrZ(v3& V) {
 	return &V.Z; 
-}
-FM_SINL void Store(float* Mem, v3 V) {
-	Mem[0] = V.X;
-	Mem[1] = V.Y;
-	Mem[2] = V.Z;
 }
 FM_SINL v3 operator+(v3 A, v3 B) {
 	v3 R;
@@ -926,6 +976,21 @@ FM_SINL v4 V4(float XYZW) {
 }
 FM_SINL v4 V4() {
 	return {};
+}
+FM_SINL v4 V4(vec4 V) {
+	v4 R;
+	Store(R.Elements, V);
+	return R;
+}
+v4::v4(const vec4& V) {
+	Store(Elements, V);
+}
+v4& v4::operator=(const vec4& V) {
+	Store(Elements, V);
+	return *this;
+}
+v4::operator vec4() {
+	return Vec4(*this);
 }
 float& v4::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
@@ -1102,6 +1167,18 @@ FM_SINL vec2 FM_CALL Vec2() {
 	vec2 R;
 	R.M = _mm_setzero_ps(); 
 	return R;
+}
+FM_SINL vec2 FM_CALL Vec2(v2 V) {
+	vec2 R;
+	R.M = _mm_set_ps(0.f, 0.f, V.Y, V.X);
+	return R;
+}
+vec2::vec2(v2 V) { 
+	M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
+}
+vec2& vec2::operator=(v2 V) {
+	M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
+	return *this;
 }
 FM_INL float& vec2::operator[](uint32_t Index) {
 	FM_ASSERT(Index == 0 || Index == 1);
@@ -1951,6 +2028,18 @@ FM_SINL vec3 FM_CALL Vec3() {
 	R.M = _mm_setzero_ps();
 	return R;
 }
+FM_SINL vec3 FM_CALL Vec3(v3 V) {
+	vec3 R;
+	R.M = _mm_set_ps(0.f, V.Z, V.Y, V.X);
+	return R;
+}
+vec3::vec3(v3 V) { 
+	M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
+}
+vec3& vec3::operator=(v3 V) {
+	M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
+	return *this;
+}
 FM_INL float& vec3::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 2);
 	return *((float*)(&M) + Index);
@@ -2176,6 +2265,18 @@ FM_SINL vec4 FM_CALL Vec4() {
 	vec4 R;
 	R.M = _mm_setzero_ps();
 	return R;
+}
+FM_SINL vec4 FM_CALL Vec4(v4 V) {
+	vec4 R;
+	R.M = _mm_set_ps(V.W, V.Z, V.Y, V.X);
+	return R;
+}
+vec4::vec4(v4 V) {
+	M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
+}
+vec4& vec4::operator=(v4 V) {
+	M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
+	return *this;
 }
 FM_INL float& vec4::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
@@ -2893,8 +2994,8 @@ mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Ne
 		0.f, 0.f, -2.f / FN, -((Far + Near) / FN),
 		0.f, 0.f, 0.f, 1.f);
 }
-mat4 Mat4Perspective(float FOV, float AspectRatio, float Near, float Far) {
-	float Cotangent = 1.f / tanf(FOV * FM_PI32 / 360.f);
+mat4 Mat4Perspective(float Fov, float AspectRatio, float Near, float Far) {
+	float Cotangent = 1.f / tanf(Fov * Pi / 360.f);
 	float NF = Near - Far;
 		
 	return Mat4FromRows(

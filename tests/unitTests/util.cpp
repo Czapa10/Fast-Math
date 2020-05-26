@@ -69,6 +69,19 @@ static char binaryOutput[128];
 	auto R = _V; \
 	CHECK3(R.X == FloatCmp(_X), R.Y == FloatCmp(_Y), R.Z == FloatCmp(_Z)); }
 
+#define CHECK_V3_ALL_ALIASES(_V, _X, _Y, _Z) {\
+	auto V = _V; \
+	CHECK3(V.X == _X, V.Y == _Y, V.Z == _Z); \
+	CHECK3(V.U == _X, V.V == _Y, V.W == _Z); \
+	CHECK3(V.R == _X, V.G == _Y, V.B == _Z); \
+	CHECK_V2(V.XY, _X, _Y); \
+	CHECK_V2(V.UV, _X, _Y); \
+	CHECK_V2(V.RG, _X, _Y); \
+	CHECK_V2(V.YZ, _Y, _Z); \
+	CHECK_V2(V.VW, _Y, _Z); \
+	CHECK_V2(V.GB, _Y, _Z); \
+	CHECK3(V[0] == _X, V[1] == _Y, V[2] == _Z) };
+
 #define CHECK_V4(_V, _X, _Y, _Z, _W) {\
 	auto R = _V; \
 	CHECK4(R.X == _X, R.Y == _Y, R.Z == _Z, R.W == _W); }
@@ -91,7 +104,7 @@ static char binaryOutput[128];
 	CHECK4(V.Elements[0] == _X, V.Elements[1] == _Y, V.Elements[2] == _Z, V.Elements[3] == _W); }
 
 #define LOG_VEC2(V) \
-	INFO("a == (" << V.X() << ", " << V.Y() << ")");
+	INFO("(" << V.X() << ", " << V.Y() << ")");
 
 #define CHECK_VEC2(_V, _X, _Y) {\
 	auto R = _V; \

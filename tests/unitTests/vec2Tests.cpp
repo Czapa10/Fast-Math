@@ -40,6 +40,10 @@ TEST_CASE("vec2 construction and getters")
 	B = V2(3.f, 4.f);
 	C = B;
 	CHECK_VEC2(C, 3.f, 4.f)
+
+	B = V2(5.f, 6.f);
+	C = Vec2(B);
+	CHECK_VEC2(C, 5.f, 6.f);
 }
 
 TEST_CASE("vec2 setters")

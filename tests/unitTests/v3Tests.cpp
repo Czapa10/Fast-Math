@@ -8,19 +8,6 @@
 
 using namespace fm;
 
-#define CHECK_V3_ALL_ALIASES(_V, _X, _Y, _Z) {\
-	auto V = _V; \
-	CHECK3(V.X == _X, V.Y == _Y, V.Z == _Z); \
-	CHECK3(V.U == _X, V.V == _Y, V.W == _Z); \
-	CHECK3(V.R == _X, V.G == _Y, V.B == _Z); \
-	CHECK_V2(V.XY, _X, _Y); \
-	CHECK_V2(V.UV, _X, _Y); \
-	CHECK_V2(V.RG, _X, _Y); \
-	CHECK_V2(V.YZ, _Y, _Z); \
-	CHECK_V2(V.VW, _Y, _Z); \
-	CHECK_V2(V.GB, _Y, _Z); \
-	CHECK3(V[0] == _X, V[1] == _Y, V[2] == _Z) };
-
 TEST_CASE("v3 construction and getters")
 {
 	v3 A = V3(1.f, 2.f, 3.f);
@@ -43,6 +30,18 @@ TEST_CASE("v3 construction and getters")
 	CHECK(P[0] == 1.f);
 	CHECK(P[1] == 2.f);
 	CHECK(P[2] == 3.f);
+
+	vec3 B = Vec3(1.f, 2.f, 3.f);
+	v3 C = B;
+	CHECK_V3(C, 1.f, 2.f, 3.f);
+
+	B = Vec3(4.f, 5.f, 6.f);
+	C = B;
+	CHECK_V3(C, 4.f, 5.f, 6.f);
+
+	B = Vec3(1.f, 2.f, 3.f);
+	C = V3(B);
+	CHECK_V3(C, 1.f, 2.f, 3.f);
 }
 
 TEST_CASE("v3 operations")
