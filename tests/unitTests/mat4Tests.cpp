@@ -321,6 +321,9 @@ TEST_CASE("mat4 Transformations")
 	Trans = Mat4Translation(1.f, 2.f, 3.f);
 	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
+	Trans = Mat4Translation(3.f);
+	CHECK_VEC4(Trans * V0, 3.f, 3.f, 3.f, 1.f);
+
 	Trans = Mat4Translation(Vec3(1.f, 2.f, 3.f));
 	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
@@ -329,6 +332,9 @@ TEST_CASE("mat4 Transformations")
 
 	Translate(&Trans, Vec3(5.f, 3.f, 0.f));
 	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+
+	Translate(&Trans, 5.f);
+	CHECK_VEC4(Trans * V0, 6.f, 7.f, 8.f, 1.f);
 
 	// Scale
 	Scal = Mat4Scale(5.f);
@@ -375,8 +381,13 @@ TEST_CASE("mat4 Transformations")
 
 	Rot = Mat4RotationAroundZAxisDegrees(90.f);
 	CHECK_VEC4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+
+
+	Rot = Mat4RotationAroundAllAxesDegrees(90.f);
+	CHECK_VEC4_APPROX(Rot * V1, 1.f, 1.f, 1.f, 1.f);
+
 	
-	// TODO: Rotate test are missing
+	// TODO: Rotate tests are missing
 
 	// Shear
 	She = Mat4ShearXAxis(3.f, 1.f);
