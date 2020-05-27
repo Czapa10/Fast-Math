@@ -419,6 +419,8 @@ TEST_CASE("mat4 Transformations")
 
 	Shear(&She, -1.f, -2.f, -3.f, 1.f, 2.f, 3.f);
 	CHECK_VEC4(She * V123, -26.f, 231.f, 447.f, 1.f);
+
+	// TODO: Combined affine transformation tests are missing
 }
 
 TEST_CASE("mat4 Orthographic projection")

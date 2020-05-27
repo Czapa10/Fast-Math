@@ -51,8 +51,8 @@ in one of C++ files that include this header, BEFORE the include, like this:
 
 namespace fm {
 
-const float Pi = 3.14159265359f;
-const double Pi64 = 3.14159265358979323846;
+static const float Pi = 3.14159265359f;
+static const double Pi64 = 3.14159265358979323846;
 
 //////////////////////
 // type definitions //
@@ -2829,8 +2829,8 @@ FM_SINL mat4 FM_CALL Mat4RotationAroundAllAxesRadians(float R) {
 FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, float AxisX, float AxisY, float AxisZ) {
 	*M = *M * Mat4RotationRadians(Radians, AxisX, AxisY, AxisZ);
 }
-FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, vec3 Axis) {
-	*M = *M * Mat4RotationRadians(Radians, Axis);
+FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, vec3 Axes) {
+	*M = *M * Mat4RotationRadians(Radians, Axes);
 }
 FM_SINL void FM_CALL RotateAroundXAxisRadians(mat4* M, float Radians) {
 	*M = *M * Mat4RotationAroundXAxisRadians(Radians);	
@@ -2845,52 +2845,40 @@ FM_SINL void FM_CALL RotateAroundAllAxesRadians(mat4* M, float Radians) {
 	*M = *M * Mat4RotationAroundAllAxesRadians(Radians);
 }
 FM_SINL mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationRadians(R, AxisX, AxisY, AxisZ);
+	return Mat4RotationRadians(DegreesToRadians(Degrees), AxisX, AxisY, AxisZ);
 } 
 FM_SINL mat4 FM_CALL Mat4RotationDegrees(float Degrees, vec3 Axis) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationRadians(R, Axis);
+	return Mat4RotationRadians(DegreesToRadians(Degrees), Axis);
 }
 FM_SINL mat4 FM_CALL Mat4RotationAroundXAxisDegrees(float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationAroundXAxisRadians(R);
+	return Mat4RotationAroundXAxisRadians(DegreesToRadians(Degrees));
 }
 FM_SINL mat4 FM_CALL Mat4RotationAroundYAxisDegrees(float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationAroundYAxisRadians(R);
+	return Mat4RotationAroundYAxisRadians(DegreesToRadians(Degrees));
 }
 FM_SINL mat4 FM_CALL Mat4RotationAroundZAxisDegrees(float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationAroundZAxisRadians(R);
+	return Mat4RotationAroundZAxisRadians(DegreesToRadians(Degrees));
 }
 FM_SINL mat4 FM_CALL Mat4RotationAroundAllAxesDegrees(float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	return Mat4RotationAroundAllAxesRadians(R);
+	return Mat4RotationAroundAllAxesRadians(DegreesToRadians(Degrees));
 }
 FM_SINL void FM_CALL RotateDegrees(mat4* M, float Degrees, float AxisX, float AxisY, float AxisZ) {
-	float R = DegreesToRadians(Degrees);
-	RotateRadians(M, R, AxisX, AxisY, AxisZ);
+	RotateRadians(M, DegreesToRadians(Degrees), AxisX, AxisY, AxisZ);
 } 
 FM_SINL void FM_CALL RotateDegrees(mat4* M, float Degrees, vec3 Axis) {
-	float R = DegreesToRadians(Degrees);
-	RotateRadians(M, R, Axis);
+	RotateRadians(M, DegreesToRadians(Degrees), Axis);
 }
 FM_SINL void FM_CALL RotateAroundXAxisDegrees(mat4* M, float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	RotateAroundXAxisRadians(M, R);
+	RotateAroundXAxisRadians(M, DegreesToRadians(Degrees));
 }
 FM_SINL void FM_CALL RotateAroundYAxisDegrees(mat4* M, float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	RotateAroundYAxisRadians(M, R);
+	RotateAroundYAxisRadians(M, DegreesToRadians(Degrees));
 }
 FM_SINL void FM_CALL RotateAroundZAxisDegrees(mat4* M, float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	RotateAroundZAxisRadians(M, R);
+	RotateAroundZAxisRadians(M, DegreesToRadians(Degrees));
 }
 FM_SINL void FM_CALL RotateAroundAllAxesDegrees(mat4* M, float Degrees) {
-	float R = DegreesToRadians(Degrees);
-	RotateAroundAllAxesRadians(M, R);
+	RotateAroundAllAxesRadians(M, DegreesToRadians(Degrees));
 }
 FM_SINL mat4 FM_CALL Mat4ShearXAxis(float Y, float Z) {
 	return Mat4FromRows(
@@ -2931,6 +2919,36 @@ FM_SINL void FM_CALL ShearZAxis(mat4* M, float X, float Y) {
 } 
 FM_SINL void FM_CALL Shear(mat4* M, float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
 	*M = *M * Mat4Shear(XY, XZ, YX, YZ, ZX, ZY);
+}
+FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationRadians(vec3 Translation, vec3 Scale, float Rotation, vec3 RotationAxes) {
+	mat4 R = Mat4Scale(Scale);
+	RotateRadians(&R, Rotation, RotationAxes);
+	Translate(&R, Translation);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationDegrees(vec3 Translation, vec3 Scale, float Rotation, vec3 RotationAxes) {
+	return Mat4TranslationScaleRotationRadians(Translation, Scale, DegreesToRadians(Rotation), RotationAxes);
+}
+FM_SINL mat4 FM_CALL Mat4TranslationScale(vec3 Translation, vec3 Scale) {
+	mat4 R = Mat4Scale(Scale);
+	Translate(&R, Translation);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4TranslationRotationRadians(vec3 Translation, float Rotation, vec3 RotationAxes) {
+	mat4 R = Mat4RotationRadians(Rotation, RotationAxes);
+	Translate(&R, Translation);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4TranslationRotationDegrees(vec3 Translation, float Rotation, vec3 RotationAxes) {
+	return Mat4TranslationRotationRadians(Translation, DegreesToRadians(Rotation), RotationAxes);
+}
+FM_SINL mat4 FM_CALL Mat4ScaleRotationRadians(vec3 Scale, float Rotation, vec3 RotationAxes) {
+	mat4 R = Mat4Scale(Scale);
+	RotateRadians(&R, Rotation, RotationAxes);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4ScaleRotationDegrees(vec3 Scale, float Rotation, vec3 RotationAxes) {
+	return Mat4ScaleRotationRadians(Scale, DegreesToRadians(Rotation), RotationAxes);
 }
 
 }
