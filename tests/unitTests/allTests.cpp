@@ -5,5 +5,6 @@
 #include "v2Tests.cpp"
 #include "v3Tests.cpp"
 #include "v4Tests.cpp"
+#include "vectorCasting.cpp"
 #include "mat4Tests.cpp"
 

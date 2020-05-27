@@ -34,18 +34,6 @@ TEST_CASE("v4 construction and getters")
 	CHECK(B[1] == 2.f);
 	CHECK(B[2] == 3.f);
 	CHECK(B[3] == 4.f);
-
-	vec4 C = Vec4(1.f, 2.f, 3.f, 4.f);
-	v4 D = C;
-	CHECK_V4(D, 1.f, 2.f, 3.f, 4.f);
-
-	C = Vec4(5.f, 6.f, 7.f, 8.f);
-	D = C;
-	CHECK_V4(D, 5.f, 6.f, 7.f, 8.f);
-
-	C = Vec4(1.f, 2.f, 3.f, 4.f);
-	D = V4(C);
-	CHECK_V4(D, 1.f, 2.f, 3.f, 4.f);
 }
 
 TEST_CASE("v4 operations")

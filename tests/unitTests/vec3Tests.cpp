@@ -50,18 +50,6 @@ TEST_CASE("vec3 construction and getters")
 	CHECK(D[0] == 1.f);
 	CHECK(D[1] == 2.f);
 	CHECK(D[2] == 3.f);
-	
-	v3 E = V3(1.f, 2.f, 3.f);
-	vec3 F = E;
-	CHECK_VEC3(F, 1.f, 2.f, 3.f);
-
-	E = V3(4.f, 5.f, 6.f);
-	F = E;
-	CHECK_VEC3(F, 4.f, 5.f, 6.f);
-
-	E = V3(7.f, 8.f, 9.f);
-	F = Vec3(E);
-	CHECK_VEC3(F, 7.f, 8.f, 9.f);
 }
 
 TEST_CASE("vec3 Setters")

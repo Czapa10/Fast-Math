@@ -57,10 +57,6 @@ static const double Pi64 = 3.14159265358979323846;
 //////////////////////
 // type definitions //
 //////////////////////
-struct vec2;
-struct vec3;
-struct vec4;
-
 union v2
 {
 	struct {
@@ -84,11 +80,6 @@ union v2
 	float Elements[2];
 
 	FM_INL float& operator[](uint32_t Index); 
-
-	v2() = default;
-	v2(const vec2&);
-	v2& operator=(const vec2&);
-	operator vec2();
 };
 
 union v3
@@ -131,11 +122,6 @@ union v3
 	FM_INL float& operator[](uint32_t Index); 
 
 	FM_INL v3 ZXY(); 
-
-	v3() = default;
-	v3(const vec3&);
-	v3& operator=(const vec3&);
-	operator vec3();
 };
 
 union v4
@@ -183,11 +169,6 @@ union v4
 	FM_INL float& operator[](uint32_t Index); 
 
 	FM_INL v3 ZXY(); 
-
-	v4() = default;
-	v4(const vec4&);
-	v4& operator=(const vec4&);
-	operator vec4();
 };
 
 struct alignas(16) vec2
@@ -224,10 +205,6 @@ struct alignas(16) vec2
 	FM_INL void FM_CALL DivY(float);
 	
 	FM_INL float& operator[](uint32_t Index);
-
-	vec2() = default;
-	vec2(v2 V);
-	vec2& operator=(v2 V); 
 };
 
 struct alignas(16) vec2d
@@ -395,10 +372,6 @@ struct alignas(16) vec3
 	FM_INL vec3 FM_CALL ZXY() const;
 
 	FM_INL float& operator[](uint32_t Index); 
-
-	vec3() = default;
-	vec3(v3 V);
-	vec3& operator=(v3 V); 
 };
 
 struct alignas(16) vec4
@@ -441,10 +414,6 @@ struct alignas(16) vec4
 	FM_INL float FM_CALL A() const { return W(); }
 
 	FM_INL float& operator[](uint32_t Index);
-
-	vec4() = default;
-	vec4(v4 V);
-	vec4& operator=(v4 V);
 };
 
 struct alignas(16) mat4
@@ -623,21 +592,6 @@ FM_SINL v2 V2() {
 	v2 R{};
 	return R;
 }
-FM_SINL v2 V2(vec2 V) {
-	v2 R;
-	Store(R.Elements, V);
-	return R;
-}
-v2::v2(const vec2& V) {
-	Store(Elements, V);
-}
-v2& v2::operator=(const vec2& Other) {
-	Store(Elements, Other);
-	return *this;
-}
-v2::operator vec2() {
-	return Vec2(*this);
-}
 FM_INL float& v2::operator[](uint32_t Index) {
 	FM_ASSERT(Index == 0 || Index == 1);
 	return Elements[Index];
@@ -783,21 +737,6 @@ FM_SINL v3 V3(float XYZ) {
 }
 FM_SINL v3 V3() {
 	return {};
-}
-FM_SINL v3 V3(vec3 V) {
-	v3 R;
-	Store(R.Elements, V);
-	return R;
-}
-v3::v3(const vec3& V) {
-	Store(Elements, V);
-}
-v3& v3::operator=(const vec3& Other) {
-	Store(Elements, Other);
-	return *this;
-}
-v3::operator vec3() {
-	return Vec3(*this);
 }
 FM_INL v3 v3::ZXY() { 
 	return V3(Z, X, Y); 
@@ -977,21 +916,6 @@ FM_SINL v4 V4(float XYZW) {
 FM_SINL v4 V4() {
 	return {};
 }
-FM_SINL v4 V4(vec4 V) {
-	v4 R;
-	Store(R.Elements, V);
-	return R;
-}
-v4::v4(const vec4& V) {
-	Store(Elements, V);
-}
-v4& v4::operator=(const vec4& V) {
-	Store(Elements, V);
-	return *this;
-}
-v4::operator vec4() {
-	return Vec4(*this);
-}
 float& v4::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	return Elements[Index];
@@ -1167,18 +1091,6 @@ FM_SINL vec2 FM_CALL Vec2() {
 	vec2 R;
 	R.M = _mm_setzero_ps(); 
 	return R;
-}
-FM_SINL vec2 FM_CALL Vec2(v2 V) {
-	vec2 R;
-	R.M = _mm_set_ps(0.f, 0.f, V.Y, V.X);
-	return R;
-}
-vec2::vec2(v2 V) { 
-	M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
-}
-vec2& vec2::operator=(v2 V) {
-	M = _mm_set_ps(0.f, 0.f, V.Y, V.X); 
-	return *this;
 }
 FM_INL float& vec2::operator[](uint32_t Index) {
 	FM_ASSERT(Index == 0 || Index == 1);
@@ -2028,18 +1940,6 @@ FM_SINL vec3 FM_CALL Vec3() {
 	R.M = _mm_setzero_ps();
 	return R;
 }
-FM_SINL vec3 FM_CALL Vec3(v3 V) {
-	vec3 R;
-	R.M = _mm_set_ps(0.f, V.Z, V.Y, V.X);
-	return R;
-}
-vec3::vec3(v3 V) { 
-	M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
-}
-vec3& vec3::operator=(v3 V) {
-	M = _mm_set_ps(0.f, V.Z, V.Y, V.X); 
-	return *this;
-}
 FM_INL float& vec3::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 2);
 	return *((float*)(&M) + Index);
@@ -2266,18 +2166,6 @@ FM_SINL vec4 FM_CALL Vec4() {
 	R.M = _mm_setzero_ps();
 	return R;
 }
-FM_SINL vec4 FM_CALL Vec4(v4 V) {
-	vec4 R;
-	R.M = _mm_set_ps(V.W, V.Z, V.Y, V.X);
-	return R;
-}
-vec4::vec4(v4 V) {
-	M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
-}
-vec4& vec4::operator=(v4 V) {
-	M = _mm_set_ps(V.W, V.Z, V.Y, V.X); 
-	return *this;
-}
 FM_INL float& vec4::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	return *((float*)(&M) + Index);
@@ -2483,6 +2371,40 @@ FM_SINL bool FM_CALL operator==(vec4 A, vec4 B) {
 } 
 FM_SINL bool FM_CALL operator!=(vec4 A, vec4 B) {
 	return !(A == B);
+}
+
+//////////////////////////
+// vector types casting //
+//////////////////////////
+FM_SINL v2 FM_CALL CastToV2(vec2 V) {
+	v2 R;
+	R.X = V.X();
+	R.Y = V.Y();
+	return R;
+}
+FM_SINL v3 FM_CALL CastToV3(vec3 V) {
+	v3 R;
+	R.X = V.X();
+	R.Y = V.Y();
+	R.Z = V.Z();
+	return R;
+}
+FM_SINL v4 FM_CALL CastToV4(vec4 V) {
+	v4 R;
+	R.X = V.X();
+	R.Y = V.Y();
+	R.Z = V.Z();
+	R.W = V.W();
+	return R;
+}
+FM_SINL vec2 FM_CALL CastToVec2(v2 V) {
+	return Vec2FromMemory(V.Elements);
+}
+FM_SINL vec3 FM_CALL CastToVec3(v3 V) {
+	return Vec3FromMemory(V.Elements);
+}
+FM_SINL vec4 FM_CALL CastToVec4(v4 V) {
+	return Vec4FromMemory(V.Elements);
 }
 
 ///////////////////////////////////////////
