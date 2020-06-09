@@ -1,24 +1,10 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
 
-#define FM_IMPLEMENTATION
-#include "../../FastMath.h"
-
-#include "util.cpp"
-
-using namespace fm;
-
-TEST_CASE("mat4 construction and Getters")
+TEST_CASE("mat4 construction and getters")
 {
-	mat4 A = Mat4Diagonal(3.f);
-	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(A, 3.f);
-
-	A = Mat4Diagonal(1.f, 2.f, 3.f, 4.f); 
-	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(A, 1.f, 2.f, 3.f, 4.f);
-
-	vec4 Diagonal = Vec4(1.f, 2.f, 3.f, 4.f);
-	A = Mat4Diagonal(Diagonal);
-	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(A, 1.f, 2.f, 3.f, 4.f);
+	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat4Diagonal(3.f), 3.f, 3.f, 3.f, 3.f);
+	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat4Diagonal(1.f, 2.f, 3.f, 4.f), 1.f, 2.f, 3.f, 4.f);
+	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat4Diagonal(Vec4(1.f, 2.f, 3.f, 4.f)), 1.f, 2.f, 3.f, 4.f);
+	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat4Diagonal(V4(1.f, 2.f, 3.f, 4.f)), 1.f, 2.f, 3.f, 4.f);
 
 	{
 		float Mem[] = {
@@ -28,16 +14,30 @@ TEST_CASE("mat4 construction and Getters")
 			13.f, 14.f, 15.f, 16.f
 		}; 
 		
-		A = Mat4FromColumnMajorMemory(Mem);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromColumnMajorMemory(Mem),
 			1.f, 5.f, 9.f,  13.f,
 			2.f, 6.f, 10.f, 14.f,
 			3.f, 7.f, 11.f, 15.f,
 			4.f, 8.f, 12.f, 16.f
 		);
 		
-		A = Mat4FromRowMajorMemory(Mem);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromRowMajorMemory(Mem),
+			1.f, 2.f, 3.f, 4.f,
+			5.f, 6.f, 7.f, 8.f,
+			9.f, 10.f, 11.f, 12.f,
+			13.f, 14.f, 15.f, 16.f
+		);
+	}
+
+	{
+		v4 Row1 = V4(1.f, 2.f, 3.f, 4.f);
+		v4 Row2 = V4(5.f, 6.f, 7.f, 8.f);
+		v4 Row3 = V4(9.f, 10.f, 11.f, 12.f);
+		v4 Row4 = V4(13.f, 14.f, 15.f, 16.f);
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromRows(Row1, Row2, Row3, Row4),
 			1.f, 2.f, 3.f, 4.f,
 			5.f, 6.f, 7.f, 8.f,
 			9.f, 10.f, 11.f, 12.f,
@@ -50,8 +50,8 @@ TEST_CASE("mat4 construction and Getters")
 		vec4 Row2 = Vec4(5.f, 6.f, 7.f, 8.f);
 		vec4 Row3 = Vec4(9.f, 10.f, 11.f, 12.f);
 		vec4 Row4 = Vec4(13.f, 14.f, 15.f, 16.f);
-		A = Mat4FromRows(Row1, Row2, Row3, Row4);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromRows(Row1, Row2, Row3, Row4),
 			1.f, 2.f, 3.f, 4.f,
 			5.f, 6.f, 7.f, 8.f,
 			9.f, 10.f, 11.f, 12.f,
@@ -64,8 +64,8 @@ TEST_CASE("mat4 construction and Getters")
 		vec3 Row2 = Vec3(4.f, 5.f, 6.f);
 		vec3 Row3 = Vec3(7.f, 8.f, 9.f);
 		vec3 Row4 = Vec3(10.f, 11.f, 12.f);
-		A = Mat4FromRows(Row1, Row2, Row3, Row4);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromRows(Row1, Row2, Row3, Row4),
 			1.f, 2.f, 3.f, 0.f,
 			4.f, 5.f, 6.f, 0.f,
 			7.f, 8.f, 9.f, 0.f,
@@ -73,7 +73,7 @@ TEST_CASE("mat4 construction and Getters")
 		);
 	}
 
-	A = Mat4FromRows(
+	mat4 A = Mat4FromRows(
 		1.f, 2.f, 3.f, 4.f,
 		5.f, 6.f, 7.f, 8.f,
 		9.f, 10.f, 11.f, 12.f,
@@ -86,25 +86,38 @@ TEST_CASE("mat4 construction and Getters")
 		13.f, 14.f, 15.f, 16.f
 	);
 
-	CHECK_VEC4(A.GetColumn(0), 1.f, 5.f, 9.f, 13.f);
-	CHECK_VEC4(A.GetColumn(1), 2.f, 6.f, 10.f, 14.f);
-	CHECK_VEC4(A.GetColumn(2), 3.f, 7.f, 11.f, 15.f);
-	CHECK_VEC4(A.GetColumn(3), 4.f, 8.f, 12.f, 16.f);
+	CHECK_V4(A.GetColumnV4(0), 1.f, 5.f, 9.f, 13.f);
+	CHECK_V4(A.GetColumnV4(1), 2.f, 6.f, 10.f, 14.f);
+	CHECK_V4(A.GetColumnV4(2), 3.f, 7.f, 11.f, 15.f);
+	CHECK_V4(A.GetColumnV4(3), 4.f, 8.f, 12.f, 16.f);
 
-	CHECK_VEC4(A.GetRow(0), 1.f, 2.f, 3.f, 4.f);
-	CHECK_VEC4(A.GetRow(1), 5.f, 6.f, 7.f, 8.f);
-	CHECK_VEC4(A.GetRow(2), 9.f, 10.f, 11.f, 12.f);
-	CHECK_VEC4(A.GetRow(3), 13.f, 14.f, 15.f, 16.f);
+	CHECK_V4(A.GetRowV4(0), 1.f, 2.f, 3.f, 4.f);
+	CHECK_V4(A.GetRowV4(1), 5.f, 6.f, 7.f, 8.f);
+	CHECK_V4(A.GetRowV4(2), 9.f, 10.f, 11.f, 12.f);
+	CHECK_V4(A.GetRowV4(3), 13.f, 14.f, 15.f, 16.f);
 
-	CHECK_VEC4(A.GetMainDiagonal(), 1.f, 6.f, 11.f, 16.f);
+	CHECK_V4(A.GetMainDiagonalV4(), 1.f, 6.f, 11.f, 16.f);
+
+
+	CHECK_VEC4(A.GetColumnVec4(0), 1.f, 5.f, 9.f, 13.f);
+	CHECK_VEC4(A.GetColumnVec4(1), 2.f, 6.f, 10.f, 14.f);
+	CHECK_VEC4(A.GetColumnVec4(2), 3.f, 7.f, 11.f, 15.f);
+	CHECK_VEC4(A.GetColumnVec4(3), 4.f, 8.f, 12.f, 16.f);
+
+	CHECK_VEC4(A.GetRowVec4(0), 1.f, 2.f, 3.f, 4.f);
+	CHECK_VEC4(A.GetRowVec4(1), 5.f, 6.f, 7.f, 8.f);
+	CHECK_VEC4(A.GetRowVec4(2), 9.f, 10.f, 11.f, 12.f);
+	CHECK_VEC4(A.GetRowVec4(3), 13.f, 14.f, 15.f, 16.f);
+
+	CHECK_VEC4(A.GetMainDiagonalVec4(), 1.f, 6.f, 11.f, 16.f);
 
 	{
 		vec4 Col1 = Vec4(1.f, 2.f, 3.f, 4.f);
 		vec4 Col2 = Vec4(5.f, 6.f, 7.f, 8.f);
 		vec4 Col3 = Vec4(9.f, 10.f, 11.f, 12.f);
 		vec4 Col4 = Vec4(13.f, 14.f, 15.f, 16.f);
-		A = Mat4FromColumns(Col1, Col2, Col3, Col4);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromColumns(Col1, Col2, Col3, Col4),
 			1.f, 5.f, 9.f,  13.f,
 			2.f, 6.f, 10.f, 14.f,
 			3.f, 7.f, 11.f, 15.f,
@@ -112,12 +125,39 @@ TEST_CASE("mat4 construction and Getters")
 		);
 	}
 	{
+		v4 Col1 = V4(1.f, 2.f, 3.f, 4.f);
+		v4 Col2 = V4(5.f, 6.f, 7.f, 8.f);
+		v4 Col3 = V4(9.f, 10.f, 11.f, 12.f);
+		v4 Col4 = V4(13.f, 14.f, 15.f, 16.f);
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromColumns(Col1, Col2, Col3, Col4),
+			1.f, 5.f, 9.f,  13.f,
+			2.f, 6.f, 10.f, 14.f,
+			3.f, 7.f, 11.f, 15.f,
+			4.f, 8.f, 12.f, 16.f
+		);
+	}
+
+	{
 		vec3 Col1 = Vec3(1.f, 2.f, 3.f);
 		vec3 Col2 = Vec3(5.f, 6.f, 7.f);
 		vec3 Col3 = Vec3(9.f, 10.f, 11.f);
 		vec3 Col4 = Vec3(13.f, 14.f, 15.f);
-		A = Mat4FromColumns(Col1, Col2, Col3, Col4);
-		CHECK_ALL_MATRIX_ENTRIES(A,
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromColumns(Col1, Col2, Col3, Col4),
+			1.f, 5.f, 9.f,  13.f,
+			2.f, 6.f, 10.f, 14.f,
+			3.f, 7.f, 11.f, 15.f,
+			0.f, 0.f, 0.f, 1.f
+		);
+	}
+	{
+		v3 Col1 = V3(1.f, 2.f, 3.f);
+		v3 Col2 = V3(5.f, 6.f, 7.f);
+		v3 Col3 = V3(9.f, 10.f, 11.f);
+		v3 Col4 = V3(13.f, 14.f, 15.f);
+		CHECK_ALL_MATRIX_ENTRIES(
+			Mat4FromColumns(Col1, Col2, Col3, Col4),
 			1.f, 5.f, 9.f,  13.f,
 			2.f, 6.f, 10.f, 14.f,
 			3.f, 7.f, 11.f, 15.f,
@@ -130,6 +170,7 @@ TEST_CASE("mat4 construction and Getters")
         5.f, 6.f, 7.f, 8.f,
         9.f, 10.f, 11.f, 12.f,
         13.f, 14.f, 15.f, 16.f);
+
 	CHECK_ALL_MATRIX_ENTRIES(A,
 		1.f, 5.f, 9.f,  13.f,
 		2.f, 6.f, 10.f, 14.f,
@@ -162,64 +203,75 @@ TEST_CASE("mat4 construction and Getters")
 	CHECK(A[5] == 6.f);
 }
 
-TEST_CASE("mat4 setters and Swaps")
+TEST_CASE("mat4 setters and swaps")
 {
 	mat4 M = Mat4();
 
-	M.SetRow(0, Vec4(1.f, 2.f, 3.f, 4.f));
-	M.SetRow(1, 1.f, 2.f, 3.f, 4.f);
+	M.SetRow(0, V4(1.f, 2.f, 3.f, 4.f));
+	M.SetRow(1, Vec4(1.f, 2.f, 3.f, 4.f));
+	M.SetRow(2, 1.f, 2.f, 3.f, 4.f);
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
 		1.f, 2.f, 3.f, 4.f,
 		1.f, 2.f, 3.f, 4.f,
-		0.f, 0.f, 0.f, 0.f, 
+		1.f, 2.f, 3.f, 4.f,
 		0.f, 0.f, 0.f, 0.f
 	);
 
+	M.SetColumn(1, V4(0.f, 1.f, 0.f, 1.f));
 	M.SetColumn(2, Vec4(1.f, 2.f, 3.f, 4.f));
 	M.SetColumn(3, 5.f, 6.f, 7.f, 8.f);
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
-		1.f, 2.f, 1.f, 5.f,
-		1.f, 2.f, 2.f, 6.f,
-		0.f, 0.f, 3.f, 7.f, 
-		0.f, 0.f, 4.f, 8.f
+		1.f, 0.f, 1.f, 5.f,
+		1.f, 1.f, 2.f, 6.f,
+		1.f, 0.f, 3.f, 7.f,
+		0.f, 1.f, 4.f, 8.f
 	);
 
 	M.SwapRows(0, 1);
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
-		1.f, 2.f, 2.f, 6.f,
-		1.f, 2.f, 1.f, 5.f,
-		0.f, 0.f, 3.f, 7.f, 
-		0.f, 0.f, 4.f, 8.f
+		1.f, 1.f, 2.f, 6.f,
+		1.f, 0.f, 1.f, 5.f,
+		1.f, 0.f, 3.f, 7.f,
+		0.f, 1.f, 4.f, 8.f
 	);
 
 	M.SwapColumns(2, 3);
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
-		1.f, 2.f, 6.f, 2.f, 
-		1.f, 2.f, 5.f, 1.f, 
-		0.f, 0.f, 7.f, 3.f, 
-		0.f, 0.f, 8.f, 4.f 
+		1.f, 1.f, 6.f, 2.f,
+		1.f, 0.f, 5.f, 1.f,
+		1.f, 0.f, 7.f, 3.f,
+		0.f, 1.f, 8.f, 4.f
 	);
 
 	M.SetMainDiagonal(8.f, 9.f, 10.f, 11.f);
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
-		8.f, 2.f, 6.f, 2.f, 
-		1.f, 9.f, 5.f, 1.f, 
-		0.f, 0.f, 10.f, 3.f, 
-		0.f, 0.f, 8.f, 11.f 
+		8.f, 1.f, 6.f, 2.f,
+		1.f, 9.f, 5.f, 1.f,
+		1.f, 0.f, 10.f,3.f,
+		0.f, 1.f, 8.f, 11.f
 	);
 
 	M.SetMainDiagonal(Vec4(0.f, 2.f, 5.f, 1.f));
 
 	CHECK_ALL_MATRIX_ENTRIES(M,
-		0.f, 2.f, 6.f, 2.f, 
-		1.f, 2.f, 5.f, 1.f, 
-		0.f, 0.f, 5.f, 3.f, 
-		0.f, 0.f, 8.f, 1.f 
+		0.f, 1.f, 6.f, 2.f,
+		1.f, 2.f, 5.f, 1.f,
+		1.f, 0.f, 5.f, 3.f,
+		0.f, 1.f, 8.f, 1.f
+	);
+
+	M.SetMainDiagonal(V4(5.f, 3.f, 2.f, 5.f));
+
+	CHECK_ALL_MATRIX_ENTRIES(M,
+		5.f, 1.f, 6.f, 2.f,
+		1.f, 3.f, 5.f, 1.f,
+		1.f, 0.f, 2.f, 3.f,
+		0.f, 1.f, 8.f, 5.f
 	);
 }
 
@@ -279,8 +331,8 @@ TEST_CASE("mat4 operations")
 		87.f, 88.f, 89.f, 90.f
 	);
 
-	vec4 V = Vec4(1.f, 2.f, 3.f, 4.f);
-	CHECK_VEC4(A * V, 30.f, 70.f, 110.f, 150.f);
+	CHECK_VEC4(A * Vec4(1.f, 2.f, 3.f, 4.f), 30.f, 70.f, 110.f, 150.f);
+	CHECK_V4(A * V4(1.f, 2.f, 3.f, 4.f), 30.f, 70.f, 110.f, 150.f);
 
 	mat4 C = A;
 	C *= 2.f;
@@ -312,95 +364,95 @@ TEST_CASE("mat4 operations")
 
 TEST_CASE("mat4 Transformations")
 {
-	vec4 V0 = Vec4(0.f, 0.f, 0.f, 1.f);
-	vec4 V1 = Vec4(1.f);
-	vec4 V123 = Vec4(1.f, 2.f, 3.f, 1.f);
+	v4 V0 = V4(0.f, 0.f, 0.f, 1.f);
+	v4 V1 = V4(1.f);
+	v4 V123 = V4(1.f, 2.f, 3.f, 1.f);
 	mat4 Trans, Scal, Rot, She;
 
 	// Translate
 	Trans = Mat4Translation(1.f, 2.f, 3.f);
-	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	Trans = Mat4Translation(3.f);
-	CHECK_VEC4(Trans * V0, 3.f, 3.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 3.f, 3.f, 3.f, 1.f);
 
 	Trans = Mat4Translation(Vec3(1.f, 2.f, 3.f));
-	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	Translate(&Trans, -5.f, -3.f, 0.f);
-	CHECK_VEC4(Trans * V0, -4.f, -1.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, -4.f, -1.f, 3.f, 1.f);
 
 	Translate(&Trans, Vec3(5.f, 3.f, 0.f));
-	CHECK_VEC4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
+	CHECK_V4(Trans * V0, 1.f, 2.f, 3.f, 1.f);
 
 	Translate(&Trans, 5.f);
-	CHECK_VEC4(Trans * V0, 6.f, 7.f, 8.f, 1.f);
+	CHECK_V4(Trans * V0, 6.f, 7.f, 8.f, 1.f);
 
 	// Scale
 	Scal = Mat4Scale(5.f);
-	CHECK_VEC4(Scal * V1, 5.f, 5.f, 5.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 5.f, 5.f, 1.f);
 
 	Scal = Mat4Scale(5.f, 4.f, 3.f);
-	CHECK_VEC4(Scal * V1, 5.f, 4.f, 3.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 4.f, 3.f, 1.f);
 
 	Scale(&Scal, 2.f);
-	CHECK_VEC4(Scal * V1, 10.f, 8.f, 6.f, 1.f);
+	CHECK_V4(Scal * V1, 10.f, 8.f, 6.f, 1.f);
 
 	Scale(&Scal, 0.5f, 0.25f, 1.f);
-	CHECK_VEC4(Scal * V1, 5.f, 2.f, 6.f, 1.f);
+	CHECK_V4(Scal * V1, 5.f, 2.f, 6.f, 1.f);
 
 	Scale(&Scal, Vec3(-1.f, 2.f, 3.f));
-	CHECK_VEC4(Scal * V1;, -5.f, 4.f, 18.f, 1.f);
+	CHECK_V4(Scal * V1;, -5.f, 4.f, 18.f, 1.f);
 
 	// Rotate
 	Rot = Mat4RotationDegrees(90.f, 1.f, 0.f, 0.f);
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, Vec3(1.f, 0.f, 0.f)); 
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationAroundXAxisDegrees(90.f);
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, -1.f, 1.f, 1.f);
 
 
 	Rot = Mat4RotationDegrees(90.f, 0.f, 1.f, 0.f);
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, Vec3(0.f, 1.f, 0.f)); 
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 	Rot = Mat4RotationAroundYAxisDegrees(90.f);
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, -1.f, 1.f);
 
 
 	Rot = Mat4RotationDegrees(90.f, 0.f, 0.f, 1.f);
-	CHECK_VEC4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationDegrees(90.f, Vec3(0.f, 0.f, 1.f)); 
-	CHECK_VEC4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 	Rot = Mat4RotationAroundZAxisDegrees(90.f);
-	CHECK_VEC4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, -1.f, 1.f, 1.f, 1.f);
 
 
 	Rot = Mat4RotationAroundAllAxesDegrees(90.f);
-	CHECK_VEC4_APPROX(Rot * V1, 1.f, 1.f, 1.f, 1.f);
+	CHECK_V4_APPROX(Rot * V1, 1.f, 1.f, 1.f, 1.f);
 
 	
 	// TODO: Rotate tests are missing
 
 	// Shear
 	She = Mat4ShearXAxis(3.f, 1.f);
-	CHECK_VEC4(She * V123, 1.f, 5.f, 4.f, 1.f);
+	CHECK_V4(She * V123, 1.f, 5.f, 4.f, 1.f);
 
 	She = Mat4ShearYAxis(3.f, 1.f);
-	CHECK_VEC4(She * V123, 7.f, 2.f, 5.f, 1.f);
+	CHECK_V4(She * V123, 7.f, 2.f, 5.f, 1.f);
 
 	She = Mat4ShearZAxis(3.f, 1.f);
-	CHECK_VEC4(She * V123, 10.f, 5.f, 3.f, 1.f);
+	CHECK_V4(She * V123, 10.f, 5.f, 3.f, 1.f);
 
 	She = Mat4Shear(1.f, 2.f, 3.f, 4.f, 5.f, 6.f);
-	CHECK_VEC4(She * V123, 22.f, 21.f, 13.f, 1.f);
+	CHECK_V4(She * V123, 22.f, 21.f, 13.f, 1.f);
 	
 	She = Mat4FromRows(
 		1.f, -1.f, 0.f, 2.f,
@@ -409,16 +461,16 @@ TEST_CASE("mat4 Transformations")
 		0.f, 0.f, 0.f, 1.f);
 
 	ShearXAxis(&She, 1.f, 2.f);
-	CHECK_VEC4(She * V123, 0.f, 7.f, 12.f, 1.f);
+	CHECK_V4(She * V123, 0.f, 7.f, 12.f, 1.f);
 
 	ShearYAxis(&She, 3.f, 4.f);
-	CHECK_VEC4(She * V123, 0.f, 19.f, 38.f, 1.f);
+	CHECK_V4(She * V123, 0.f, 19.f, 38.f, 1.f);
 
 	ShearZAxis(&She, 5.f, 6.f);
-	CHECK_VEC4(She * V123, -18.f, 175.f, 335.f, 1.f);
+	CHECK_V4(She * V123, -18.f, 175.f, 335.f, 1.f);
 
 	Shear(&She, -1.f, -2.f, -3.f, 1.f, 2.f, 3.f);
-	CHECK_VEC4(She * V123, -26.f, 231.f, 447.f, 1.f);
+	CHECK_V4(She * V123, -26.f, 231.f, 447.f, 1.f);
 
 	// TODO: Combined affine transformation tests are missing
 }
@@ -426,28 +478,28 @@ TEST_CASE("mat4 Transformations")
 TEST_CASE("mat4 Orthographic projection")
 {
 	mat4 Ortho = Mat4Orthographic(-10.f, 10.f, -5.f, 5.f, 0.f, -10.f);
-	vec4 V = Vec4(5.f, 5.f, -5.f, 1.f);
-	CHECK_VEC4_APPROX(Ortho * V, 0.5f, 1.f, -2.f, 1.f);
+	v4 P = V4(5.f, 5.f, -5.f, 1.f);
+	CHECK_V4_APPROX(Ortho * P, 0.5f, 1.f, -2.f, 1.f);
 }
 
 TEST_CASE("mat4 Perspective projection")
 {
 	mat4 Persp = Mat4Perspective(90.0f, 2.0f, 5.0f, 15.0f);
 
-	vec4 V = Vec4(5.0f, 5.0f, -15.0f, 1.f);
-	CHECK_VEC4(Persp * V, 2.5f, 5.f, 15.f, 15.f);
+	vec4 P1 = Vec4(5.0f, 5.0f, -15.0f, 1.f);
+	CHECK_VEC4(Persp * P1, 2.5f, 5.f, 15.f, 15.f);
 
-	V = Vec4(5.0f, 5.0f, -5.0f, 1.f);
-	CHECK_VEC4(Persp * V, 2.5f, 5.f, -5.f, 5.f);
+	v4 P2 = V4(5.0f, 5.0f, -5.0f, 1.f);
+	CHECK_V4(Persp * P2, 2.5f, 5.f, -5.f, 5.f);
 }
 
 TEST_CASE("mat4 look at")
 {
 	mat4 ViewMat = Mat4LookAt(Vec3(0.f), Vec3(0.f, 0.f, 5.f));
-	vec4 P = Vec4(0.f, 2.f, 5.f, 1.f);
-	vec4 Res = ViewMat * P;
-	CHECK4(Res.X() == 0.f, Res.Y() == 2.f, Res.Z() == -5.f, Res.W() == 1.f);
+	CHECK_VEC4(ViewMat * Vec4(0.f, 2.f, 5.f, 1.f), 0.f, 2.f, -5.f, 1.f);
 
-	// TODO: Why CHECK_VEC4 macro doesn't work here !?
+	ViewMat = Mat4LookAt(V3(0.f), V3(0.f, 0.f, 5.f));
+	CHECK_V4(ViewMat * V4(0.f, 2.f, 5.f, 1.f), 0.f, 2.f, -5.f, 1.f);
+
 	// TODO: Make more tests for look at function
 }

@@ -1,12 +1,3 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-
-#define FM_IMPLEMENTATION
-#include "../../FastMath.h"
-
-#include "util.cpp"
-
-using namespace fm;
 
 TEST_CASE("utility functions")
 {

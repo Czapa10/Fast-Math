@@ -1,12 +1,3 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-
-#define FM_IMPLEMENTATION
-#include "../../FastMath.h"
-
-#include "util.cpp"
-
-using namespace fm;
 
 TEST_CASE("vec2 construction and getters") 
 {
@@ -459,9 +450,6 @@ TEST_CASE("vec2u constructors and getters")
 	Store(Arr, A);
 	CHECK_ARRAY2(Arr, 3, 4);
 
-	vec2u C = Vec2u(-2, 3);
-	CHECK_VEC2(C, -2, 3);
-
 	vec2u D = Vec2u();
 	CHECK_VEC2(D, 0, 0);
 
@@ -551,7 +539,7 @@ TEST_CASE("vec2u comparisons")
 {
 	vec2u A = Vec2u(5, 5);
 	vec2u B = Vec2u(3, 5);
-	vec2u C = Vec2u(-2, 6);
+	vec2u C = Vec2u(2, 6);
 
 	CHECK(A == A);
 	CHECK(A != B);

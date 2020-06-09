@@ -420,18 +420,24 @@ struct alignas(16) mat4
 {
 	__m128 Columns[4];
 
-	FM_INL vec4 FM_CALL GetColumn(uint32_t Index);
+	FM_INL v4 FM_CALL GetColumnV4(uint32_t Index);
+	FM_INL vec4 FM_CALL GetColumnVec4(uint32_t Index); 
+	FM_INL void FM_CALL SetColumn(uint32_t Index, v4 Col);
 	FM_INL void FM_CALL SetColumn(uint32_t Index, vec4 Col);
 	FM_INL void FM_CALL SetColumn(uint32_t Index, float X, float Y, float Z, float W);
 	FM_INL void FM_CALL SwapColumns(uint32_t Col1Index, uint32_t Col2Index); 
 
-	vec4 FM_CALL GetRow(uint32_t Index);
+	v4 FM_CALL GetRowV4(uint32_t Index);
+	vec4 FM_CALL GetRowVec4(uint32_t Index);
+	void FM_CALL SetRow(uint32_t Index, v4 Row);
 	void FM_CALL SetRow(uint32_t Index, vec4 Row);
 	FM_INL void FM_CALL SetRow(uint32_t Index, float X, float Y, float Z, float W);
 	FM_INL void FM_CALL SwapRows(uint32_t Row1Index, uint32_t Row2Index); 
 
-	FM_INL vec4 FM_CALL GetMainDiagonal();
+	FM_INL v4 FM_CALL GetMainDiagonalV4();
+	FM_INL vec4 FM_CALL GetMainDiagonalVec4();
 	FM_INL void FM_CALL SetMainDiagonal(float X, float Y, float Z, float W); 
+	FM_INL void FM_CALL SetMainDiagonal(v4);
 	FM_INL void FM_CALL SetMainDiagonal(vec4);
 
 	FM_INL float& operator[](uint32_t Index); 
@@ -2390,6 +2396,7 @@ FM_SINL v3 FM_CALL CastToV3(vec3 V) {
 	return R;
 }
 FM_SINL v4 FM_CALL CastToV4(vec4 V) {
+	// TODO: Use store
 	v4 R;
 	R.X = V.X();
 	R.Y = V.Y();
@@ -2414,6 +2421,7 @@ mat4 FM_CALL operator*(mat4 A, mat4 B);
 mat4 Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far);
 mat4 Mat4Perspective(float FOV, float AspectRatio, float near, float Far);
 mat4 Mat4LookAt(vec3 Eye, vec3 At, vec3 Up = Vec3(0.f, 1.f, 0.f));
+mat4 Mat4LookAt(v3 Eye, v3 At, v3 Up = V3(0.f, 1.f, 0.f));
 
 ////////////////////
 // mat4 functions //
@@ -2422,13 +2430,19 @@ FM_INL float& mat4::operator[](uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 15);
 	return *((float*)(Columns) + Index);
 }
-FM_INL vec4 FM_CALL mat4::GetColumn(uint32_t Index) {
+FM_INL vec4 FM_CALL mat4::GetColumnVec4(uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	return Vec4(Columns[Index]);
+}
+FM_INL v4 FM_CALL mat4::GetColumnV4(uint32_t Index) {
+	return CastToV4(GetColumnVec4(Index));
 }
 FM_INL void FM_CALL mat4::SetColumn(uint32_t Index, vec4 Col) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	Columns[Index] = Col.M;
+}
+FM_INL void FM_CALL mat4::SetColumn(uint32_t Index, v4 Col) {
+	SetColumn(Index, CastToVec4(Col));
 }
 FM_INL void FM_CALL mat4::SetColumn(uint32_t Index, float X, float Y, float Z, float W) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
@@ -2440,32 +2454,44 @@ FM_INL void FM_CALL mat4::SwapColumns(uint32_t Col1Index, uint32_t Col2Index) {
 	Columns[Col1Index] = Columns[Col2Index];
 	Columns[Col2Index] = Temp;
 }
+FM_INL vec4 FM_CALL mat4::GetRowVec4(uint32_t Index) {
+	return CastToVec4(GetRowV4(Index));
+}
 FM_INL void FM_CALL mat4::SetRow(uint32_t Index, float X, float Y, float Z, float W) {
-	SetRow(Index, Vec4(X, Y, Z, W));
+	SetRow(Index, V4(X, Y, Z, W));
+}
+FM_INL void FM_CALL mat4::SetRow(uint32_t Index, vec4 V) {
+	SetRow(Index, CastToV4(V));
 }
 FM_INL void FM_CALL mat4::SwapRows(uint32_t Row1Index, uint32_t Row2Index) {
 	FM_ASSERT(Row1Index >= 0 && Row2Index <= 3 && Row1Index >= 0 && Row2Index <= 3);
-	vec4 Row1 = GetRow(Row1Index);
-	vec4 Row2 = GetRow(Row2Index);
+	v4 Row1 = GetRowV4(Row1Index);
+	v4 Row2 = GetRowV4(Row2Index);
 	SetRow(Row2Index, Row1);
 	SetRow(Row1Index, Row2);
 }
-FM_INL vec4 FM_CALL mat4::GetMainDiagonal() {
-	vec4 R;
-	R.SetX(priv::GetX(Columns[0]));
-	R.SetY(priv::GetY(Columns[1]));
-	R.SetZ(priv::GetZ(Columns[2]));
-	R.SetW(priv::GetW(Columns[3]));
+FM_INL v4 FM_CALL mat4::GetMainDiagonalV4() {
+	v4 R;
+	R.X = priv::GetX(Columns[0]);
+	R.Y = priv::GetY(Columns[1]);
+	R.Z = priv::GetZ(Columns[2]);
+	R.W = priv::GetW(Columns[3]);
 	return R;
 }
-FM_INL void FM_CALL mat4::SetMainDiagonal(float x, float y, float z, float w) {
-	Columns[0] = priv::SetX(Columns[0], x);
-	Columns[1] = priv::SetY(Columns[1], y);
-	Columns[2] = priv::SetZ(Columns[2], z);
-	Columns[3] = priv::SetW(Columns[3], w);
+FM_INL vec4 FM_CALL mat4::GetMainDiagonalVec4() {
+	return CastToVec4(GetMainDiagonalV4());
+}
+FM_INL void FM_CALL mat4::SetMainDiagonal(float X, float Y, float Z, float W) {
+	Columns[0] = priv::SetX(Columns[0], X);
+	Columns[1] = priv::SetY(Columns[1], Y);
+	Columns[2] = priv::SetZ(Columns[2], Z);
+	Columns[3] = priv::SetW(Columns[3], W);
+}
+FM_INL void FM_CALL mat4::SetMainDiagonal(v4 V) {
+	SetMainDiagonal(V.X, V.Y, V.Z, V.W);
 }
 FM_INL void FM_CALL mat4::SetMainDiagonal(vec4 V) {
-	SetMainDiagonal(V.X(), V.Y(), V.Z(), V.W());
+	SetMainDiagonal(CastToV4(V));
 }
 FM_SINL mat4 FM_CALL Mat4FromColumnMajorMemory(float* Mem) {
 	mat4 R;
@@ -2505,15 +2531,16 @@ FM_SINL mat4 FM_CALL Mat4Diagonal(float DiagX, float DiagY, float DiagZ, float D
 	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, DiagW);
 	return R;
 }
-FM_SINL mat4 FM_CALL Mat4Diagonal(vec4 Diag) {
-	// TODO: What is going on with Diag.X() Diag.Y()... 
+FM_SINL mat4 FM_CALL Mat4Diagonal(v4 Diag) {
 	mat4 R;
-	float* V = (float*)(&Diag);
-	R.Columns[0] = _mm_set_ps(0.f, 0.f, 0.f, V[0]);
-	R.Columns[1] = _mm_set_ps(0.f, 0.f, V[1], 0.f);
-	R.Columns[2] = _mm_set_ps(0.f, V[2], 0.f, 0.f);
-	R.Columns[3] = _mm_set_ps(V[3], 0.f, 0.f, 0.f);
+	R.Columns[0] = _mm_setr_ps(Diag.X, 0.f, 0.f, 0.f);
+	R.Columns[1] = _mm_setr_ps(0.f, Diag.Y, 0.f, 0.f);
+	R.Columns[2] = _mm_setr_ps(0.f, 0.f, Diag.Z, 0.f);
+	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, Diag.W);
 	return R;
+}
+FM_SINL mat4 FM_CALL Mat4Diagonal(vec4 Diag) {
+	return Mat4Diagonal(CastToV4(Diag));
 }
 FM_SINL mat4 FM_CALL Mat4Identity() {
 	return Mat4Diagonal(1.f);
@@ -2526,6 +2553,9 @@ FM_SINL mat4 FM_CALL Mat4FromColumns(vec4 Col1, vec4 Col2, vec4 Col3, vec4 Col4)
 	R.Columns[3] = Col4.M;
 	return R;
 }
+FM_SINL mat4 FM_CALL Mat4FromColumns(v4 Col1, v4 Col2, v4 Col3, v4 Col4) {
+	return Mat4FromColumns(CastToVec4(Col1), CastToVec4(Col2), CastToVec4(Col3), CastToVec4(Col4));
+}
 FM_SINL mat4 FM_CALL Mat4FromColumns(vec3 Col1, vec3 Col2, vec3 Col3, vec3 Col4) {
 	mat4 R;
 	R.Columns[0] = Col1.M;
@@ -2534,6 +2564,9 @@ FM_SINL mat4 FM_CALL Mat4FromColumns(vec3 Col1, vec3 Col2, vec3 Col3, vec3 Col4)
 	R.Columns[3] = Col4.M;
 	R.SetRow(3, 0.f, 0.f, 0.f, 1.f);
 	return R;
+}
+FM_SINL mat4 FM_CALL Mat4FromColumns(v3 Col1, v3 Col2, v3 Col3, v3 Col4) {
+	return Mat4FromColumns(CastToVec3(Col1), CastToVec3(Col2), CastToVec3(Col3), CastToVec3(Col4));
 }
 FM_SINL mat4 FM_CALL Mat4FromColumns(
 	float E11, float E21, float E31, float E41,
@@ -2556,13 +2589,8 @@ FM_SINL mat4 FM_CALL Mat4FromRows(vec4 Row1, vec4 Row2, vec4 Row3, vec4 Row4) {
 	R.Columns[3] = _mm_setr_ps(Row1.W(), Row2.W(), Row3.W(), Row4.W());
 	return R;
 }
-FM_SINL mat4 FM_CALL Mat4FromRows(vec3 Row1, vec3 Row2, vec3 Row3, vec3 Row4) {
-	mat4 R;
-	R.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
-	R.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
-	R.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
-	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, 1.f);
-	return R;
+FM_SINL mat4 FM_CALL Mat4FromRows(v4 Row1, v4 Row2, v4 Row3, v4 Row4) {
+	return Mat4FromRows(CastToVec4(Row1), CastToVec4(Row2), CastToVec4(Row3), CastToVec4(Row4));
 }
 FM_SINL mat4 FM_CALL Mat4FromRows(
 	float E11, float E12, float E13, float E14,
@@ -2576,6 +2604,17 @@ FM_SINL mat4 FM_CALL Mat4FromRows(
 	R.Columns[2] = _mm_setr_ps(E13, E23, E33, E43);
 	R.Columns[3] = _mm_setr_ps(E14, E24, E34, E44);
 	return R;
+}
+FM_SINL mat4 FM_CALL Mat4FromRows(vec3 Row1, vec3 Row2, vec3 Row3, vec3 Row4) {
+	mat4 R;
+	R.Columns[0] = _mm_setr_ps(Row1.X(), Row2.X(), Row3.X(), Row4.X());
+	R.Columns[1] = _mm_setr_ps(Row1.Y(), Row2.Y(), Row3.Y(), Row4.Y());
+	R.Columns[2] = _mm_setr_ps(Row1.Z(), Row2.Z(), Row3.Z(), Row4.Z());
+	R.Columns[3] = _mm_setr_ps(0.f, 0.f, 0.f, 1.f);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4FromRows(v3 Row1, v3 Row2, v3 Row3, v3 Row4) {
+	return Mat4FromRows(CastToVec3(Row1), CastToVec3(Row2), CastToVec3(Row3), CastToVec3(Row4));
 }
 FM_SINL float* Ptr(const mat4& V) {
 	return (float*)(&V);
@@ -2614,6 +2653,11 @@ FM_SINL vec4 FM_CALL operator*(mat4 M, vec4 V) {
 	float W = priv::SumOfElements(_mm_mul_ps(Row4, V.M));
 	return Vec4(X, Y, Z, W);
 }
+FM_SINL v4 FM_CALL operator*(mat4 M, v4 V) {
+	// TODO: Try to implement the logic in v4 function and make vec4 version call it. 
+	//       Maybe just make separate implementations. Profile it!
+	return CastToV4(M * CastToVec4(V));
+}
 FM_SINL mat4 FM_CALL operator*(mat4 M, float Scalar) {
 	__m128 ScalarM = _mm_set1_ps(Scalar);
 	for(uint32_t Col = 0; Col < 4; ++Col)
@@ -2651,12 +2695,15 @@ FM_SINL mat4 FM_CALL Mat4Translation(float X, float Y, float Z) {
 		0.f, 0.f, 1.f, Z,
 		0.f, 0.f, 0.f, 1.f);
 }
-FM_SINL mat4 FM_CALL Mat4Translation(vec3 Translation) {
+FM_SINL mat4 FM_CALL Mat4Translation(v3 Translation) {
 	return Mat4FromRows(
-		1.f, 0.f, 0.f, Translation.X(),
-		0.f, 1.f, 0.f, Translation.Y(),
-		0.f, 0.f, 1.f, Translation.Z(),
+		1.f, 0.f, 0.f, Translation.X,
+		0.f, 1.f, 0.f, Translation.Y,
+		0.f, 0.f, 1.f, Translation.Z,
 		0.f, 0.f, 0.f, 1.f);
+}
+FM_SINL mat4 FM_CALL Mat4Translation(vec3 Translation) {
+	return Mat4Translation(CastToV3(Translation));
 }
 FM_SINL mat4 FM_CALL Mat4Translation(float Translation) {
 	return Mat4FromRows(
@@ -2671,6 +2718,9 @@ FM_SINL void FM_CALL Translate(mat4* M, float X, float Y, float Z) {
 FM_SINL void FM_CALL Translate(mat4* M, vec3 Trans) {
 	M->Columns[3] = _mm_add_ps(M->Columns[3], Trans.M);
 }
+FM_SINL void FM_CALL Translate(mat4* M, v3 Trans) {
+	Translate(M, CastToVec3(Trans));
+}
 FM_SINL void FM_CALL Translate(mat4* M, float Trans) {
 	M->Columns[3] = _mm_add_ps(M->Columns[3], _mm_set_ps(0.f, Trans, Trans, Trans));
 }
@@ -2680,12 +2730,16 @@ FM_SINL mat4 FM_CALL Mat4Scale(float Scalar) {
 FM_SINL mat4 FM_CALL Mat4Scale(float ScalarX, float ScalarY, float ScalarZ) {
 	return Mat4Diagonal(ScalarX, ScalarY, ScalarZ, 1.f);
 } 
+FM_SINL mat4 FM_CALL Mat4Scale(v3 Scalar) {
+	return Mat4Diagonal(Scalar.X, Scalar.Y, Scalar.Z, 1.f); 
+}
 FM_SINL mat4 FM_CALL Mat4Scale(vec3 Scalar) {
 	return Mat4Diagonal(Scalar.X(), Scalar.Y(), Scalar.Z(), 1.f); 
 }
 FM_SINL void FM_CALL Scale(mat4* M, float X, float Y, float Z) {
-	vec4 MainDiag = M->GetMainDiagonal();
-	vec4 ScalarVec = Vec4(X, Y, Z, 1.f);
+	// TODO: Try to Cast to vec and v back and forth and Profile!
+	v4 MainDiag = M->GetMainDiagonalV4();
+	v4 ScalarVec = V4(X, Y, Z, 1.f);
 	MainDiag = HadamardMul(MainDiag, ScalarVec);
 	M->SetMainDiagonal(MainDiag);
 }
@@ -2693,10 +2747,14 @@ FM_SINL void FM_CALL Scale(mat4* M, float Scalar) {
 	Scale(M, Scalar, Scalar, Scalar);
 }
 FM_SINL void FM_CALL Scale(mat4* M, vec3 Scalar) {
-	vec4 MainDiag = M->GetMainDiagonal();
+	// TODO: Try to Cast to vec and v back and forth and Profile!
+	vec4 MainDiag = M->GetMainDiagonalVec4();
 	MainDiag.M = _mm_mul_ps(MainDiag.M, Scalar.M);
 	MainDiag.M = priv::SetW(MainDiag.M, 1.f);
 	M->SetMainDiagonal(MainDiag);
+}
+FM_SINL void FM_CALL Scale(mat4* M, v3 Scalar) {
+	return Scale(M, CastToVec3(Scalar));
 }
 FM_SINL mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY, float AxisZ) {
 	vec3 Normalized = Normalize(Vec3(AxisX, AxisY, AxisZ));
@@ -2721,6 +2779,9 @@ FM_SINL mat4 FM_CALL Mat4RotationRadians(float Radians, float AxisX, float AxisY
 		0.f,
 		0.f, 0.f, 0.f, 1.f);
 } 
+FM_SINL mat4 FM_CALL Mat4RotationRadians(float Radians, v3 Axis) {
+	return Mat4RotationRadians(Radians, Axis.X, Axis.Y, Axis.Z);
+}
 FM_SINL mat4 FM_CALL Mat4RotationRadians(float Radians, vec3 Axis) {
 	return Mat4RotationRadians(Radians, Axis.X(), Axis.Y(), Axis.Z());
 }
@@ -2754,6 +2815,9 @@ FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, float AxisX, float Ax
 FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, vec3 Axes) {
 	*M = *M * Mat4RotationRadians(Radians, Axes);
 }
+FM_SINL void FM_CALL RotateRadians(mat4* M, float Radians, v3 Axes) {
+	*M = *M * Mat4RotationRadians(Radians, Axes);
+}
 FM_SINL void FM_CALL RotateAroundXAxisRadians(mat4* M, float Radians) {
 	*M = *M * Mat4RotationAroundXAxisRadians(Radians);	
 }
@@ -2769,6 +2833,9 @@ FM_SINL void FM_CALL RotateAroundAllAxesRadians(mat4* M, float Radians) {
 FM_SINL mat4 FM_CALL Mat4RotationDegrees(float Degrees, float AxisX, float AxisY, float AxisZ) {
 	return Mat4RotationRadians(DegreesToRadians(Degrees), AxisX, AxisY, AxisZ);
 } 
+FM_SINL mat4 FM_CALL Mat4RotationDegrees(float Degrees, v3 Axis) {
+	return Mat4RotationRadians(DegreesToRadians(Degrees), Axis);
+}
 FM_SINL mat4 FM_CALL Mat4RotationDegrees(float Degrees, vec3 Axis) {
 	return Mat4RotationRadians(DegreesToRadians(Degrees), Axis);
 }
@@ -2787,6 +2854,9 @@ FM_SINL mat4 FM_CALL Mat4RotationAroundAllAxesDegrees(float Degrees) {
 FM_SINL void FM_CALL RotateDegrees(mat4* M, float Degrees, float AxisX, float AxisY, float AxisZ) {
 	RotateRadians(M, DegreesToRadians(Degrees), AxisX, AxisY, AxisZ);
 } 
+FM_SINL void FM_CALL RotateDegrees(mat4* M, float Degrees, v3 Axis) {
+	RotateRadians(M, DegreesToRadians(Degrees), Axis);
+}
 FM_SINL void FM_CALL RotateDegrees(mat4* M, float Degrees, vec3 Axis) {
 	RotateRadians(M, DegreesToRadians(Degrees), Axis);
 }
@@ -2842,17 +2912,36 @@ FM_SINL void FM_CALL ShearZAxis(mat4* M, float X, float Y) {
 FM_SINL void FM_CALL Shear(mat4* M, float XY, float XZ, float YX, float YZ, float ZX, float ZY) {
 	*M = *M * Mat4Shear(XY, XZ, YX, YZ, ZX, ZY);
 }
+FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationRadians(v3 Translation, v3 Scale, float Rotation, v3 RotationAxes) {
+	mat4 R = Mat4Scale(Scale);
+	RotateRadians(&R, Rotation, RotationAxes);
+	Translate(&R, Translation);
+	return R;
+}
 FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationRadians(vec3 Translation, vec3 Scale, float Rotation, vec3 RotationAxes) {
 	mat4 R = Mat4Scale(Scale);
 	RotateRadians(&R, Rotation, RotationAxes);
 	Translate(&R, Translation);
 	return R;
 }
+FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationDegrees(v3 Translation, v3 Scale, float Rotation, v3 RotationAxes) {
+	return Mat4TranslationScaleRotationRadians(Translation, Scale, DegreesToRadians(Rotation), RotationAxes);
+}
 FM_SINL mat4 FM_CALL Mat4TranslationScaleRotationDegrees(vec3 Translation, vec3 Scale, float Rotation, vec3 RotationAxes) {
 	return Mat4TranslationScaleRotationRadians(Translation, Scale, DegreesToRadians(Rotation), RotationAxes);
 }
+FM_SINL mat4 FM_CALL Mat4TranslationScale(v3 Translation, v3 Scale) {
+	mat4 R = Mat4Scale(Scale);
+	Translate(&R, Translation);
+	return R;
+}
 FM_SINL mat4 FM_CALL Mat4TranslationScale(vec3 Translation, vec3 Scale) {
 	mat4 R = Mat4Scale(Scale);
+	Translate(&R, Translation);
+	return R;
+}
+FM_SINL mat4 FM_CALL Mat4TranslationRotationRadians(v3 Translation, float Rotation, v3 RotationAxes) {
+	mat4 R = Mat4RotationRadians(Rotation, RotationAxes);
 	Translate(&R, Translation);
 	return R;
 }
@@ -2861,13 +2950,24 @@ FM_SINL mat4 FM_CALL Mat4TranslationRotationRadians(vec3 Translation, float Rota
 	Translate(&R, Translation);
 	return R;
 }
+FM_SINL mat4 FM_CALL Mat4TranslationRotationDegrees(v3 Translation, float Rotation, v3 RotationAxes) {
+	return Mat4TranslationRotationRadians(Translation, DegreesToRadians(Rotation), RotationAxes);
+}
 FM_SINL mat4 FM_CALL Mat4TranslationRotationDegrees(vec3 Translation, float Rotation, vec3 RotationAxes) {
 	return Mat4TranslationRotationRadians(Translation, DegreesToRadians(Rotation), RotationAxes);
+}
+FM_SINL mat4 FM_CALL Mat4ScaleRotationRadians(v3 Scale, float Rotation, v3 RotationAxes) {
+	mat4 R = Mat4Scale(Scale);
+	RotateRadians(&R, Rotation, RotationAxes);
+	return R;
 }
 FM_SINL mat4 FM_CALL Mat4ScaleRotationRadians(vec3 Scale, float Rotation, vec3 RotationAxes) {
 	mat4 R = Mat4Scale(Scale);
 	RotateRadians(&R, Rotation, RotationAxes);
 	return R;
+}
+FM_SINL mat4 FM_CALL Mat4ScaleRotationDegrees(v3 Scale, float Rotation, v3 RotationAxes) {
+	return Mat4ScaleRotationRadians(Scale, DegreesToRadians(Rotation), RotationAxes);
 }
 FM_SINL mat4 FM_CALL Mat4ScaleRotationDegrees(vec3 Scale, float Rotation, vec3 RotationAxes) {
 	return Mat4ScaleRotationRadians(Scale, DegreesToRadians(Rotation), RotationAxes);
@@ -2954,30 +3054,38 @@ mat4 Mat4LookAt(vec3 Eye, vec3 At, vec3 Up) {
 		Right, Up, -Forward,
 		Vec3(-Dot(Right, Eye), -Dot(Up, Eye), Dot(Forward, Eye)));
 }
-vec4 FM_CALL mat4::GetRow(uint32_t Index) {
+mat4 Mat4LookAt(v3 Eye, v3 At, v3 Up) {
+	v3 Forward = Normalize(At - Eye);
+	v3 Right = Cross(Forward, Up); // TODO(docs): We assume that Up is normalized
+	Up = Cross(Right, Forward);
+	return Mat4FromColumns(
+		Right, Up, -Forward,
+		V3(-Dot(Right, Eye), -Dot(Up, Eye), Dot(Forward, Eye)));
+}
+v4 FM_CALL mat4::GetRowV4(uint32_t Index) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	switch(Index)
 	{
 		case 0: {
-			return Vec4(
+			return V4(
 				priv::GetX(Columns[0]), priv::GetX(Columns[1]),
 				priv::GetX(Columns[2]), priv::GetX(Columns[3]));
 		} break;
 		
 		case 1: {
-			return Vec4(
+			return V4(
 				priv::GetY(Columns[0]), priv::GetY(Columns[1]),
 				priv::GetY(Columns[2]), priv::GetY(Columns[3]));
 		} break;
 	
 		case 2: {
-			return Vec4(
+			return V4(
 				priv::GetZ(Columns[0]), priv::GetZ(Columns[1]),
 				priv::GetZ(Columns[2]), priv::GetZ(Columns[3]));
 		} break;
 	
 		case 3: {
-			return Vec4(
+			return V4(
 				priv::GetW(Columns[0]), priv::GetW(Columns[1]),
 				priv::GetW(Columns[2]), priv::GetW(Columns[3]));
 		} break;
@@ -2987,36 +3095,36 @@ vec4 FM_CALL mat4::GetRow(uint32_t Index) {
 		}
 	}
 }
-void FM_CALL mat4::SetRow(uint32_t Index, vec4 Row) {
+void FM_CALL mat4::SetRow(uint32_t Index, v4 Row) {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	switch(Index)
 	{
 		case 0: {
-				Columns[0] = priv::SetX(Columns[0], Row.X());
-				Columns[1] = priv::SetX(Columns[1], Row.Y());
-				Columns[2] = priv::SetX(Columns[2], Row.Z());
-				Columns[3] = priv::SetX(Columns[3], Row.W());
+			Columns[0] = priv::SetX(Columns[0], Row.X);
+			Columns[1] = priv::SetX(Columns[1], Row.Y);
+			Columns[2] = priv::SetX(Columns[2], Row.Z);
+			Columns[3] = priv::SetX(Columns[3], Row.W);
 		} break;
 	
 		case 1: {
-				Columns[0] = priv::SetY(Columns[0], Row.X());
-				Columns[1] = priv::SetY(Columns[1], Row.Y());
-				Columns[2] = priv::SetY(Columns[2], Row.Z());
-				Columns[3] = priv::SetY(Columns[3], Row.W());
+			Columns[0] = priv::SetY(Columns[0], Row.X);
+			Columns[1] = priv::SetY(Columns[1], Row.Y);
+			Columns[2] = priv::SetY(Columns[2], Row.Z);
+			Columns[3] = priv::SetY(Columns[3], Row.W);
 		} break;
 	
 		case 2: {
-				Columns[0] = priv::SetZ(Columns[0], Row.X());
-				Columns[1] = priv::SetZ(Columns[1], Row.Y());
-				Columns[2] = priv::SetZ(Columns[2], Row.Z());
-				Columns[3] = priv::SetZ(Columns[3], Row.W());
+			Columns[0] = priv::SetZ(Columns[0], Row.X);
+			Columns[1] = priv::SetZ(Columns[1], Row.Y);
+			Columns[2] = priv::SetZ(Columns[2], Row.Z);
+			Columns[3] = priv::SetZ(Columns[3], Row.W);
 		} break;
 	
 		case 3: {
-				Columns[0] = priv::SetW(Columns[0], Row.X());
-				Columns[1] = priv::SetW(Columns[1], Row.Y());
-				Columns[2] = priv::SetW(Columns[2], Row.Z());
-				Columns[3] = priv::SetW(Columns[3], Row.W());
+			Columns[0] = priv::SetW(Columns[0], Row.X);
+			Columns[1] = priv::SetW(Columns[1], Row.Y);
+			Columns[2] = priv::SetW(Columns[2], Row.Z);
+			Columns[3] = priv::SetW(Columns[3], Row.W);
 		} break;
 	
 		default: {

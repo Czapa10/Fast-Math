@@ -1,9 +1,13 @@
-#ifndef TESTS_UTIL
-#define TESTS_UTIL
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest.h"
+
+#define FM_IMPLEMENTATION
+#include "../../FastMath.h"
 
 #include <string>
 #include <cmath>
-#include "doctest.h"
+
+using namespace fm;
 
 using uint32 = uint32_t;
 using int32 = int32_t;
@@ -144,6 +148,7 @@ static char binaryOutput[128];
 	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
 	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
 
+// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_ALL_MATRIX_ARRAY_ENTRIES(Arr, A, B, C, D, \
                                             E, F, G, H, \
                                             I, J, K, L,\
@@ -153,6 +158,7 @@ static char binaryOutput[128];
 	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
 	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
 
+// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_ALL_MATRIX_ENTRIES(Mat, A, B, C, D, \
                                       E, F, G, H, \
                                       I, J, K, L,\
@@ -164,14 +170,13 @@ static char binaryOutput[128];
 	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
 	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
 
+// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat, A, B, C, D) {\
 	mat4 _Mat = Mat; \
 	float* Arr = (float*)(&_Mat); \
 	CHECK4(Arr[0] == A,   Arr[5] == B, Arr[10] == C,  Arr[15] == D);} \
 
-#define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX1(Mat, D) \
-	CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat, D, D, D, D)
-
+// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define PRINT_MAT4(Mat) \
 	mat4 _Mat = Mat; \
 	float* Arr = (float*)(&_Mat); \
@@ -181,6 +186,14 @@ static char binaryOutput[128];
     INFO(Arr[3] << ", " << Arr[7] << ", " << Arr[11] << ", " << Arr[15]); \
 
 
+#include "utilityFunctions.cpp"
+#include "vec2.cpp"
+#include "vec3.cpp"
+#include "vec4.cpp"
+#include "v2.cpp"
+#include "v3.cpp"
+#include "v4.cpp"
+#include "vectorCasting.cpp"
+#include "mat4.cpp"
 
 
-#endif // TESTS_UTIL
