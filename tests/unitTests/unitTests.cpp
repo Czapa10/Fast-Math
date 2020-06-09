@@ -148,7 +148,6 @@ static char binaryOutput[128];
 	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
 	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
 
-// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_ALL_MATRIX_ARRAY_ENTRIES(Arr, A, B, C, D, \
                                             E, F, G, H, \
                                             I, J, K, L,\
@@ -158,32 +157,26 @@ static char binaryOutput[128];
 	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
 	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
 
-// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_ALL_MATRIX_ENTRIES(Mat, A, B, C, D, \
                                       E, F, G, H, \
                                       I, J, K, L,\
                                       M, N, O, P) { \
 	mat4 _Mat = Mat; \
-	float* Arr = (float*)(&_Mat); \
-	CHECK4(Arr[0] == A, Arr[1] == E, Arr[2] == I, Arr[3] == M); \
-	CHECK4(Arr[4] == B, Arr[5] == F, Arr[6] == J, Arr[7] == N); \
-	CHECK4(Arr[8] == C, Arr[9] == G, Arr[10] == K, Arr[11] == O); \
-	CHECK4(Arr[12] == D, Arr[13] == H, Arr[14] == L, Arr[15] == P); }\
+	CHECK4(_Mat[0] == A, _Mat[1] == E, _Mat[2] == I, _Mat[3] == M); \
+	CHECK4(_Mat[4] == B, _Mat[5] == F, _Mat[6] == J, _Mat[7] == N); \
+	CHECK4(_Mat[8] == C, _Mat[9] == G, _Mat[10] == K, _Mat[11] == O); \
+	CHECK4(_Mat[12] == D, _Mat[13] == H, _Mat[14] == L, _Mat[15] == P); }\
 
-// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define CHECK_MAIN_DIAGONAL_OF_DIAGONAL_MATRIX(Mat, A, B, C, D) {\
 	mat4 _Mat = Mat; \
-	float* Arr = (float*)(&_Mat); \
-	CHECK4(Arr[0] == A,   Arr[5] == B, Arr[10] == C,  Arr[15] == D);} \
+	CHECK4(_Mat[0] == A,   _Mat[5] == B, _Mat[10] == C,  _Mat[15] == D);} \
 
-// TODO: Now there is no need to cast to ptr because we overload operator[]
 #define PRINT_MAT4(Mat) \
 	mat4 _Mat = Mat; \
-	float* Arr = (float*)(&_Mat); \
-	INFO(Arr[0] << ", " << Arr[4] << ", " << Arr[8] << ", " << Arr[12]); \
-    INFO(Arr[1] << ", " << Arr[5] << ", " << Arr[9] << ", " << Arr[13]); \
-	INFO(Arr[2] << ", " << Arr[6] << ", " << Arr[10] << ", " << Arr[14]); \
-    INFO(Arr[3] << ", " << Arr[7] << ", " << Arr[11] << ", " << Arr[15]); \
+	INFO(_Mat[0] << ", " << _Mat[4] << ", " << _Mat[8] << ", " << _Mat[12]); \
+    INFO(_Mat[1] << ", " << _Mat[5] << ", " << _Mat[9] << ", " << _Mat[13]); \
+	INFO(_Mat[2] << ", " << _Mat[6] << ", " << _Mat[10] << ", " << _Mat[14]); \
+    INFO(_Mat[3] << ", " << _Mat[7] << ", " << _Mat[11] << ", " << _Mat[15]); \
 
 
 #include "utilityFunctions.cpp"

@@ -2396,12 +2396,8 @@ FM_SINL v3 FM_CALL CastToV3(vec3 V) {
 	return R;
 }
 FM_SINL v4 FM_CALL CastToV4(vec4 V) {
-	// TODO: Use store
 	v4 R;
-	R.X = V.X();
-	R.Y = V.Y();
-	R.Z = V.Z();
-	R.W = V.W();
+	Store(R.Elements, V);
 	return R;
 }
 FM_SINL vec2 FM_CALL CastToVec2(v2 V) {
