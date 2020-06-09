@@ -2660,6 +2660,16 @@ FM_SINL mat4 FM_CALL operator*(mat4 M, float Scalar) {
 		M.Columns[Col] = _mm_mul_ps(M.Columns[Col], ScalarM);
 	return M;
 }
+FM_SINL mat4 FM_CALL HadamardMul(mat4 A, mat4 B) {
+	for(uint32_t Col = 0; Col < 4; ++Col)
+		A.Columns[Col] = _mm_mul_ps(A.Columns[Col], B.Columns[Col]);
+	return A;
+}
+FM_SINL mat4 FM_CALL HadamardDiv(mat4 A, mat4 B) {
+	for(uint32_t Col = 0; Col < 4; ++Col)
+		A.Columns[Col] = _mm_div_ps(A.Columns[Col], B.Columns[Col]);
+	return A;
+}
 FM_SINL mat4 FM_CALL operator*(float Scalar, mat4 M) {
 	return M * Scalar;
 }
@@ -2676,6 +2686,21 @@ FM_SINL mat4 FM_CALL operator/(mat4 M, float Scalar) {
 FM_SINL mat4& FM_CALL operator/=(mat4& M, float Scalar) {
 	M = M / Scalar;
 	return M;
+}
+FM_SINL bool FM_CALL operator==(mat4 A, mat4 B) {
+	bool R = true;
+	for(uint32_t Col = 0; Col < 4; ++Col)
+	{
+		if(Vec4(A.Columns[Col]) != Vec4(B.Columns[Col]))
+		{
+			R = false;
+			break;
+		}
+	}
+	return R;
+}
+FM_SINL bool FM_CALL operator!=(mat4 A, mat4 B) {
+	return !(A == B);
 }
 FM_SINL void FM_CALL Transpose(mat4* M) {
 	_MM_TRANSPOSE4_PS(M->Columns[0], M->Columns[1], M->Columns[2], M->Columns[3]);
