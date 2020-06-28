@@ -298,7 +298,7 @@ TEST_CASE("vec2i constructors and getters")
 
 	CHECK_VEC2_ALL_ALIASES(A, -3, 4);
 
-	int32 Arr[2];
+	i32 Arr[2];
 	Store(Arr, A);
 	CHECK_ARRAY2(Arr, -3, 4);
 
@@ -308,12 +308,12 @@ TEST_CASE("vec2i constructors and getters")
 	vec2i C = Vec2i();
 	CHECK_VEC2(C, 0, 0);
 
-	int32 InitArr[] = {-1, 2};	
+	i32 InitArr[] = {-1, 2};	
 	vec2i D = Vec2iFromMemory(InitArr);
 	CHECK_VEC2(D, -1, 2);
 
-	int32* PX = Ptr(D);
-	int32* PY = PtrY(D);
+	i32* PX = Ptr(D);
+	i32* PY = PtrY(D);
 	CHECK(*PX == -1);
 	CHECK(*PY == 2);
 
@@ -378,7 +378,7 @@ TEST_CASE("vec2i operations")
 	CHECK_VEC2(AbsoluteB, 5, 3);
 
 	CHECK(SumOfElements(B) == -2);
-	CHECK(Length(B) == (int32)sqrt(34));
+	CHECK(Length(B) == (i32)sqrt(34));
 	CHECK(LengthSquared(B) == 34);
 
 	vec2i Min = Vec2i(0, 0);
@@ -446,19 +446,19 @@ TEST_CASE("vec2u constructors and getters")
 	vec2u B = Vec2u(1);
 	CHECK_VEC2(B, 1, 1);
 
-	uint32 Arr[2];
+	u32 Arr[2];
 	Store(Arr, A);
 	CHECK_ARRAY2(Arr, 3, 4);
 
 	vec2u D = Vec2u();
 	CHECK_VEC2(D, 0, 0);
 
-	uint32 InitArr[] = {1, 2};	
+	u32 InitArr[] = {1, 2};	
 	vec2u E = Vec2uFromMemory(InitArr);
 	CHECK_VEC2(E, 1, 2);
 
-	uint32* PX = Ptr(E);
-	uint32* PY = PtrY(E);
+	u32* PX = Ptr(E);
+	u32* PY = PtrY(E);
 	CHECK(*PX == 1);
 	CHECK(*PY == 2);
 
@@ -508,7 +508,7 @@ TEST_CASE("vec2u operations")
 	CHECK_VEC2(MaxRes, 5, 4);
 
 	CHECK(SumOfElements(B) == 4);
-	CHECK(Length(B) == (uint32)sqrt(10));
+	CHECK(Length(B) == (u32)sqrt(10));
 	CHECK(LengthSquared(B) == 10);
 
 	vec2u Min = Vec2u(2, 0);

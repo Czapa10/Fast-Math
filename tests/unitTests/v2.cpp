@@ -1,30 +1,37 @@
 
-TEST_CASE("v2 construction and getters")
+TEST_CASE_TEMPLATE("v2 base constructors and getters", t, NUMERICAL_TYPES)
 {
-	v2 A = V2(-3.f, 4.5f);
-	CHECK_V2_ALL_ALIASES(A, -3.f, 4.5f);
+	CHECK_V2_ALL_ALIASES(v2_base<t>(3, 4), 3, 4);
+	CHECK_V2(v2_base<t>(5), 5, 5);
+	CHECK_V2(v2_base<t>{}, 0, 0);
 
-	float Arr[2];
-	Store(Arr, A);
-	CHECK_ARRAY2(Arr, -3.f, 4.5f);
+	t Arr[2] = {1, 2};
+	CHECK_V2(v2_base<t>(Arr), 1, 2);
 
-	CHECK_V2(V2(1.f), 1.f, 1.f);
-	CHECK_V2(V2(), 0.f, 0.f);
+	Store(Arr, v2_base<t>(1, 3));
+	CHECK_ARRAY2(Arr, 1, 3);
 
-	float InitArr[] = {-1.f, 2.f};	
-	CHECK_V2(V2FromMemory(InitArr), -1.f, 2.f);
-
-	v2 P = V2(-1.f, 2.f);
-	CHECK(*Ptr(P) == -1.f);
+	v2_base<t> P = {1, 2};
+	CHECK(*Ptr(P) == 1.f);
 	CHECK(*PtrY(P) == 2.f);
-	CHECK(P[0] == -1.f);
-	CHECK(P[1] == 2.f);
+	CHECK(P[0] == 1);
+	CHECK(P[1] == 2);
+}
+
+TEST_CASE_TEMPLATE("v2 base some operations", t, NUMERICAL_TYPES)
+{
+	v2_base<t> A(1, 2);
+	v2_base<t> B(3, 4);
+
+	CHECK_V2(A + B, 4, 6);
+	CHECK_V2(B - A, 2, 2);
+	CHECK_V2(HadamardMul(A, B), 3, 8);
 }
 
 TEST_CASE("v2 operations")
 {
-	v2 A = V2(2.f, 4.f);
-	v2 B = V2(-5.f, 3.f);
+	v2 A(2.f, 4.f);
+	v2 B(-5.f, 3.f);
 
 	CHECK_V2(A + B, -3.f, 7.f);
 	CHECK_V2(A - B, 7.f, 1.f);
@@ -38,9 +45,9 @@ TEST_CASE("v2 operations")
 	CHECK_V2(Max(A, B), 2.f, 4.f);
 	CHECK_V2(Abs(B), 5.f, 3.f);
 	CHECK_V2(Normalize(B), B.X / sqrt(34.f), B.Y / sqrt(34.f));
-	CHECK_V2(Clamp(B, V2(), V2(5.f, 2.f)), 0.f, 2.f);
-	CHECK_V2(Lerp(V2(), V2(2.f, 4.f), 0.5f), 1.f, 2.f);
-	CHECK_V2(Lerp(V2(2.f, 4.f), V2(), 0.5f), 1.f, 2.f);
+	CHECK_V2(Clamp(B, v2(), v2(5.f, 2.f)), 0.f, 2.f);
+	CHECK_V2(Lerp(v2(), v2(2.f, 4.f), 0.5f), 1.f, 2.f);
+	CHECK_V2(Lerp(v2(2.f, 4.f), v2(), 0.5f), 1.f, 2.f);
 	CHECK(Dot(A, B) == 2.f);
 	CHECK(SumOfElements(B) == -2.f);
 	CHECK(Length(B) == FloatCmp(sqrt(34.f)));
@@ -56,15 +63,16 @@ TEST_CASE("v2 operations")
 	D -= B;
 	CHECK_V2(D, 7.f, 1.f);
 
-	v2 E = V2(2.f, -3.f);
+	v2 E(2.f, -3.f);
 	E *= 2.f;
 	CHECK_V2(E, 4.f, -6.f);
 
-	v2 G = V2(3.f, -2.f);
+	v2 G(3.f, -2.f);
 	G /= 2.f;
 	CHECK_V2(G, 1.5f, -1.f);
 
-	v2 F = V2(-5.f, 3.f);
+	v2 F(-5.f, 3.f);
 	Normalize(&F);
 	CHECK_V2(F, F.X / Length(F), F.Y / Length(F));
 }
+

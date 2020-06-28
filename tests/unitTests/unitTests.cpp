@@ -9,9 +9,22 @@
 
 using namespace fm;
 
-using uint32 = uint32_t;
-using int32 = int32_t;
-using bool32 = int;
+using f32 = float;
+using f64 = double;
+
+using u8 = uint8_t;
+using u16 = uint16_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+
+using i8 = int8_t;
+using i16 = int16_t;
+using i32 = int32_t;
+using i64 = int64_t;
+
+using bool32 = i32;
+
+#define NUMERICAL_TYPES f32, f64, u8, u16, u32, u64, i8, i16, i32, i64
 
 static long long vElements;
 static char binaryOutput[128];
@@ -59,8 +72,6 @@ static char binaryOutput[128];
 	auto R = _V; \
 	CHECK2(R.X == _X, R.Y == _Y); \
 	CHECK2(R.U == _X, R.V == _Y); \
-	CHECK2(R.Left == _X, R.Top == _Y); \
-	CHECK2(R.Left == _X, R.Right == _Y); \
 	CHECK2(R.Width == _X, R.Height == _Y); \
 	CHECK2(R.W == _X, R.H == _Y); \
 	CHECK2(R[0] == _X, R[1] == _Y); }

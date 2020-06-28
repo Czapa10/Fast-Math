@@ -28,6 +28,7 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #ifdef _MSC_VER
 	__pragma(warning(push))
 	__pragma(warning(disable : 4201))
+	__pragma(warning(disable : 4146))
 #endif
 
 // TODO: make FM_SINL work on all compilers
@@ -57,30 +58,36 @@ static const double Pi64 = 3.14159265358979323846;
 //////////////////////
 // type definitions //
 //////////////////////
-union v2
-{
-	struct {
-		float X, Y;
-	};
-	struct {
-		float U, V;
-	};
-	struct {
-		float Left;
-		union {
-			float Top, Right;
-		};
-	};
-	struct {
-		float Width, Height;
-	};
-	struct {
-		float W, H;
-	};
-	float Elements[2];
 
-	FM_INL float& operator[](uint32_t Index); 
+template<class t>
+union v2_base
+{
+	struct { t X, Y; };
+	struct { t U, V; };
+	struct { t Width, Height; };
+	struct { t W, H; };
+	t Elements[2];
+
+	v2_base(t X, t Y) :X(X), Y(Y) {}
+	v2_base(t XY) :X(XY), Y(XY) {}
+	v2_base(const t* Mem) :X(Mem[0]), Y(Mem[1]) {}
+	v2_base() = default;
+
+	template<class u>
+	v2_base(v2_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
+
+	FM_INL t& operator[](uint32_t Index); 
 };
+using v2 = v2_base<float>;
+using v2d = v2_base<double>;
+using v2i = v2_base<int32_t>;
+using v2u = v2_base<uint32_t>;
+using v2i64 = v2_base<int64_t>;
+using v2u64 = v2_base<uint64_t>;
+using v2i16 = v2_base<int16_t>;
+using v2u16 = v2_base<uint16_t>;
+using v2i8 = v2_base<int8_t>;
+using v2u8 = v2_base<uint8_t>;
 
 union v3
 {
@@ -456,70 +463,28 @@ FM_SINL vec4 FM_CALL Vec4(v4 V);
 ///////////////////////
 // utility functions //
 ///////////////////////
-FM_SINL float Min(float A, float B) {
+template<class t>
+FM_SINL t Min(t A, t B) {
 	return A < B ? A : B; 
 }
-FM_SINL float Max(float A, float B) {
+template<class t>
+FM_SINL t Max(t A, t B) {
 	return A > B ? A : B;
 }
-FM_SINL double Min(double A, double B) {
-	return A < B ? A : B; 
-}
-FM_SINL double Max(double A, double B) {
-	return A > B ? A : B;
-}
-FM_SINL int32_t Min(int32_t A, int32_t B) {
-	return A < B ? A : B; 
-}
-FM_SINL int32_t Max(int32_t A, int32_t B) {
-	return A > B ? A : B;
-}
-FM_SINL uint32_t Min(uint32_t A, uint32_t B) {
-	return A < B ? A : B; 
-}
-FM_SINL uint32_t Max(uint32_t A, uint32_t B) {
-	return A > B ? A : B;
-}
-FM_SINL float Abs(float A) {
+template<class t>
+FM_SINL t Abs(t A) {
 	return A < 0 ? -A : A;
 }
-FM_SINL double Abs(double A) {
-	return A < 0 ? -A : A;
-}
-FM_SINL int32_t Abs(int32_t A) {
-	return A < 0 ? -A : A;
-}
-FM_SINL void Abs(float* A) {
+template<class t>
+FM_SINL void Abs(t* A) {
 	*A = *A < 0 ? -(*A) : *A;
 }
-FM_SINL void Abs(double* A) {
-	*A = *A < 0 ? -(*A) : *A;
-}
-FM_SINL void Abs(int32_t* A) {
-	*A = *A < 0 ? -(*A) : *A;
-}
-FM_SINL float Square(float A) {
+template<class t>
+FM_SINL t Square(t A) {
 	return A * A;
 }
-FM_SINL double Square(double A) {
-	return A * A;
-}
-FM_SINL int32_t Square(int32_t A) {
-	return A * A;
-}
-FM_SINL uint32_t Square(uint32_t A) {
-	return A * A;
-}
-FM_SINL void Square(float* A) {
-	*A = (*A) * (*A);
-}
-FM_SINL void Square(double* A) {
-	*A = (*A) * (*A);
-}
-FM_SINL void Square(int32_t* A) {
-	*A = (*A) * (*A);
-}
-FM_SINL void Square(uint32_t* A) {
+template<class t>
+FM_SINL void Square(t* A) {
 	*A = (*A) * (*A);
 }
 FM_SINL float RadiansToDegrees(float Radians) {
@@ -577,147 +542,157 @@ namespace priv {
 //////////////////
 // v2 functions //
 //////////////////
-FM_SINL v2 V2FromMemory(const float* Mem) {
-	v2 R;
-	R.X = Mem[0];
-	R.Y = Mem[1];
-	return R;
-}
-FM_SINL v2 V2(float X, float Y) {
-	v2 R;
-	R.X = X;
-	R.Y = Y;
-	return R;
-}
-FM_SINL v2 V2(float XY) {
-	v2 R;
-	R.X = R.Y = XY;
-	return R;
-}
-FM_SINL v2 V2() {
-	v2 R{};
-	return R;
-}
-FM_INL float& v2::operator[](uint32_t Index) {
+template<class t>
+FM_INL t& v2_base<t>::operator[](uint32_t Index) {
 	FM_ASSERT(Index == 0 || Index == 1);
 	return Elements[Index];
 }
-FM_SINL float* Ptr(v2& V) {
+template<class t>
+FM_SINL t* Ptr(v2_base<t>& V) {
 	return &V.X; 
 }
-FM_SINL float* PtrY(v2& V) {
+template<class t> 
+FM_SINL t* PtrY(v2_base<t>& V) {
 	return &V.Y; 
 }
-FM_SINL void Store(float* Mem, v2 V) {
+template<class t>
+FM_SINL void Store(t* Mem, v2_base<t> V) {
 	Mem[0] = V.X;
 	Mem[1] = V.Y;
 }
-FM_SINL v2 operator+(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> operator+(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = A.X + B.X;
 	R.Y = A.Y + B.Y;
 	return R;
 }
-FM_SINL v2 operator-(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> operator-(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = A.X - B.X;
 	R.Y = A.Y - B.Y;
 	return R;
 }
-FM_SINL v2& operator+=(v2& A, v2 B) {
+template<class t>
+FM_SINL v2_base<t>& operator+=(v2_base<t>& A, v2_base<t> B) {
 	A.X += B.X;
 	A.Y += B.Y;
 	return A;
 }
-FM_SINL v2& operator-=(v2& A, v2 B) {
+template<class t>
+FM_SINL v2_base<t>& operator-=(v2_base<t>& A, v2_base<t> B) {
 	A.X -= B.X;
 	A.Y -= B.Y;
 	return A;
 }
-FM_SINL v2 HadamardMul(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> HadamardMul(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = A.X * B.X;
 	R.Y = A.Y * B.Y;
 	return R;
 } 
-FM_SINL v2 HadamardDiv(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> HadamardDiv(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = A.X / B.X;
 	R.Y = A.Y / B.Y;
 	return R;
 }
-FM_SINL v2 operator*(v2 V, float Scalar) {
+template<class t>
+FM_SINL v2_base<t> operator*(v2_base<t> V, t Scalar) {
 	V.X *= Scalar;
 	V.Y *= Scalar;
 	return V;
 }
-FM_SINL v2 operator*(float Scalar, v2 V) {
+template<class t>
+FM_SINL v2_base<t> operator*(t Scalar, v2_base<t> V) {
 	return V * Scalar;
 }
-FM_SINL v2& operator*=(v2& V, float Scalar) {
+template<class t>
+FM_SINL v2_base<t>& operator*=(v2_base<t>& V, t Scalar) {
 	V = V * Scalar;	
 	return V;
 }
-FM_SINL v2 operator/(v2 V, float Scalar) {
+template<class t>
+FM_SINL v2_base<t> operator/(v2_base<t> V, t Scalar) {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	return V;
 }
-FM_SINL v2& operator/=(v2& V, float Scalar) {
+template<class t>
+FM_SINL v2_base<t>& operator/=(v2_base<t>& V, t Scalar) {
 	V = V / Scalar;
 	return V;
 } 
-FM_SINL v2 operator-(v2 V) {
+template<class t>
+FM_SINL v2_base<t> operator-(v2_base<t> V) {
 	V.X = -V.X;
 	V.Y = -V.Y;
 	return V;
 } 
-FM_SINL float Dot(v2 A, v2 B) {
+template<class t>
+FM_SINL t Dot(v2_base<t> A, v2_base<t> B) {
 	return A.X * B.X + A.Y * B.Y;
 } 
-FM_SINL v2 Min(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> Min(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = Min(A.X, B.X);	
 	R.Y = Min(A.Y, B.Y);	
 	return R;
 }
-FM_SINL v2 Max(v2 A, v2 B) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> Max(v2_base<t> A, v2_base<t> B) {
+	v2_base<t> R;
 	R.X = Max(A.X, B.X);
 	R.Y = Max(A.Y, B.Y);
 	return R;
 } 
-FM_SINL v2 Abs(v2 V) {
-	v2 R;
+template<class t>
+FM_SINL v2_base<t> Abs(v2_base<t> V) {
+	v2_base<t> R;
 	R.X = Abs(V.X);
 	R.Y = Abs(V.Y);
 	return R;
 } 
-FM_SINL float SumOfElements(v2 V) {
+template<class t>
+FM_SINL t SumOfElements(v2_base<t> V) {
 	return V.X + V.Y;
 }
-FM_SINL float Length(v2 V) {
-	return sqrtf(V.X * V.X + V.Y * V.Y);
+template<class t>
+FM_SINL t Length(v2_base<t> V) {
+	return static_cast<t>(sqrt(V.X * V.X + V.Y * V.Y));
 }
-FM_SINL float LengthSquared(v2 V) {
+template<class t>
+FM_SINL t LengthSquared(v2_base<t> V) {
 	return V.X * V.X + V.Y * V.Y;
 } 
-FM_SINL v2 Normalize(v2 V) {
+template<class t>
+FM_SINL v2_base<t> Normalize(v2_base<t> V) {
 	return V / Length(V);
 }
-FM_SINL void Normalize(v2* V) {
-	*V =  *V / Length(*V);
+template<class t>
+FM_SINL void Normalize(v2_base<t>* V) {
+	*V = *V / Length(*V);
 }
-FM_SINL v2 Clamp(v2 V, v2 MinV, v2 MaxV) {
+template<class t>
+FM_SINL v2_base<t> Clamp(v2_base<t> V, v2_base<t> MinV, v2_base<t> MaxV) {
 	return Min(Max(V, MinV), MaxV);
 }
-FM_SINL v2 Lerp(v2 A, v2 B, float T) {
-	return A + (B-A)*T;
+template<class t>
+FM_SINL v2_base<t> Lerp(v2_base<t> A, v2_base<t> B, float T) {
+	v2 fA = static_cast<v2>(A);
+	v2 fB = static_cast<v2>(B);
+	return static_cast<v2_base<t>>(fA + (fB - fA)*T);
 }
-FM_SINL bool operator==(v2 A, v2 B) {
+template<class t>
+FM_SINL bool operator==(v2_base<t> A, v2_base<t> B) {
 	return A.X == B.X && A.Y == B.Y;
 }
-FM_SINL bool operator!=(v2 A, v2 B) {
+template<class t>
+FM_SINL bool operator!=(v2_base<t> A, v2_base<t> B) {
 	return A.X != B.X || A.X != B.X;
 }
 
