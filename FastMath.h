@@ -40,8 +40,10 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FM_FUN auto
 #define FM_FUN_I FM_INL auto
 #define FM_FUN_C auto FM_CALL
+#define FM_FUN_TI template<class t> FM_INL auto
 #define FM_FUN_IC FM_INL auto FM_CALL
 #define FM_FUN_SI static FM_INL auto
+#define FM_FUN_TSI template<class t> static FM_INL auto
 #define FM_FUN_SIC static FM_INL auto FM_CALL
 
 #ifdef NDEBUG
@@ -83,7 +85,7 @@ union v2_base
 	template<class u>
 	v2_base(v2_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
 
-	FM_INL t& operator[](uint32_t Index); 
+	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
 using v2 = v2_base<float>;
 using v2d = v2_base<double>;
@@ -549,157 +551,128 @@ namespace priv {
 //////////////////
 // v2 functions //
 //////////////////
-template<class t>
-FM_INL t& v2_base<t>::operator[](uint32_t Index) {
+FM_FUN_TI v2_base<t>::operator[](uint32_t Index) -> t& {
 	FM_ASSERT(Index == 0 || Index == 1);
 	return Elements[Index];
 }
-template<class t>
-FM_SINL t* Ptr(v2_base<t>& V) {
+FM_FUN_TSI Ptr(v2_base<t>& V) -> t* {
 	return &V.X; 
 }
-template<class t> 
-FM_SINL t* PtrY(v2_base<t>& V) {
+FM_FUN_TSI PtrY(v2_base<t>& V) -> t* {
 	return &V.Y; 
 }
-template<class t>
-FM_SINL void Store(t* Mem, v2_base<t> V) {
+FM_FUN_TSI Store(t* Mem, v2_base<t> V) -> void {
 	Mem[0] = V.X;
 	Mem[1] = V.Y;
 }
-template<class t>
-FM_SINL v2_base<t> operator+(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI operator+(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = A.X + B.X;
 	R.Y = A.Y + B.Y;
 	return R;
 }
-template<class t>
-FM_SINL v2_base<t> operator-(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI operator-(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = A.X - B.X;
 	R.Y = A.Y - B.Y;
 	return R;
 }
-template<class t>
-FM_SINL v2_base<t>& operator+=(v2_base<t>& A, v2_base<t> B) {
+FM_FUN_TSI operator+=(v2_base<t>& A, v2_base<t> B) -> v2_base<t> {
 	A.X += B.X;
 	A.Y += B.Y;
 	return A;
 }
-template<class t>
-FM_SINL v2_base<t>& operator-=(v2_base<t>& A, v2_base<t> B) {
+FM_FUN_TSI operator-=(v2_base<t>& A, v2_base<t> B) -> v2_base<t> {
 	A.X -= B.X;
 	A.Y -= B.Y;
 	return A;
 }
-template<class t>
-FM_SINL v2_base<t> HadamardMul(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI HadamardMul(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = A.X * B.X;
 	R.Y = A.Y * B.Y;
 	return R;
 } 
-template<class t>
-FM_SINL v2_base<t> HadamardDiv(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI HadamardDiv(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = A.X / B.X;
 	R.Y = A.Y / B.Y;
 	return R;
 }
-template<class t>
-FM_SINL v2_base<t> operator*(v2_base<t> V, t Scalar) {
+FM_FUN_TSI operator*(v2_base<t> V, t Scalar) -> v2_base<t> {
 	V.X *= Scalar;
 	V.Y *= Scalar;
 	return V;
 }
-template<class t>
-FM_SINL v2_base<t> operator*(t Scalar, v2_base<t> V) {
+FM_FUN_TSI operator*(t Scalar, v2_base<t> V) -> v2_base<t> {
 	return V * Scalar;
 }
-template<class t>
-FM_SINL v2_base<t>& operator*=(v2_base<t>& V, t Scalar) {
+FM_FUN_TSI operator*=(v2_base<t>& V, t Scalar) -> v2_base<t>& {
 	V = V * Scalar;	
 	return V;
 }
-template<class t>
-FM_SINL v2_base<t> operator/(v2_base<t> V, t Scalar) {
+FM_FUN_TSI operator/(v2_base<t> V, t Scalar) -> v2_base<t> {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	return V;
 }
-template<class t>
-FM_SINL v2_base<t>& operator/=(v2_base<t>& V, t Scalar) {
+FM_FUN_TSI operator/=(v2_base<t>& V, t Scalar) -> v2_base<t>& {
 	V = V / Scalar;
 	return V;
 } 
-template<class t>
-FM_SINL v2_base<t> operator-(v2_base<t> V) {
+FM_FUN_TSI operator-(v2_base<t> V) -> v2_base<t> {
 	V.X = -V.X;
 	V.Y = -V.Y;
 	return V;
 } 
-template<class t>
-FM_SINL t Dot(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI Dot(v2_base<t> A, v2_base<t> B) -> t {
 	return A.X * B.X + A.Y * B.Y;
 } 
-template<class t>
-FM_SINL v2_base<t> Min(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI Min(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = Min(A.X, B.X);	
 	R.Y = Min(A.Y, B.Y);	
 	return R;
 }
-template<class t>
-FM_SINL v2_base<t> Max(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI Max(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = Max(A.X, B.X);
 	R.Y = Max(A.Y, B.Y);
 	return R;
 } 
-template<class t>
-FM_SINL v2_base<t> Abs(v2_base<t> V) {
+FM_FUN_TSI Abs(v2_base<t> V) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = Abs(V.X);
 	R.Y = Abs(V.Y);
 	return R;
 } 
-template<class t>
-FM_SINL t SumOfElements(v2_base<t> V) {
+FM_FUN_TSI SumOfElements(v2_base<t> V) -> t {
 	return V.X + V.Y;
 }
-template<class t>
-FM_SINL t Length(v2_base<t> V) {
+FM_FUN_TSI Length(v2_base<t> V) -> t {
 	return static_cast<t>(sqrt(V.X * V.X + V.Y * V.Y));
 }
-template<class t>
-FM_SINL t LengthSquared(v2_base<t> V) {
+FM_FUN_TSI LengthSquared(v2_base<t> V) -> t {
 	return V.X * V.X + V.Y * V.Y;
 } 
-template<class t>
-FM_SINL v2_base<t> Normalize(v2_base<t> V) {
+FM_FUN_TSI Normalize(v2_base<t> V) -> v2_base<t> {
 	return V / Length(V);
 }
-template<class t>
-FM_SINL void Normalize(v2_base<t>* V) {
+FM_FUN_TSI Normalize(v2_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-template<class t>
-FM_SINL v2_base<t> Clamp(v2_base<t> V, v2_base<t> MinV, v2_base<t> MaxV) {
+FM_FUN_TSI Clamp(v2_base<t> V, v2_base<t> MinV, v2_base<t> MaxV) -> v2_base<t> {
 	return Min(Max(V, MinV), MaxV);
 }
-template<class t>
-FM_SINL v2_base<t> Lerp(v2_base<t> A, v2_base<t> B, float T) {
+FM_FUN_TSI Lerp(v2_base<t> A, v2_base<t> B, float T) -> v2_base<t> {
 	v2 fA = static_cast<v2>(A);
 	v2 fB = static_cast<v2>(B);
 	return static_cast<v2_base<t>>(fA + (fB - fA)*T);
 }
-template<class t>
-FM_SINL bool operator==(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI operator==(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y;
 }
-template<class t>
-FM_SINL bool operator!=(v2_base<t> A, v2_base<t> B) {
+FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X != B.X || A.X != B.X;
 }
 
