@@ -14,7 +14,7 @@ TEST_CASE("v4 construction and getters")
 	float Arr[4] = {1.f, 2.f, 3.f, 4.f};
 	CHECK_V4(V4FromMemory(Arr), 1.f, 2.f, 3.f, 4.f);
 
-	v4 B = V4(V3(1.f, 2.f, 3.f), 4.f);
+	v4 B = V4(v3(1, 2, 3), 4.f);
 	CHECK_V4(B, 1.f, 2.f, 3.f, 4.f);
 
 	CHECK(*Ptr(B) == 1.f);

@@ -38,6 +38,7 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FM_CALL __vectorcall
 
 #define FM_FUN auto
+#define FM_FUN_T template<t> auto
 #define FM_FUN_I FM_INL auto
 #define FM_FUN_C auto FM_CALL
 #define FM_FUN_TI template<class t> FM_INL auto
@@ -98,47 +99,42 @@ using v2u16 = v2_base<uint16_t>;
 using v2i8 = v2_base<int8_t>;
 using v2u8 = v2_base<uint8_t>;
 
-union v3
+template<class t>
+union v3_base
 {
-	struct {
-		float X, Y, Z;
-	};
-	struct {
-		float U, V, W;
-	};
-	struct {
-		float R, G, B;
-	};
-	struct {
-		v2 XY;
-		float Placeholder1_;
-	};
-	struct {
-		float Placeholder2_;
-		v2 YZ;
-	};
-	struct {
-		v2 UV;
-		float Placeholder3_;
-	};
-	struct {
-		float Placeholder4_;
-		v2 VW;
-	};
-	struct {
-		v2 RG;
-		float Placeholder5_;
-	};
-	struct {
-		float Placeholder6_;
-		v2 GB;
-	};
-	float Elements[3];
+	struct { t X, Y, Z; };
+	struct { t U, V, W; };
+	struct { t R, G, B; };
+	struct { v2_base<t> XY; t Placeholder1_; };
+	struct { t Placeholder2_; v2_base<t> YZ; };
+	struct { v2_base<t> UV; t Placeholder3_; };
+	struct { t Placeholder4_; v2_base<t> VW; };
+	struct { v2_base<t> RG; t Placeholder5_; };
+	struct { t Placeholder6_; v2_base<t> GB; };
+	t Elements[3];
 
-	FM_FUN_I operator[](uint32_t Index) -> float&; 
+	v3_base(t X, t Y, t Z) :X(X), Y(Y), Z(Z) {}
+	v3_base(t XYZ) :X(XYZ), Y(XYZ), Z(XYZ) {}
+	v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
+	v3_base() = default;
 
-	FM_FUN_I ZXY() -> v3; 
+	template<class u>
+	v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<V.Z>) {}
+
+	FM_FUN_I operator[](uint32_t Index) -> t&; 
+
+	FM_FUN_I ZXY() -> v3_base<t>; 
 };
+using v3 = v3_base<float>;
+using v3d = v3_base<double>;
+using v3i = v3_base<int32_t>;
+using v3u = v3_base<uint32_t>;
+using v3i64 = v3_base<int64_t>;
+using v3u64 = v3_base<uint64_t>;
+using v3i16 = v3_base<int16_t>;
+using v3u16 = v3_base<uint16_t>;
+using v3i8 = v3_base<int8_t>;
+using v3u8 = v3_base<uint8_t>;
 
 union v4
 {
@@ -679,163 +675,143 @@ FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
 //////////////////
 // v3 functions //
 //////////////////
-FM_SINL v3 V3FromMemory(float* Mem) {
-	v3 R;
-	R.X = Mem[0];
-	R.Y = Mem[1];
-	R.Z = Mem[2];
-	return R;
-}
-FM_SINL v3 V3(float X, float Y, float Z) {
-	v3 R;
-	R.X = X;
-	R.Y = Y;
-	R.Z = Z;
-	return R;
-}
-FM_SINL v3 V3(float XYZ) {
-	return V3(XYZ, XYZ, XYZ);
-}
-FM_SINL v3 V3() {
-	return {};
-}
-FM_FUN_I v3::ZXY() -> v3 { 
-	return V3(Z, X, Y); 
-}
-FM_FUN_I v3::operator[](uint32_t Index) -> float& {
+FM_FUN_TI v3_base<t>::operator[](uint32_t Index) -> t& {
 	FM_ASSERT(Index >= 0 && Index <= 2);
 	return Elements[Index];
 }
-FM_SINL void Store(float* Mem, v3 V) {
+FM_FUN_TI v3_base<t>::ZXY() -> v3_base<t> { 
+	return v3_base<t>(Z, X, Y); 
+}
+FM_FUN_TSI Store(t* Mem, v3_base<t> V) -> void {
 	Mem[0] = V.X;
 	Mem[1] = V.Y;
 	Mem[2] = V.Z;
 }
-FM_SINL float* Ptr(v3& V) {
+FM_FUN_TSI Ptr(v3_base<t>& V) -> t* {
 	return &V.X; 
 }
-FM_SINL float* PtrY(v3& V) {
+FM_FUN_TSI PtrY(v3_base<t>& V) -> t* {
 	return &V.Y; 
 }
-FM_SINL float* PtrZ(v3& V) {
+FM_FUN_TSI PtrZ(v3_base<t>& V) -> t* {
 	return &V.Z; 
 }
-FM_SINL v3 operator+(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI operator+(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = A.X + B.X;
 	R.Y = A.Y + B.Y;
 	R.Z = A.Z + B.Z;
 	return R;
 }
-FM_SINL v3 operator-(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI operator-(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = A.X - B.X;
 	R.Y = A.Y - B.Y;
 	R.Z = A.Z - B.Z;
 	return R;
 }
-FM_SINL v3& operator+=(v3& A, v3 B) {
+FM_FUN_TSI operator+=(v3_base<t>& A, v3_base<t> B) -> v3_base<t>& {
 	A = A + B;
 	return A;
 }
-FM_SINL v3& operator-=(v3& A, v3 B) {
+FM_FUN_TSI operator-=(v3_base<t>& A, v3_base<t> B) -> v3_base<t>& {
 	A = A - B;
 	return A;
 }
-FM_SINL v3 HadamardMul(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI HadamardMul(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = A.X * B.X;
 	R.Y = A.Y * B.Y;
 	R.Z = A.Z * B.Z;
 	return R;
 }
-FM_SINL v3 HadamardDiv(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI HadamardDiv(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = A.X / B.X;
 	R.Y = A.Y / B.Y;
 	R.Z = A.Z / B.Z;
 	return R;
 }
-FM_SINL v3 operator*(v3 V, float Scalar) {
+FM_FUN_TSI operator*(v3_base<t> V, t Scalar) -> v3_base<t> {
 	V.X *= Scalar;
 	V.Y *= Scalar;
 	V.Z *= Scalar;
 	return V;
 }
-FM_SINL v3 operator*(float Scalar, v3 V) {
+FM_FUN_TSI operator*(t Scalar, v3_base<t> V) -> v3_base<t> {
 	return V * Scalar;
 }
-FM_SINL v3& operator*=(v3& V, float Scalar) {
+FM_FUN_TSI operator*=(v3_base<t>& V, t Scalar) -> v3_base<t>& {
 	V = V * Scalar;
 	return V;
 }
-FM_SINL v3 operator/(v3 V, float Scalar) {
+FM_FUN_TSI operator/(v3_base<t> V, t Scalar) -> v3_base<t> {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	V.Z /= Scalar;
 	return V;
 }
-FM_SINL v3& operator/=(v3& V, float Scalar) {
+FM_FUN_TSI operator/=(v3_base<t>& V, t Scalar) -> v3_base<t>& {
 	V = V / Scalar;
 	return V;
 }
-FM_SINL v3 operator-(v3 V) {
+FM_FUN_TSI operator-(v3_base<t> V) -> v3_base<t> {
 	V.X = -V.X;
 	V.Y = -V.Y;
 	V.Z = -V.Z;
 	return V;
 }
-FM_SINL v3 Cross(v3 A, v3 B) {
-	return v3(HadamardMul(A.ZXY(), B) - HadamardMul(A, B.ZXY())).ZXY();
+FM_FUN_TSI Cross(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	return v3_base<t>(HadamardMul(A.ZXY(), B) - HadamardMul(A, B.ZXY())).ZXY();
 }
-FM_SINL float Dot(v3 A, v3 B) {
+FM_FUN_TSI Dot(v3_base<t> A, v3_base<t> B) -> t {
 	return A.X * B.X + A.Y * B.Y + A.Z * B.Z;
 }
-FM_SINL v3 Min(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI Min(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = Min(A.X, B.X);
 	R.Y = Min(A.Y, B.Y);
 	R.Z = Min(A.Z, B.Z);
 	return R;
 }
-FM_SINL v3 Max(v3 A, v3 B) {
-	v3 R;
+FM_FUN_TSI Max(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	v3_base<t> R;
 	R.X = Max(A.X, B.X);
 	R.Y = Max(A.Y, B.Y);
 	R.Z = Max(A.Z, B.Z);
 	return R;
 } 
-FM_SINL v3 Abs(v3 V) {
+FM_FUN_TSI Abs(v3_base<t> V) -> v3_base<t> {
 	V.X = Abs(V.X);
 	V.Y = Abs(V.Y);
 	V.Z = Abs(V.Z);
 	return V;
 }
-FM_SINL float SumOfElements(v3 V) {
+FM_FUN_TSI SumOfElements(v3_base<t> V) -> t {
 	return V.X + V.Y + V.Z;
 }
-FM_SINL float Length(v3 V) {
+FM_FUN_TSI Length(v3_base<t> V) -> t {
 	return sqrtf(V.X * V.X + V.Y * V.Y + V.Z * V.Z);
 }
-FM_SINL float LengthSquared(v3 V) {
+FM_FUN_TSI LengthSquared(v3_base<t> V) -> t {
 	return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 } 
-FM_SINL v3 Normalize(v3 V) {
+FM_FUN_TSI Normalize(v3_base<t> V) -> v3_base<t> {
 	return V / Length(V);
 }
-FM_SINL void Normalize(v3* V) {
+FM_FUN_TSI Normalize(v3_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-FM_SINL v3 Clamp(v3 V, v3 MinV, v3 MaxV) {
+FM_FUN_TSI Clamp(v3_base<t> V, v3_base<t> MinV, v3_base<t> MaxV) -> v3_base<t> {
 	return Min(Max(V, MinV), MaxV);	
 } 
-FM_SINL v3 Lerp(v3 A, v3 B, float T) {
+FM_FUN_TSI Lerp(v3_base<t> A, v3_base<t> B, t T) -> v3_base<t> {
 	return A + (B - A) * T;
 }
-FM_SINL bool operator==(v3 A, v3 B) {
+FM_FUN_TSI operator==(v3_base<t> A, v3_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y && A.Z == B.Z;
 }
-FM_SINL bool operator!=(v3 A, v3 B) {
+FM_FUN_TSI operator!=(v3_base<t> A, v3_base<t> B) -> bool {
 	return !(A == B);
 }
 
@@ -2372,7 +2348,7 @@ FM_FUN_C operator*(mat4 A, mat4 B) -> mat4;
 FM_FUN Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far) -> mat4;
 FM_FUN Mat4Perspective(float FOV, float AspectRatio, float near, float Far) -> mat4;
 FM_FUN Mat4LookAt(vec3 Eye, vec3 At, vec3 Up = Vec3(0.f, 1.f, 0.f)) -> mat4;
-FM_FUN Mat4LookAt(v3 Eye, v3 At, v3 Up = V3(0.f, 1.f, 0.f)) -> mat4;
+FM_FUN Mat4LookAt(v3 Eye, v3 At, v3 Up = {0.f, 1.f, 0.f}) -> mat4;
 
 ////////////////////
 // mat4 functions //
@@ -3036,7 +3012,7 @@ FM_FUN Mat4LookAt(v3 Eye, v3 At, v3 Up) -> mat4 {
 	Up = Cross(Right, Forward);
 	return Mat4FromColumns(
 		Right, Up, -Forward,
-		V3(-Dot(Right, Eye), -Dot(Up, Eye), Dot(Forward, Eye)));
+		v3(-Dot(Right, Eye), -Dot(Up, Eye), Dot(Forward, Eye)));
 }
 FM_FUN_C mat4::GetRowV4(uint32_t Index) -> v4 {
 	FM_ASSERT(Index >= 0 && Index <= 3);

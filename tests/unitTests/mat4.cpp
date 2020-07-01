@@ -152,10 +152,10 @@ TEST_CASE("mat4 construction and getters")
 		);
 	}
 	{
-		v3 Col1 = V3(1.f, 2.f, 3.f);
-		v3 Col2 = V3(5.f, 6.f, 7.f);
-		v3 Col3 = V3(9.f, 10.f, 11.f);
-		v3 Col4 = V3(13.f, 14.f, 15.f);
+		v3 Col1(1, 2, 3);
+		v3 Col2(5, 6, 7);
+		v3 Col3(9, 10, 11);
+		v3 Col4(13, 14, 15);
 		CHECK_ALL_MATRIX_ENTRIES(
 			Mat4FromColumns(Col1, Col2, Col3, Col4),
 			1.f, 5.f, 9.f,  13.f,
@@ -523,7 +523,7 @@ TEST_CASE("mat4 look at")
 	mat4 ViewMat = Mat4LookAt(Vec3(0.f), Vec3(0.f, 0.f, 5.f));
 	CHECK_VEC4(ViewMat * Vec4(0.f, 2.f, 5.f, 1.f), 0.f, 2.f, -5.f, 1.f);
 
-	ViewMat = Mat4LookAt(V3(0.f), V3(0.f, 0.f, 5.f));
+	ViewMat = Mat4LookAt(v3{}, v3(0, 0, 5));
 	CHECK_V4(ViewMat * V4(0.f, 2.f, 5.f, 1.f), 0.f, 2.f, -5.f, 1.f);
 
 	// TODO: Make more tests for look at function
