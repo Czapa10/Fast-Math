@@ -2291,31 +2291,24 @@ FM_SINL bool FM_CALL operator!=(vec4 A, vec4 B) {
 //////////////////////////
 // vector types casting //
 //////////////////////////
-FM_SINL v2 FM_CALL CastToV2(vec2 V) {
-	v2 R;
-	R.X = V.X();
-	R.Y = V.Y();
-	return R;
+FM_FUN_SIC CastToV2(vec2 V) -> v2 {
+	return v2(V.X(), V.Y());
 }
-FM_SINL v3 FM_CALL CastToV3(vec3 V) {
-	v3 R;
-	R.X = V.X();
-	R.Y = V.Y();
-	R.Z = V.Z();
-	return R;
+FM_FUN_SIC CastToV3(vec3 V) -> v3 {
+	return v3(V.X(), V.Y(), V.Z());
 }
-FM_SINL v4 FM_CALL CastToV4(vec4 V) {
+FM_FUN_SIC CastToV4(vec4 V) -> v4 {
 	v4 R;
 	Store(R.Elements, V);
 	return R;
 }
-FM_SINL vec2 FM_CALL CastToVec2(v2 V) {
+FM_FUN_SIC CastToVec2(v2 V) -> vec2 {
 	return Vec2FromMemory(V.Elements);
 }
-FM_SINL vec3 FM_CALL CastToVec3(v3 V) {
+FM_FUN_SIC CastToVec3(v3 V) -> vec3 {
 	return Vec3FromMemory(V.Elements);
 }
-FM_SINL vec4 FM_CALL CastToVec4(v4 V) {
+FM_FUN_SIC CastToVec4(v4 V) -> vec4 {
 	return Vec4FromMemory(V.Elements);
 }
 
