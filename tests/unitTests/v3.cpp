@@ -1,5 +1,5 @@
 
-TEST_CASE_TEMPLATE("v3 construction and getters", t, NUMERICAL_TYPES)
+TEST_CASE_TEMPLATE("v3_construction and getters", t, NUMERICAL_TYPES)
 {
 	CHECK_V3_ALL_ALIASES(v3_base<t>(1, 2, 3), 1, 2, 3);
 	CHECK_V3(v3_base<t>(2), 2, 2, 2);
@@ -20,7 +20,7 @@ TEST_CASE_TEMPLATE("v3 construction and getters", t, NUMERICAL_TYPES)
 	CHECK(P[2] == 3);
 }
 
-TEST_CASE_TEMPLATE("v3 base some operations", t, NUMERICAL_TYPES)
+TEST_CASE_TEMPLATE("v3_base some operations", t, NUMERICAL_TYPES)
 {
 	v3_base<t> A(1, 2, 3);
 	v3_base<t> B(4, 5, 6);

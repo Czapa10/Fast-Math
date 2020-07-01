@@ -1,5 +1,5 @@
 
-TEST_CASE_TEMPLATE("v2 base constructors and getters", t, NUMERICAL_TYPES)
+TEST_CASE_TEMPLATE("v2_base constructors and getters", t, NUMERICAL_TYPES)
 {
 	CHECK_V2_ALL_ALIASES(v2_base<t>(3, 4), 3, 4);
 	CHECK_V2(v2_base<t>(5), 5, 5);
@@ -18,7 +18,7 @@ TEST_CASE_TEMPLATE("v2 base constructors and getters", t, NUMERICAL_TYPES)
 	CHECK(P[1] == 2);
 }
 
-TEST_CASE_TEMPLATE("v2 base some operations", t, NUMERICAL_TYPES)
+TEST_CASE_TEMPLATE("v2_base some operations", t, NUMERICAL_TYPES)
 {
 	v2_base<t> A(1, 2);
 	v2_base<t> B(3, 4);

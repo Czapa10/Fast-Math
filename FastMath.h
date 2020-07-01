@@ -119,7 +119,7 @@ union v3_base
 	v3_base() = default;
 
 	template<class u>
-	v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<V.Z>) {}
+	v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 
@@ -136,52 +136,65 @@ using v3u16 = v3_base<uint16_t>;
 using v3i8 = v3_base<int8_t>;
 using v3u8 = v3_base<uint8_t>;
 
-union v4
+template<class t>
+union v4_base
 {
 	struct 
 	{
 		union 
 		{
-			v3 XYZ;
-			struct { float X, Y, Z; };
+			v3_base<t> XYZ;
+			struct { t X, Y, Z; };
 		};
-		float W;
+		t W;
 	};
-
 	struct
 	{
 		union 
 		{
-			v3 RGB;
-			struct { float R, G, B; };
+			v3_base<t> RGB;
+			struct { t R, G, B; };
 		};
-		float A;
+		t A;
 	};
-
 	struct {
-		v2 XY;
-		float Placeholder1_;
-		float Placeholder2_;
+		v2_base<t> XY;
+		t Placeholder1_;
+		t Placeholder2_;
 	};
-
 	struct {
-		float Placeholder3_;
-		v2 YZ;
-		float Placeholder4_;
+		t Placeholder3_;
+		v2_base<t> YZ;
+		t Placeholder4_;
 	};
-
 	struct {
-		float Placeholder5_;
-		float Placeholder6_;
-		v2 ZW;
+		t Placeholder5_;
+		t Placeholder6_;
+		v2_base<t> ZW;
 	};
+	t Elements[4];
 
-	float Elements[4];
+	v4_base(t X, t Y, t Z, t W) :X(X), Y(Y), Z(Z), W(W) {}
+	v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
+	v4_base(v3 XYZ, t W) :XYZ(XYZ), W(W) {}
+	v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
+	v4_base() = default;
 
-	FM_INL float& operator[](uint32_t Index); 
+	template<class u>
+	v4_base(v4_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
 
-	FM_INL v3 ZXY(); 
+	 FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
+using v4 = v4_base<float>;
+using v4d = v4_base<double>;
+using v4i = v4_base<int32_t>;
+using v4u = v4_base<uint32_t>;
+using v4i64 = v4_base<int64_t>;
+using v4u64 = v4_base<uint64_t>;
+using v4i16 = v4_base<int16_t>;
+using v4u16 = v4_base<uint16_t>;
+using v4i8 = v4_base<int8_t>;
+using v4u8 = v4_base<uint8_t>;
 
 struct alignas(16) vec2
 {
@@ -818,186 +831,151 @@ FM_FUN_TSI operator!=(v3_base<t> A, v3_base<t> B) -> bool {
 //////////////////
 // v4 functions //
 //////////////////
-FM_SINL v4 V4FromMemory(float* Mem) {
-	v4 R;
-	R[0] = Mem[0];
-	R[1] = Mem[1];
-	R[2] = Mem[2];
-	R[3] = Mem[3];
-	return R;
-}
-FM_SINL v4 V4(float X, float Y, float Z, float W) {
-	v4 R;
-	R.X = X;
-	R.Y = Y;
-	R.Z = Z;
-	R.W = W;
-	return R;
-}
-FM_SINL v4 V4(v3 XYZ, float W) {
-	v4 R;
-	R.X = XYZ.X;
-	R.Y = XYZ.Y;
-	R.Z = XYZ.Z;
-	R.W = W;
-	return R;
-}
-FM_SINL v4 V4(float XYZW) {
-	v4 R;
-	R.X = XYZW;
-	R.Y = XYZW;
-	R.Z = XYZW;
-	R.W = XYZW;
-	return R;
-}
-FM_SINL v4 V4() {
-	return {};
-}
-float& v4::operator[](uint32_t Index) {
+FM_FUN_TI v4_base<t>::operator[](uint32_t Index) -> t& {
 	FM_ASSERT(Index >= 0 && Index <= 3);
 	return Elements[Index];
 }
-FM_SINL float* Ptr(v4& V) {
+FM_FUN_TSI Ptr(v4_base<t>& V) -> t* {
 	return &V.X; 
 }
-FM_SINL float* PtrY(v4& V) {
+FM_FUN_TSI PtrY(v4_base<t>& V) -> t* {
 	return &V.Y; 
 }
-FM_SINL float* PtrZ(v4& V) {
+FM_FUN_TSI PtrZ(v4_base<t>& V) -> t* {
 	return &V.Z; 
 }
-FM_SINL float* PtrW(v4& V) {
+FM_FUN_TSI PtrW(v4_base<t>& V) -> t* {
 	return &V.W; 
 }
-FM_SINL void Store(float* Mem, v4 V) {
+FM_FUN_TSI Store(t* Mem, v4_base<t> V) -> void {
 	Mem[0] = V.X;
 	Mem[1] = V.Y;
 	Mem[2] = V.Z;
 	Mem[3] = V.W;
 }
-FM_SINL v4 operator+(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI operator+(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = A.X + B.X;
 	R.Y = A.Y + B.Y;
 	R.Z = A.Z + B.Z;
 	R.W = A.W + B.W;
 	return R;
 } 
-FM_SINL v4 operator-(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI operator-(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = A.X - B.X;
 	R.Y = A.Y - B.Y;
 	R.Z = A.Z - B.Z;
 	R.W = A.W - B.W;
 	return R;
 }
-FM_SINL v4& operator+=(v4& A, v4 B) {
+FM_FUN_TSI operator+=(v4_base<t>& A, v4_base<t> B) -> v4_base<t>& {
 	A = A + B;
 	return A;
 }
-FM_SINL v4& operator-=(v4& A, v4 B) {
+FM_FUN_TSI operator-=(v4_base<t>& A, v4_base<t> B) -> v4_base<t>& {
 	A = A - B;
 	return A;
 }
-FM_SINL v4 HadamardMul(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI HadamardMul(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = A.X * B.X;
 	R.Y = A.Y * B.Y;
 	R.Z = A.Z * B.Z;
 	R.W = A.W * B.W;
 	return R;
 }
-FM_SINL v4 HadamardDiv(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI HadamardDiv(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = A.X / B.X;
 	R.Y = A.Y / B.Y;
 	R.Z = A.Z / B.Z;
 	R.W = A.W / B.W;
 	return R;
 }
-FM_SINL v4 operator*(v4 V, float  Scalar) {
+FM_FUN_TSI operator*(v4_base<t> V, t Scalar) -> v4_base<t> {
 	V.X *= Scalar;
 	V.Y *= Scalar;
 	V.Z *= Scalar;
 	V.W *= Scalar;
 	return V;
 }
-FM_SINL v4 operator*(float Scalar, v4 V) {
+FM_FUN_TSI operator*(t Scalar, v4_base<t> V) -> v4_base<t> {
 	return V * Scalar;
 }
-FM_SINL v4& operator*=(v4& V, float Scalar) {
+FM_FUN_TSI operator*=(v4_base<t>& V, t Scalar) -> v4_base<t>& {
 	V = V * Scalar;
 	return V;
 }
-FM_SINL v4 operator/(v4 V, float Scalar) {
+FM_FUN_TSI operator/(v4_base<t> V, t Scalar) -> v4_base<t> {
 	V.X /= Scalar;
 	V.Y /= Scalar;
 	V.Z /= Scalar;
 	V.W /= Scalar;
 	return V;
 }
-FM_SINL v4& operator/=(v4& V, float Scalar) {
+FM_FUN_TSI operator/=(v4_base<t>& V, t Scalar) -> v4_base<t>& {
 	V = V / Scalar;
 	return V;
 }
-FM_SINL v4 operator-(v4 V) {
+FM_FUN_TSI operator-(v4_base<t> V) -> v4_base<t> {
 	V.X = -V.X;
 	V.Y = -V.Y;
 	V.Z = -V.Z;
 	V.W = -V.W;
 	return V;
 } 
-FM_SINL float Dot(v4 A, v4 B) {
+FM_FUN_TSI Dot(v4_base<t> A, v4_base<t> B) -> t {
 	return A.X * B.X + A.Y * B.Y + A.Z * B.Z + A.W * B.W;
 } 
-FM_SINL v4 Min(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI Min(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = Min(A.X, B.X);
 	R.Y = Min(A.Y, B.Y);
 	R.Z = Min(A.Z, B.Z);
 	R.W = Min(A.W, B.W);
 	return R;
 } 
-FM_SINL v4 Max(v4 A, v4 B) {
-	v4 R;
+FM_FUN_TSI Max(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	v4_base<t> R;
 	R.X = Max(A.X, B.X);
 	R.Y = Max(A.Y, B.Y);
 	R.Z = Max(A.Z, B.Z);
 	R.W = Max(A.W, B.W);
 	return R;
 }
-FM_SINL v4 Abs(v4 V) {
+FM_FUN_TSI Abs(v4_base<t> V) -> v4_base<t> {
 	V.X = Abs(V.X);
 	V.Y = Abs(V.Y);
 	V.Z = Abs(V.Z);
 	V.W = Abs(V.W);
 	return V;
 }
-FM_SINL float SumOfElements(v4 V) {
+FM_FUN_TSI SumOfElements(v4_base<t> V) -> t {
 	return V.X + V.Y + V.Z + V.W;
 }
-FM_SINL float Length(v4 V) {
+FM_FUN_TSI Length(v4_base<t> V) -> t {
 	return sqrtf(Dot(V, V));
 }
-FM_SINL float LengthSquared(v4 V) {
+FM_FUN_TSI LengthSquared(v4_base<t> V) -> t {
 	return Dot(V, V);
 } 
-FM_SINL v4 Normalize(v4 V) {
+FM_FUN_TSI Normalize(v4_base<t> V) -> v4_base<t> {
 	return V / Length(V);
 }
-FM_SINL void Normalize(v4* V) {
+FM_FUN_TSI Normalize(v4_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-FM_SINL v4 Clamp(v4 V, v4 MinV, v4 MaxV) {
+FM_FUN_TSI Clamp(v4_base<t> V, v4_base<t> MinV, v4_base<t> MaxV) -> v4_base<t> {
 	return Min(Max(V, MinV), MaxV);
 } 
-FM_SINL v4 Lerp(v4 A, v4 B, float T) {
+FM_FUN_TSI Lerp(v4_base<t> A, v4_base<t> B, t T) -> v4_base<t> {
 	return A + (B - A) * T;
 }
-FM_SINL bool operator==(v4 A, v4 B) {
+FM_FUN_TSI operator==(v4_base<t> A, v4_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y && A.Z == B.Z && A.W == B.W;
 } 
-FM_SINL bool operator!=(v4 A, v4 B) {
+FM_FUN_TSI operator!=(v4_base<t> A, v4_base<t> B) -> bool {
 	return !(A == B);
 } 
 
@@ -2385,7 +2363,7 @@ FM_FUN_IC mat4::GetRowVec4(uint32_t Index) -> vec4 {
 	return CastToVec4(GetRowV4(Index));
 }
 FM_FUN_IC mat4::SetRow(uint32_t Index, float X, float Y, float Z, float W) -> void {
-	SetRow(Index, V4(X, Y, Z, W));
+	SetRow(Index, v4(X, Y, Z, W));
 }
 FM_FUN_IC mat4::SetRow(uint32_t Index, vec4 V) -> void {
 	SetRow(Index, CastToV4(V));
@@ -2691,7 +2669,7 @@ FM_FUN_SIC Mat4Scale(vec3 Scalar) -> mat4 {
 FM_FUN_SIC Scale(mat4* M, float X, float Y, float Z) -> void {
 	// TODO: Try to Cast to vec and v back and forth and Profile!
 	v4 MainDiag = M->GetMainDiagonalV4();
-	v4 ScalarVec = V4(X, Y, Z, 1.f);
+	v4 ScalarVec(X, Y, Z, 1.f);
 	MainDiag = HadamardMul(MainDiag, ScalarVec);
 	M->SetMainDiagonal(MainDiag);
 }
@@ -3019,25 +2997,25 @@ FM_FUN_C mat4::GetRowV4(uint32_t Index) -> v4 {
 	switch(Index)
 	{
 		case 0: {
-			return V4(
+			return v4(
 				priv::GetX(Columns[0]), priv::GetX(Columns[1]),
 				priv::GetX(Columns[2]), priv::GetX(Columns[3]));
 		} break;
 		
 		case 1: {
-			return V4(
+			return v4(
 				priv::GetY(Columns[0]), priv::GetY(Columns[1]),
 				priv::GetY(Columns[2]), priv::GetY(Columns[3]));
 		} break;
 	
 		case 2: {
-			return V4(
+			return v4(
 				priv::GetZ(Columns[0]), priv::GetZ(Columns[1]),
 				priv::GetZ(Columns[2]), priv::GetZ(Columns[3]));
 		} break;
 	
 		case 3: {
-			return V4(
+			return v4(
 				priv::GetW(Columns[0]), priv::GetW(Columns[1]),
 				priv::GetW(Columns[2]), priv::GetW(Columns[3]));
 		} break;
