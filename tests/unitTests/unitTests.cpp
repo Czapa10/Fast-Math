@@ -155,6 +155,9 @@ static char binaryOutput[128];
 #define CHECK_VEC4_1(V, A) \
 	CHECK4(V.X() == A, V.Y() == A, V.Z() == A, V.W() == A);
 
+#define CHECK_RECT2(_Rect, _MinX, _MinY, _MaxX, _MaxY) \
+	CHECK4(_Rect.Min.X == _MinX, _Rect.Min.Y == _MinY, _Rect.Max.X == _MaxX, _Rect.Max.Y == _MaxY);
+
 #define CHECK_VEC4_WITH_XYZW_AND_RGBA_GETTERS(V, _X, _Y, _Z, _W) \
 	CHECK4(V.X() == _X, V.Y() == _Y, V.Z() == _Z, V.W() == _W); \
 	CHECK4(V.R() == _X, V.G() == _Y, V.B() == _Z, V.A() == _W);
@@ -198,6 +201,7 @@ static char binaryOutput[128];
 #include "v3.cpp"
 #include "v4.cpp"
 #include "vectorCasting.cpp"
+#include "rect2.cpp"
 #include "mat4.cpp"
 
 

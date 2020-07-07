@@ -47,6 +47,13 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FM_FUN_TSI template<class t> static FM_INL auto
 #define FM_FUN_SIC static FM_INL auto FM_CALL
 
+#define FM_GENERIC_FUNCTION(Macro) \
+	Macro(, float) Macro(d, double) \
+	Macro(i, int32_t) Macro(u, uint32_t) \
+	Macro(i64, int64_t) Macro(u64, uint64_t) \
+	Macro(i16, int16_t) Macro(u16, uint16_t) \
+	Macro(i8, int8_t) Macro(u8, uint8_t)
+
 #ifdef NDEBUG
 	#define FM_ASSERT(expression) if(!expression) (*(int32_t*)0 = 0);
 	#define FM_ERROR() (*(int32_t*)0 = 0);
@@ -440,6 +447,47 @@ struct alignas(16) vec4
 
 	FM_INL float& operator[](uint32_t Index);
 };
+
+template<class t>
+struct rect2_base
+{
+	v2_base<t> Min, Max;
+
+	FM_FUN_I Width() -> t;
+	FM_FUN_I Height() -> t;
+	FM_FUN_I W() -> t { return Width(); }
+	FM_FUN_I H() -> t { return Height(); }
+	FM_FUN_I Dim() -> v2_base<t>;
+	FM_FUN_I Size() -> v2_base<t> { return Dim(); }
+	FM_FUN_I Radius() -> v2_base<t>;
+
+	FM_FUN_I Center() -> v2_base<t>;
+	FM_FUN_I MaxXMinY() -> v2_base<t>;
+	FM_FUN_I MinXMaxY() -> v2_base<t>;
+	FM_FUN_I MinYCenter() -> v2_base<t>;
+	FM_FUN_I MaxYCenter() -> v2_base<t>;
+	FM_FUN_I MinXCenter() -> v2_base<t>;
+	FM_FUN_I MaxXCenter() -> v2_base<t>;
+
+	FM_FUN_I SetCenter(v2_base<t>) -> void;
+	FM_FUN_I SetCenter(t, t) -> void;
+	FM_FUN_I SetSizeWithFixedCenter(v2_base<t>) -> void;
+	FM_FUN_I SetSizeWithFixedCenter(t, t) -> void;
+	FM_FUN_I SetSizeWithFixedMin(v2_base<t>) -> void;
+	FM_FUN_I SetSizeWithFixedMin(t, t) -> void;
+	FM_FUN_I SetSizeWithFixedMax(v2_base<t>) -> void;
+	FM_FUN_I SetSizeWithFixedMax(t, t) -> void;
+};
+using rect2 = rect2_base<float>;
+using rect2d = rect2_base<double>;
+using rect2i = rect2_base<int32_t>;
+using rect2u = rect2_base<uint32_t>;
+using rect2i64 = rect2_base<int64_t>;
+using rect2u64 = rect2_base<uint64_t>;
+using rect2i16 = rect2_base<int16_t>;
+using rect2u16 = rect2_base<uint16_t>;
+using rect2i8 = rect2_base<int8_t>;
+using rect2u8 = rect2_base<uint8_t>;
 
 struct alignas(16) mat4
 {
@@ -2311,6 +2359,148 @@ FM_FUN_SIC CastToVec3(v3 V) -> vec3 {
 FM_FUN_SIC CastToVec4(v4 V) -> vec4 {
 	return Vec4FromMemory(V.Elements);
 }
+
+/////////////////////
+// rect2 functions //
+/////////////////////
+FM_FUN_TI rect2_base<t>::Width() -> t {
+	return Max.X - Min.X;
+}
+FM_FUN_TI rect2_base<t>::Height() -> t {
+	return Max.Y - Min.Y;
+}
+FM_FUN_TI rect2_base<t>::Dim() -> v2_base<t> {
+	return Max - Min;
+}
+FM_FUN_TI rect2_base<t>::Radius() -> v2_base<t> {
+	return Dim() / (t)2;
+}
+FM_FUN_TI rect2_base<t>::Center() -> v2_base<t> {
+	return v2_base<t>(Min + Dim()/(t)2);
+}
+FM_FUN_TI rect2_base<t>::MaxXMinY() -> v2_base<t> {
+	return v2_base<t>(Max.X, Min.Y);
+}
+FM_FUN_TI rect2_base<t>::MinXMaxY() -> v2_base<t> {
+	return v2_base<t>(Min.X, Max.Y);
+}
+FM_FUN_TI rect2_base<t>::MinYCenter() -> v2_base<t> {
+	return v2_base<t>(Min.X + Width()/(t)2, Min.Y);
+}
+FM_FUN_TI rect2_base<t>::MaxYCenter() -> v2_base<t> {
+	return v2_base<t>(Min.X + Width()/(t)2, Max.Y);
+}
+FM_FUN_TI rect2_base<t>::MinXCenter() -> v2_base<t> {
+	return v2_base<t>(Min.X, Min.Y + Height()/(t)2);
+}
+FM_FUN_TI rect2_base<t>::MaxXCenter() -> v2_base<t> {
+	return v2_base<t>(Max.X, Min.Y + Height()/(t)2);
+}
+FM_FUN_TI rect2_base<t>::SetCenter(v2_base<t> Center) -> void {
+	auto R = Radius();
+	Min = Center - R;
+	Max = Center + R;
+}
+FM_FUN_TI rect2_base<t>::SetCenter(t X, t Y) -> void {
+	SetCenter(v2_base<t>(X, Y));
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedCenter(v2_base<t> Size) -> void {
+	auto NewRadius = Size / (t)2;
+	auto Cen = Center();
+	Min = Cen - NewRadius;
+	Max = Cen + NewRadius;
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedCenter(t Width, t Height) -> void {
+	SetSizeWithFixedCenter(v2_base<t>(Width, Height));
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedMin(v2_base<t> Size) -> void {
+	Max = Min + Size;
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedMin(t Width, t Height) -> void {
+	SetSizeWithFixedMin(v2_base<t>(Width, Height));
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedMax(v2_base<t> Size) -> void {
+	Min = Max - Size;
+}
+FM_FUN_TI rect2_base<t>::SetSizeWithFixedMax(t Width, t Height) -> void {
+	SetSizeWithFixedMax(v2_base<t>(Width, Height));
+}
+FM_FUN_TSI Rect2BaseMinMax(t MinX, t MinY, t MaxX, t MaxY) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min.X = MinX;
+	R.Min.Y = MinY;
+	R.Max.X = MaxX;
+	R.Max.Y = MaxY;
+	return R;
+}
+FM_FUN_TSI Rect2BaseMinMax(v2_base<t> Min, v2_base<t> Max) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Min;
+	R.Max = Max;
+	return R;
+}
+FM_FUN_TSI Rect2BaseMinDim(t MinX, t MinY, t Width, t Height) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min.X = MinX;
+	R.Min.Y = MinY;
+	R.Max.X = MinX + Width;
+	R.Max.Y = MinY + Height;
+	return R;
+}
+FM_FUN_TSI Rect2BaseMinDim(v2_base<t> Min, v2_base<t> Dim) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Min;
+	R.Max = Min + Dim;
+	return R;
+}
+FM_FUN_TSI Offset(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = A.Min + Offset;
+	R.Max = A.Max + Offset;
+	return R;
+}
+FM_FUN_TSI Offset(rect2_base<t>* A, v2_base<t> Offset) -> void {
+	A->Min += Offset;
+	A->Max += Offset;
+}
+FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
+	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
+	       Point.Y >= Rect.Min.Y && Point.Y <= Rect.Max.Y;
+}
+FM_FUN_TSI Intersect(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return A.Max.X >= B.Min.X && A.Min.X <= B.Max.X &&
+	       A.Max.Y >= B.Min.Y && A.Min.Y <= B.Max.Y;
+}
+FM_FUN_TSI FullyIntersect(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return Intersect(A, B.Min) && Intersect(A, B.Max) &&
+	       Intersect(A, B.MaxXMinY()) && Intersect(A, B.MinXMaxY());
+}
+FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return A.Min == B.Min && A.Max == B.Max;
+}
+FM_FUN_TSI operator!=(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return !(A == B);
+}
+	
+#define FM_RECT2_MIN_MAX(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##MinMax(T Left, T Top, T Right, T Bottom) -> rect2_base<T>\
+	{ return Rect2BaseMinMax<T>(Left, Top, Right, Bottom); }
+FM_GENERIC_FUNCTION(FM_RECT2_MIN_MAX);
+	
+#define FM_RECT2_MIN_MAX_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##MinMax(v2_base<T> Min, v2_base<T> Max) -> rect2_base<T>\
+	{ return Rect2BaseMinMax<T>(Min, Max); }
+FM_GENERIC_FUNCTION(FM_RECT2_MIN_MAX_2);
+	
+#define FM_RECT2_MIN_DIM(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##MinDim(T Left, T Top, T Width, T Height) -> rect2_base<T>\
+	{ return Rect2BaseMinDim<T>(Left, Top, Width, Height); }
+FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM);
+	
+#define FM_RECT2_MIN_DIM_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##MinDim(v2_base<T> Min, v2_base<T> Dim) -> rect2_base<T>\
+	{ return Rect2BaseMinDim<T>(Min, Dim); }
+FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM_2);
 
 ///////////////////////////////////////////
 // headers of not inlined mat4 functions //
