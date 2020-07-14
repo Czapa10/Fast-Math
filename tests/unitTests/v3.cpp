@@ -2,6 +2,8 @@
 TEST_CASE_TEMPLATE("v3_construction and getters", t, NUMERICAL_TYPES)
 {
 	CHECK_V3_ALL_ALIASES(v3_base<t>(1, 2, 3), 1, 2, 3);
+	CHECK_V3(v3_base<t>(v2_base<t>(1, 2), 3), 1, 2, 3);
+	CHECK_V3(v3_base<t>(1, v2_base<t>(2, 3)), 1, 2, 3);
 	CHECK_V3(v3_base<t>(2), 2, 2, 2);
 	CHECK_V3(v3_base<t>{}, 0, 0, 0);
 
@@ -18,6 +20,12 @@ TEST_CASE_TEMPLATE("v3_construction and getters", t, NUMERICAL_TYPES)
 	CHECK(P[0] == 1);
 	CHECK(P[1] == 2);
 	CHECK(P[2] == 3);
+}
+
+TEST_CASE("v3 cast constructors")
+{
+	CHECK_V3(v3(v3i(1, 2, 3)), 1, 2, 3);	
+	CHECK_V3(v3(uint32_t(1)), 1, 1, 1);	
 }
 
 TEST_CASE_TEMPLATE("v3_base some operations", t, NUMERICAL_TYPES)

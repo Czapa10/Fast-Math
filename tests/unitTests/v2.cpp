@@ -18,6 +18,12 @@ TEST_CASE_TEMPLATE("v2_base constructors and getters", t, NUMERICAL_TYPES)
 	CHECK(P[1] == 2);
 }
 
+TEST_CASE("v2 cast constructors")
+{
+	CHECK_V2(v2(v2i(1, 2)), 1, 2);
+	CHECK_V2(v2(uint32_t(1)), 1, 1);
+}
+
 TEST_CASE_TEMPLATE("v2_base some operations", t, NUMERICAL_TYPES)
 {
 	v2_base<t> A(1, 2);

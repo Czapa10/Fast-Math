@@ -2,6 +2,9 @@
 TEST_CASE_TEMPLATE("v4_construction and getters", t, NUMERICAL_TYPES) 
 {
 	CHECK_V4_ALL_ALIASES(v4_base<t>(1, 2, 3, 4), 1, 2, 3, 4);
+	CHECK_V4(v4_base<t>(v2_base<t>(1, 2), v2_base<t>(3, 4)), 1, 2, 3, 4);
+	CHECK_V4(v4_base<t>(v3_base<t>(1, 2, 3), 4), 1, 2, 3, 4);
+	CHECK_V4(v4_base<t>(1, v3_base<t>(2, 3, 4)), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>(5), 5, 5, 5, 5);
 	CHECK_V4(v4_base<t>(v3(1, 2, 3), 4), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>{}, 0, 0, 0, 0);
@@ -21,6 +24,12 @@ TEST_CASE_TEMPLATE("v4_construction and getters", t, NUMERICAL_TYPES)
 	CHECK(P[1] == 2);
 	CHECK(P[2] == 3);
 	CHECK(P[3] == 4);
+}
+
+TEST_CASE("v4 cast constructors")
+{
+	CHECK_V4(v4(v4i(1, 2, 3, 4)), 1, 2, 3, 4);
+	CHECK_V4(v4(uint32_t(1)), 1, 1, 1, 1);
 }
 
 TEST_CASE_TEMPLATE("v4_base some operations", t, NUMERICAL_TYPES)

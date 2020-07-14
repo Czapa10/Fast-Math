@@ -86,12 +86,10 @@ union v2_base
 	t Elements[2];
 
 	v2_base(t X, t Y) :X(X), Y(Y) {}
-	v2_base(t XY) :X(XY), Y(XY) {}
-	v2_base(const t* Mem) :X(Mem[0]), Y(Mem[1]) {}
+	explicit v2_base(t XY) :X(XY), Y(XY) {}
+	explicit v2_base(const t* Mem) :X(Mem[0]), Y(Mem[1]) {}
 	v2_base() = default;
-
-	template<class u>
-	v2_base(v2_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
+	template<class u> v2_base(v2_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
@@ -121,12 +119,12 @@ union v3_base
 	t Elements[3];
 
 	v3_base(t X, t Y, t Z) :X(X), Y(Y), Z(Z) {}
-	v3_base(t XYZ) :X(XYZ), Y(XYZ), Z(XYZ) {}
-	v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
+	v3_base(v2_base<t> XY, t Z) :XY(XY), Z(Z) {}
+	v3_base(t X, v2_base<t> YZ) :X(X), YZ(YZ) {}
+	explicit v3_base(t XYZ) :X(XYZ), Y(XYZ), Z(XYZ) {}
+	explicit v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
 	v3_base() = default;
-
-	template<class u>
-	v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
+	template<class u> v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 
@@ -182,13 +180,13 @@ union v4_base
 	t Elements[4];
 
 	v4_base(t X, t Y, t Z, t W) :X(X), Y(Y), Z(Z), W(W) {}
-	v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
-	v4_base(v3 XYZ, t W) :XYZ(XYZ), W(W) {}
-	v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
+	v4_base(v2_base<t> XY, v2_base<t> ZW) :XY(XY), ZW(ZW) {}
+	v4_base(v3_base<t> XYZ, t W) :XYZ(XYZ), W(W) {}
+	v4_base(t X, v3_base<t> YZW) :X(X), YZ(YZW.XY), W(YZW.Z) {}
+	explicit v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
+	explicit v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
 	v4_base() = default;
-
-	template<class u>
-	v4_base(v4_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
+	template<class u> v4_base(v4_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
 
 	 FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
