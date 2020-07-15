@@ -25,6 +25,7 @@ using i64 = int64_t;
 using bool32 = i32;
 
 #define NUMERICAL_TYPES f32, f64, u8, u16, u32, u64, i8, i16, i32, i64
+#define NUMERICAL_TYPES_MIN_16_BYTES f32, f64, u16, u32, u64, i16, i32, i64
 
 static long long vElements;
 static char binaryOutput[128];

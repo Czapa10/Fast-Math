@@ -45,6 +45,7 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FM_FUN_IC FM_INL auto FM_CALL
 #define FM_FUN_SI static FM_INL auto
 #define FM_FUN_TSI template<class t> static FM_INL auto
+#define FM_FUN_2T template<class t> template<class u> auto
 #define FM_FUN_SIC static FM_INL auto FM_CALL
 
 #define FM_GENERIC_FUNCTION(Macro) \
@@ -89,7 +90,9 @@ union v2_base
 	explicit v2_base(t XY) :X(XY), Y(XY) {}
 	explicit v2_base(const t* Mem) :X(Mem[0]), Y(Mem[1]) {}
 	v2_base() = default;
-	template<class u> v2_base(v2_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
+
+	template<class u> v2_base(v2_base<u> V)
+		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
@@ -124,7 +127,9 @@ union v3_base
 	explicit v3_base(t XYZ) :X(XYZ), Y(XYZ), Z(XYZ) {}
 	explicit v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
 	v3_base() = default;
-	template<class u> v3_base(v3_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
+
+	template<class u> v3_base(v3_base<u> V)
+		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 
@@ -186,7 +191,9 @@ union v4_base
 	explicit v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
 	explicit v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
 	v4_base() = default;
-	template<class u> v4_base(v4_base<u> V) :X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
+
+	template<class u> v4_base(v4_base<u> V)
+		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
 
 	 FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
@@ -451,12 +458,15 @@ struct rect2_base
 {
 	v2_base<t> Min, Max;
 
+	rect2_base() = default;
+
+	template<class u> rect2_base(rect2_base<u>); 
+
 	FM_FUN_I Width() -> t;
 	FM_FUN_I Height() -> t;
 	FM_FUN_I W() -> t { return Width(); }
 	FM_FUN_I H() -> t { return Height(); }
 	FM_FUN_I Dim() -> v2_base<t>;
-	FM_FUN_I Size() -> v2_base<t> { return Dim(); }
 	FM_FUN_I Radius() -> v2_base<t>;
 
 	FM_FUN_I Center() -> v2_base<t>;
@@ -469,12 +479,12 @@ struct rect2_base
 
 	FM_FUN_I SetCenter(v2_base<t>) -> void;
 	FM_FUN_I SetCenter(t, t) -> void;
-	FM_FUN_I SetSizeWithFixedCenter(v2_base<t>) -> void;
-	FM_FUN_I SetSizeWithFixedCenter(t, t) -> void;
-	FM_FUN_I SetSizeWithFixedMin(v2_base<t>) -> void;
-	FM_FUN_I SetSizeWithFixedMin(t, t) -> void;
-	FM_FUN_I SetSizeWithFixedMax(v2_base<t>) -> void;
-	FM_FUN_I SetSizeWithFixedMax(t, t) -> void;
+	FM_FUN_I SetDimWithFixedCenter(v2_base<t>) -> void;
+	FM_FUN_I SetDimWithFixedCenter(t, t) -> void;
+	FM_FUN_I SetDimWithFixedMin(v2_base<t>) -> void;
+	FM_FUN_I SetDimWithFixedMin(t, t) -> void;
+	FM_FUN_I SetDimWithFixedMax(v2_base<t>) -> void;
+	FM_FUN_I SetDimWithFixedMax(t, t) -> void;
 };
 using rect2 = rect2_base<float>;
 using rect2d = rect2_base<double>;
@@ -2361,6 +2371,10 @@ FM_FUN_SIC CastToVec4(v4 V) -> vec4 {
 /////////////////////
 // rect2 functions //
 /////////////////////
+template<class t> template<class u> rect2_base<t>::rect2_base(rect2_base<u> A) {
+	Min = static_cast<v2_base<t>>(A.Min);
+	Max = static_cast<v2_base<t>>(A.Max);
+}
 FM_FUN_TI rect2_base<t>::Width() -> t {
 	return Max.X - Min.X;
 }
@@ -2402,26 +2416,26 @@ FM_FUN_TI rect2_base<t>::SetCenter(v2_base<t> Center) -> void {
 FM_FUN_TI rect2_base<t>::SetCenter(t X, t Y) -> void {
 	SetCenter(v2_base<t>(X, Y));
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedCenter(v2_base<t> Size) -> void {
-	auto NewRadius = Size / (t)2;
+FM_FUN_TI rect2_base<t>::SetDimWithFixedCenter(v2_base<t> Dim) -> void {
+	auto NewRadius = Dim / (t)2;
 	auto Cen = Center();
 	Min = Cen - NewRadius;
 	Max = Cen + NewRadius;
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedCenter(t Width, t Height) -> void {
-	SetSizeWithFixedCenter(v2_base<t>(Width, Height));
+FM_FUN_TI rect2_base<t>::SetDimWithFixedCenter(t Width, t Height) -> void {
+	SetDimWithFixedCenter(v2_base<t>(Width, Height));
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedMin(v2_base<t> Size) -> void {
-	Max = Min + Size;
+FM_FUN_TI rect2_base<t>::SetDimWithFixedMin(v2_base<t> Dim) -> void {
+	Max = Min + Dim;
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedMin(t Width, t Height) -> void {
-	SetSizeWithFixedMin(v2_base<t>(Width, Height));
+FM_FUN_TI rect2_base<t>::SetDimWithFixedMin(t Width, t Height) -> void {
+	SetDimWithFixedMin(v2_base<t>(Width, Height));
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedMax(v2_base<t> Size) -> void {
-	Min = Max - Size;
+FM_FUN_TI rect2_base<t>::SetDimWithFixedMax(v2_base<t> Dim) -> void {
+	Min = Max - Dim;
 }
-FM_FUN_TI rect2_base<t>::SetSizeWithFixedMax(t Width, t Height) -> void {
-	SetSizeWithFixedMax(v2_base<t>(Width, Height));
+FM_FUN_TI rect2_base<t>::SetDimWithFixedMax(t Width, t Height) -> void {
+	SetDimWithFixedMax(v2_base<t>(Width, Height));
 }
 FM_FUN_TSI Rect2BaseMinMax(t MinX, t MinY, t MaxX, t MaxY) -> rect2_base<t> {
 	rect2_base<t> R;
@@ -2451,6 +2465,64 @@ FM_FUN_TSI Rect2BaseMinDim(v2_base<t> Min, v2_base<t> Dim) -> rect2_base<t> {
 	R.Max = Min + Dim;
 	return R;
 }
+FM_FUN_TSI Ptr(rect2_base<t>& A) -> t* {
+	return &A.Min.X;
+}
+FM_FUN_TSI PtrMax(rect2_base<t>& A) -> t* {
+	return &A.Max.X;
+}
+FM_FUN_TSI operator*(rect2_base<t> A, t Scalar) -> rect2_base<t> {
+	A.Min *= Scalar;
+	A.Max *= Scalar;
+	return A;
+}
+FM_FUN_TSI operator/(rect2_base<t> A, t Scalar) -> rect2_base<t> {
+	A.Min /= Scalar;
+	A.Max /= Scalar;
+	return A;
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(A.Dim(), Scalar);
+	A.SetDimWithFixedMin(NewDim);
+	return A;
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMin(A, v2_base<t>(Scalar));
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedMin(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, t Scalar) -> void {
+	*A = ScaleWithFixedMin(*A, v2_base<t>(Scalar));
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(A.Dim(), Scalar);
+	A.SetDimWithFixedMax(NewDim);
+	return A;
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMax(A, v2_base<t>(Scalar));
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedMax(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, t Scalar) -> void {
+	*A = ScaleWithFixedMax(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(A.Dim(), Scalar);
+	A.SetDimWithFixedCenter(NewDim);
+	return A;
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedCenter(A, v2_base<t>(Scalar));
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedCenter(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, t Scalar) -> void {
+	*A = ScaleWithFixedCenter(*A, Scalar);	
+}
 FM_FUN_TSI Offset(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
 	rect2_base<t> R;
 	R.Min = A.Min + Offset;
@@ -2460,6 +2532,19 @@ FM_FUN_TSI Offset(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
 FM_FUN_TSI Offset(rect2_base<t>* A, v2_base<t> Offset) -> void {
 	A->Min += Offset;
 	A->Max += Offset;
+}
+FM_FUN_TSI MakeRectNotHaveNegativeDim(rect2_base<t> A) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Min(A.Min, A.Max);
+	R.Max = Max(A.Min, A.Max);
+	return R;
+}
+FM_FUN_TSI MakeRectNotHaveNegativeDim(rect2_base<t>* A) -> void {
+	*A = MakeRectNotHaveNegativeDim(*A);
+}
+FM_FUN_TSI MakeRectsNotHaveNegativeDim(rect2_base<t>* A, rect2_base<t>* B) -> void {
+	MakeRectNotHaveNegativeDim(A);
+	MakeRectNotHaveNegativeDim(B);
 }
 FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
@@ -2472,6 +2557,31 @@ FM_FUN_TSI Intersect(rect2_base<t> A, rect2_base<t> B) -> bool {
 FM_FUN_TSI FullyIntersect(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return Intersect(A, B.Min) && Intersect(A, B.Max) &&
 	       Intersect(A, B.MaxXMinY()) && Intersect(A, B.MinXMaxY());
+}
+FM_FUN_TSI IntersectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
+	MakeRectsNotHaveNegativeDim(&A, &B);
+	return Intersect(A, B);
+}
+FM_FUN_TSI FullyIntersectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
+	MakeRectsNotHaveNegativeDim(&A, &B);
+	return FullyIntersect(A, B);
+}
+FM_FUN_TSI IntersectionRect(rect2_base<t> A, rect2_base<t> B, rect2_base<t>* Intersection) -> bool {
+	auto RMin = Max(A.Min, B.Min);
+	auto RMax = Min(A.Max, B.Max);
+	if(RMin.X < RMax.X && RMin.Y < RMax.Y)
+	{
+		*Intersection = Rect2BaseMinMax<t>(RMin, RMax);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+FM_FUN_TSI GetIntersectionRectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
+	MakeRectNotHaveNegativeDim(&A, &B);
+	return GetIntersectionRect(A, B);
 }
 FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Min == B.Min && A.Max == B.Max;
