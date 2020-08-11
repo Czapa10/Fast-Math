@@ -70,10 +70,17 @@ in one of C++ files that include this header, BEFORE the include, like this:
 
 namespace fm {
 
+static constexpr uint8_t U8Max = 255;
+static constexpr uint16_t U16Max = 65535;
+static constexpr uint32_t U32Max = ((uint32_t)-1);
+static constexpr uint64_t U64Max = ((uint64_t)-1);
+static constexpr int32_t I32Min = ((int32_t)0x80000000);
+static constexpr int32_t I32Max = ((int32_t)0x7fffffff);
+
 static constexpr float Pi = 3.14159265359f;
 static constexpr double Pi64 = 3.14159265358979323846;
-static constexpr float Tau = 6.28318530717f;
-static constexpr double Tau64 = 6.28318530717958647692;
+static constexpr float Tau = Pi * 2;
+static constexpr double Tau64 = Pi64 * 2;
 
 //////////////////////
 // type definitions //
