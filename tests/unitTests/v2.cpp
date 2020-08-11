@@ -36,16 +36,24 @@ TEST_CASE_TEMPLATE("v2_base some operations", t, NUMERICAL_TYPES)
 
 TEST_CASE("v2 operations")
 {
-	v2 A(2.f, 4.f);
-	v2 B(-5.f, 3.f);
+	v2 A(2, 4);
+	v2 B(-5, 3);
 
-	CHECK_V2(A + B, -3.f, 7.f);
-	CHECK_V2(A - B, 7.f, 1.f);
-	CHECK_V2(A * 2.f, 4.f, 8.f);
-	CHECK_V2(2.f * A, 4.f, 8.f);
-	CHECK_V2(A / 2.f, 1.f, 2.f);
-	CHECK_V2(HadamardMul(A, B), -10.f, 12.f);
+	CHECK_V2(A + B, -3, 7);
+	CHECK_V2(A - B, 7, 1);
+	CHECK_V2(A * 2.f, 4, 8);
+	CHECK_V2(2.f * A, 4, 8);
+	CHECK_V2(A / 2.f, 1, 2);
+	CHECK_V2(HadamardMul(A, B), -10, 12);
 	CHECK_V2(HadamardDiv(A, B), 2.f / -5.f, 4.f / 3.f);
+	CHECK_V2(SaveHadamardDivN(A, B, v2(5)), 2.f / -5.f, 4.f / 3.f);
+	CHECK_V2(SaveHadamardDivN(A, v2(1, 0), v2(5)), 2, 5);
+	CHECK_V2(SaveHadamardDivN(A, v2(0, 1), v2(11, 5)), 11, 4);
+	CHECK_V2(SaveHadamardDivN(A, v2(0.f), v2(11, 5)), 11, 5);
+	CHECK_V2(SaveHadamardDiv1(A, B), 2.f / -5.f, 4.f / 3.f);
+	CHECK_V2(SaveHadamardDiv1(A, v2(0.f)), 1, 1);
+	CHECK_V2(SaveHadamardDiv0(A, B), 2.f / -5.f, 4.f / 3.f);
+	CHECK_V2(SaveHadamardDiv0(A, v2(0.f)), 0, 0);
 	CHECK_V2(-B, 5.f, -3.f);
 	CHECK_V2(Min(A, B), -5.f, 3.f);
 	CHECK_V2(Max(A, B), 2.f, 4.f);

@@ -74,4 +74,21 @@ TEST_CASE("utility functions")
 		CHECK(RadiansToDegrees(0.5235f) == FloatCmp(30.f));
 		CHECK(RadiansToDegrees(0.5235) == FloatCmp(30.0));
 	}
+
+	{
+		CHECK(SafeDivN(1.f, 0.f, 5.f) == 5.f);
+		CHECK(SafeDivN(1.f, 2.f, 5.f) == 0.5f);
+		CHECK(SafeDivN(4, 0, 5) == 5);
+		CHECK(SafeDivN(4, 2, 5) == 2);
+
+		CHECK(SafeDiv1(4.f, 0.f) == 1.f);
+		CHECK(SafeDiv1(1.f, 2.f) == 0.5f);
+		CHECK(SafeDiv1(4, 0) == 1);
+		CHECK(SafeDiv1(4, 2) == 2);
+
+		CHECK(SafeDiv0(4.f, 0.f) == 0.f);
+		CHECK(SafeDiv0(1.f, 2.f) == 0.5f);
+		CHECK(SafeDiv0(4, 0) == 0);
+		CHECK(SafeDiv0(4, 2) == 2);
+	}
 }

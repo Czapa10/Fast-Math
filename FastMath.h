@@ -547,41 +547,46 @@ FM_SINL vec4 FM_CALL Vec4(v4 V);
 ///////////////////////
 // utility functions //
 ///////////////////////
-template<class t>
-FM_SINL t Min(t A, t B) {
+FM_FUN_TSI Min(t A, t B) -> t {
 	return A < B ? A : B; 
 }
-template<class t>
-FM_SINL t Max(t A, t B) {
+FM_FUN_TSI Max(t A, t B) -> t {
 	return A > B ? A : B;
 }
-template<class t>
-FM_SINL t Abs(t A) {
+FM_FUN_TSI Abs(t A) -> t {
 	return A < 0 ? -A : A;
 }
-template<class t>
-FM_SINL void Abs(t* A) {
+FM_FUN_TSI Abs(t* A) -> void {
 	*A = *A < 0 ? -(*A) : *A;
 }
-template<class t>
-FM_SINL t Square(t A) {
+FM_FUN_TSI Square(t A) -> t {
 	return A * A;
 }
-template<class t>
-FM_SINL void Square(t* A) {
+FM_FUN_TSI Square(t* A) -> void {
 	*A = (*A) * (*A);
 }
-FM_SINL float RadiansToDegrees(float Radians) {
+FM_FUN_SI RadiansToDegrees(float Radians) -> float {
 	return Radians * 180.f / Pi;
 }
-FM_SINL double RadiansToDegrees(double Radians) {
-	return Radians * 180.f / Pi64;
+FM_FUN_SI RadiansToDegrees(double Radians) -> double {
+	return Radians * 180.0 / Pi64;
 }
-FM_SINL float DegreesToRadians(float Degrees) {
+FM_FUN_SI DegreesToRadians(float Degrees) -> float {
 	return Degrees * Pi / 180.f;
 }
-FM_SINL double DegreesToRadians(double Degrees) {
-	return Degrees * Pi64 / 180.f;
+FM_FUN_SI DegreesToRadians(double Degrees) -> double {
+	return Degrees * Pi64 / 180.0;
+}
+FM_FUN_TSI SafeDivN(t Numerator, t Divisor, t N) -> t {
+	if(Divisor != 0)
+		return Numerator / Divisor;
+	return N;
+}
+FM_FUN_TSI SafeDiv1(t Numerator, t Divisor) -> t {
+	return SafeDivN<t>(Numerator, Divisor, 1);
+}
+FM_FUN_TSI SafeDiv0(t Numerator, t Divisor) -> t {
+	return SafeDivN<t>(Numerator, Divisor, 0);
 }
 
 /////////////////////////////////////////
@@ -673,6 +678,18 @@ FM_FUN_TSI HadamardDiv(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	R.X = A.X / B.X;
 	R.Y = A.Y / B.Y;
 	return R;
+}
+FM_FUN_TSI SaveHadamardDivN(v2_base<t> A, v2_base<t> B, v2_base<t> N) -> v2_base<t> {
+	v2_base<t> R;
+	R.X = B.X != 0 ? A.X / B.X : N.X;
+	R.Y = B.Y != 0 ? A.Y / B.Y : N.Y;
+	return R;
+}
+FM_FUN_TSI SaveHadamardDiv1(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
+	return SaveHadamardDivN<t>(A, B, v2_base<t>((t)1));
+}
+FM_FUN_TSI SaveHadamardDiv0(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
+	return SaveHadamardDivN<t>(A, B, v2_base<t>((t)0));
 }
 FM_FUN_TSI operator*(v2_base<t> V, t Scalar) -> v2_base<t> {
 	V.X *= Scalar;
@@ -810,6 +827,19 @@ FM_FUN_TSI HadamardDiv(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
 	R.Y = A.Y / B.Y;
 	R.Z = A.Z / B.Z;
 	return R;
+}
+FM_FUN_TSI SaveHadamardDivN(v3_base<t> A, v3_base<t> B, v3_base<t> N) -> v3_base<t> {
+	v3_base<t> R;
+	R.X = B.X != 0 ? A.X / B.X : N.X;
+	R.Y = B.Y != 0 ? A.Y / B.Y : N.Y;
+	R.Z = B.Z != 0 ? A.Z / B.Z : N.Z;
+	return R;
+}
+FM_FUN_TSI SaveHadamardDiv1(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	return SaveHadamardDivN<t>(A, B, v3_base<t>((t)1));
+}
+FM_FUN_TSI SaveHadamardDiv0(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
+	return SaveHadamardDivN<t>(A, B, v3_base<t>((t)0));
 }
 FM_FUN_TSI operator*(v3_base<t> V, t Scalar) -> v3_base<t> {
 	V.X *= Scalar;
@@ -958,6 +988,20 @@ FM_FUN_TSI HadamardDiv(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
 	R.Z = A.Z / B.Z;
 	R.W = A.W / B.W;
 	return R;
+}
+FM_FUN_TSI SaveHadamardDivN(v4_base<t> A, v4_base<t> B, v4_base<t> N) -> v4_base<t> {
+	v4_base<t> R;
+	R.X = B.X != 0 ? A.X / B.X : N.X;
+	R.Y = B.Y != 0 ? A.Y / B.Y : N.Y;
+	R.Z = B.Z != 0 ? A.Z / B.Z : N.Z;
+	R.W = B.W != 0 ? A.W / B.W : N.W;
+	return R;
+}
+FM_FUN_TSI SaveHadamardDiv1(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	return SaveHadamardDivN<t>(A, B, v4_base<t>((t)1));
+}
+FM_FUN_TSI SaveHadamardDiv0(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
+	return SaveHadamardDivN<t>(A, B, v4_base<t>((t)0));
 }
 FM_FUN_TSI operator*(v4_base<t> V, t Scalar) -> v4_base<t> {
 	V.X *= Scalar;

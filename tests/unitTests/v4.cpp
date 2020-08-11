@@ -54,7 +54,15 @@ TEST_CASE("v4 operations")
 	CHECK_V4(2.f * A, 2, 6, 10, -14);
 	CHECK_V4(A / 2.f, 0.5f, 1.5f, 2.5f, -3.5f);
 	CHECK_V4(HadamardMul(A, B), 2, 12, -30, -56);
-	CHECK_V4_APPROX(HadamardDiv(A, B), 0.5f, 0.75f, -0.83, -0.875);
+	CHECK_V4(HadamardDiv(A, B), 0.5f, 0.75f, 5.f/-6.f, -7.f/8.f);
+	CHECK_V4(SaveHadamardDivN(A, B, v4(5)), 0.5f, 0.75f, 5.f/-6.f, -7.f/8.f);
+	CHECK_V4(SaveHadamardDivN(A, v4(1, 0, 0, 1), v4(5)), 1, 5, 5, -7.f);
+	CHECK_V4(SaveHadamardDivN(A, v4(0, 1, 1, 0), v4(5)), 5, 3, 5, 5);
+	CHECK_V4(SaveHadamardDivN(A, v4(0.f), v4(11, 10, 9, 8)), 11, 10, 9, 8);
+	CHECK_V4(SaveHadamardDiv1(A, B), 0.5f, 0.75f, 5.f/-6.f, -7.f/8.f);
+	CHECK_V4(SaveHadamardDiv1(A, v4(0.f)), 1, 1, 1, 1);
+	CHECK_V4(SaveHadamardDiv0(A, B), 0.5f, 0.75f, 5.f/-6.f, -7.f/8.f);
+	CHECK_V4(SaveHadamardDiv0(A, v4(0.f)), 0, 0, 0, 0);
 	CHECK_V4(-B, -2, -4, 6, -8);
 	CHECK_V4(Min(A, B), 1, 3, -6, -7);
 	CHECK_V4(Max(A, B), 2, 4, 5, 8);
