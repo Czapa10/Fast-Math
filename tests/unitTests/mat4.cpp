@@ -505,6 +505,8 @@ TEST_CASE("mat4 Orthographic projection")
 	mat4 Ortho = Mat4Orthographic(-10.f, 10.f, -5.f, 5.f, 0.f, -10.f);
 	v4 P(5.f, 5.f, -5.f, 1.f);
 	CHECK_V4_APPROX(Ortho * P, 0.5f, 1.f, -2.f, 1.f);
+
+	// TODO: Add Mat4OrthographicTopDown and Mat4OrthographicBottomUp
 }
 
 TEST_CASE("mat4 Perspective projection")

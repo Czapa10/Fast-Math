@@ -2755,7 +2755,7 @@ FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM_2);
 // headers of not inlined mat4 functions //
 ///////////////////////////////////////////
 FM_FUN_C operator*(mat4 A, mat4 B) -> mat4; 
-FM_FUN Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near, float Far) -> mat4;
+FM_FUN Mat4Orthographic(float Left, float Right, float Bottom, float Top, float Near = 0, float Far = 1) -> mat4;
 FM_FUN Mat4Perspective(float FOV, float AspectRatio, float near, float Far) -> mat4;
 FM_FUN Mat4LookAt(vec3 Eye, vec3 At, vec3 Up = Vec3(0.f, 1.f, 0.f)) -> mat4;
 FM_FUN Mat4LookAt(v3 Eye, v3 At, v3 Up = {0.f, 1.f, 0.f}) -> mat4;
@@ -3333,6 +3333,14 @@ FM_FUN_SIC Mat4ScaleRotationDegrees(v3 Scale, float Rotation, v3 RotationAxes) -
 }
 FM_FUN_SIC Mat4ScaleRotationDegrees(vec3 Scale, float Rotation, vec3 RotationAxes) -> mat4 {
 	return Mat4ScaleRotationRadians(Scale, DegreesToRadians(Rotation), RotationAxes);
+}
+FM_FUN_SIC Mat4OrthographicTopDown(rect2 A) -> mat4 {
+	FM_Rect2ToMinMax(A, Min, Max);
+	return Mat4Orthographic(Min.X, Max.X, Max.Y, Min.Y);
+}
+FM_FUN_SIC Mat4OrthographicBottomUp(rect2 A) -> mat4 {
+	FM_Rect2ToMinMax(A, Min, Max);
+	return Mat4Orthographic(Min.X, Max.X, Min.Y, Max.Y);
 }
 
 }
