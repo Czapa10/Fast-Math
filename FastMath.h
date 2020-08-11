@@ -2455,6 +2455,12 @@ FM_FUN_TSI SetCenter(rect2_base<t> A, v2_base<t> Center) -> rect2_base<t> {
 FM_FUN_TSI SetCenter(rect2_base<t> A, t X, t Y) -> rect2_base<t> {
 	return SetCenter(A, v2_base<t>(X, Y));
 }
+FM_FUN_TSI SetCenter(rect2_base<t>* A, v2_base<t> Center) -> void {
+	*A = SetCenter(*A, Center);
+}
+FM_FUN_TSI SetCenter(rect2_base<t>* A, t X, t Y) -> void {
+	*A = SetCenter(*A, X, Y);
+}
 FM_FUN_TSI SetDimWithFixedCenter(rect2_base<t> A, v2_base<t> Dim) -> rect2_base<t> {
 	auto NewRadius = Dim / (t)2;
 	auto Center = GetCenter(A);
@@ -2465,6 +2471,12 @@ FM_FUN_TSI SetDimWithFixedCenter(rect2_base<t> A, v2_base<t> Dim) -> rect2_base<
 FM_FUN_TSI SetDimWithFixedCenter(rect2_base<t> A, t Width, t Height) -> rect2_base<t> {
 	return SetDimWithFixedCenter(A, v2_base<t>(Width, Height));
 }
+FM_FUN_TSI SetDimWithFixedCenter(rect2_base<t>* A, t Width, t Height) -> void {
+	*A = SetDimWithFixedCenter(*A, Width, Height);
+}
+FM_FUN_TSI SetDimWithFixedCenter(rect2_base<t>* A, v2_base<t> Dim) -> void {
+	*A = SetDimWithFixedCenter(*A, Dim);
+}
 FM_FUN_TSI SetDimWithFixedMin(rect2_base<t> A, v2_base<t> Dim) -> rect2_base<t> {
 	A.Max = A.Min + Dim;
 	return A;
@@ -2472,12 +2484,24 @@ FM_FUN_TSI SetDimWithFixedMin(rect2_base<t> A, v2_base<t> Dim) -> rect2_base<t> 
 FM_FUN_TSI SetDimWithFixedMin(rect2_base<t> A, t Width, t Height) -> rect2_base<t> {
 	return SetDimWithFixedMin(A, v2_base<t>(Width, Height));
 }
+FM_FUN_TSI SetDimWithFixedMin(rect2_base<t>* A, v2_base<t> Dim) -> void {
+	*A = SetDimWithFixedMin(*A, Dim);
+}
+FM_FUN_TSI SetDimWithFixedMin(rect2_base<t>* A, t Width, t Height) -> void {
+	*A = SetDimWithFixedMin(*A, v2_base<t>(Width, Height));
+}
 FM_FUN_TSI SetDimWithFixedMax(rect2_base<t> A, v2_base<t> Dim) -> rect2_base<t> {
 	A.Min = A.Max - Dim;
 	return A;
 }
 FM_FUN_TSI SetDimWithFixedMax(rect2_base<t> A, t Width, t Height) -> rect2_base<t> {
 	return SetDimWithFixedMax(A, v2_base<t>(Width, Height));
+}
+FM_FUN_TSI SetDimWithFixedMax(rect2_base<t>* A, v2_base<t> Dim) -> void {
+	*A = SetDimWithFixedMax(*A, Dim);
+}
+FM_FUN_TSI SetDimWithFixedMax(rect2_base<t>* A, t Width, t Height) -> void {
+	*A = SetDimWithFixedMax(*A, v2_base<t>(Width, Height));
 }
 FM_FUN_TSI HasArea(rect2_base<t> A) -> bool {
 	return A.Min.X < A.Max.X && A.Min.Y < A.Max.Y;
@@ -2718,11 +2742,11 @@ FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM);
 	FM_FUN_SI Rect2##InsideName##CenterDim(v2_base<T> Center, v2_base<T> Dim) -> rect2_base<T>\
 	{ return Rect2BaseCenterDim<T>(Center, Dim); }
 FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM_2);
-
+	
 #define FM_Rect2ToMinMax(_Rect, _Min, _Max) \
 	auto _Min = (_Rect).Min; \
 	auto _Max = (_Rect).Max
-
+	
 #define FM_Rect2ToMinDim(_Rect, _Min, _Dim) \
 	auto _Min = (_Rect).Min; \
 	auto _Dim = GetDim(_Rect);

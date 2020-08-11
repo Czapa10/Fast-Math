@@ -90,9 +90,13 @@ TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
 {
 	auto A = Rect2BaseMinMax<t>(5, 0, 15, 30);
 	CHECK_RECT2(SetCenter(A, (t)15, (t)15), 10, 0, 20, 30);
+	SetCenter(&A, (t)15, (t)15);
+	CHECK_RECT2(A, 10, 0, 20, 30);
 
 	auto B = Rect2BaseMinMax<t>(20, 20, 30, 30);
 	CHECK_RECT2(SetCenter(B, v2_base<t>(10, 10)), 5, 5, 15, 15);
+	SetCenter(&B, v2_base<t>(10, 10));
+	CHECK_RECT2(B, 5, 5, 15, 15);
 
 	auto C = Rect2BaseMinMax<t>(10, 10, 20, 20);
 
@@ -109,7 +113,21 @@ TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
 
 	C = Offset(C, v2_base<t>(10, 10));
 	CHECK_RECT2(C, 25, 25, 30, 30);
-	Offset(&C, v2_base<t>(20, 20));
+
+	C = Rect2BaseMinMax<t>(10, 10, 20, 20);
+
+	SetDimWithFixedCenter(&C, (t)20, (t)20);
+	CHECK_RECT2(C, 5, 5, 25, 25);
+
+	SetDimWithFixedMin(&C, (t)15, (t)15);
+	CHECK_RECT2(C, 5, 5, 20, 20);
+
+	SetDimWithFixedMax(&C, (t)10, (t)10);
+	CHECK_RECT2(C, 10, 10, 20, 20);
+	SetDimWithFixedMax(&C, v2_base<t>(5, 5));
+	CHECK_RECT2(C, 15, 15, 20, 20);
+
+	Offset(&C, v2_base<t>(30, 30));
 	CHECK_RECT2(C, 45, 45, 50, 50);
 }
 
