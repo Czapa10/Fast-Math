@@ -3,7 +3,7 @@ FAST MATH
 C++ single header math libary
 https://github.com/Czapa10/Fast-Math
 
-Written by Grzegorz "Czapa" Bednorz
+Made by Grzegorz "Czapa" Bednorz
 
 YOU HAVE TO
 #define FM_IMPLEMENTATION
@@ -70,8 +70,10 @@ in one of C++ files that include this header, BEFORE the include, like this:
 
 namespace fm {
 
-static const float Pi = 3.14159265359f;
-static const double Pi64 = 3.14159265358979323846;
+static constexpr float Pi = 3.14159265359f;
+static constexpr double Pi64 = 3.14159265358979323846;
+static constexpr float Tau = 6.28318530717f;
+static constexpr double Tau64 = 6.28318530717958647692;
 
 //////////////////////
 // type definitions //
@@ -195,7 +197,7 @@ union v4_base
 	template<class u> v4_base(v4_base<u> V)
 		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
 
-	 FM_FUN_I operator[](uint32_t Index) -> t&; 
+	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
 using v4 = v4_base<float>;
 using v4d = v4_base<double>;
@@ -468,6 +470,7 @@ struct rect2_base
 	FM_FUN_I H() -> t { return Height(); }
 	FM_FUN_I Dim() -> v2_base<t>;
 	FM_FUN_I Radius() -> v2_base<t>;
+	FM_FUN_I Area() -> t;
 
 	FM_FUN_I Center() -> v2_base<t>;
 	FM_FUN_I MaxXMinY() -> v2_base<t>;
@@ -2387,8 +2390,12 @@ FM_FUN_TI rect2_base<t>::Dim() -> v2_base<t> {
 FM_FUN_TI rect2_base<t>::Radius() -> v2_base<t> {
 	return Dim() / (t)2;
 }
+FM_FUN_TI rect2_base<t>::Area() -> t {
+	auto D = Dim();
+	return D.X * D.Y;
+}
 FM_FUN_TI rect2_base<t>::Center() -> v2_base<t> {
-	return v2_base<t>(Min + Dim()/(t)2);
+	return v2_base<t>((Min + Max) / (t)2);
 }
 FM_FUN_TI rect2_base<t>::MaxXMinY() -> v2_base<t> {
 	return v2_base<t>(Max.X, Min.Y);
@@ -2437,6 +2444,12 @@ FM_FUN_TI rect2_base<t>::SetDimWithFixedMax(v2_base<t> Dim) -> void {
 FM_FUN_TI rect2_base<t>::SetDimWithFixedMax(t Width, t Height) -> void {
 	SetDimWithFixedMax(v2_base<t>(Width, Height));
 }
+FM_FUN_TSI HasArea(rect2_base<t> A) -> bool {
+	return A.Min.X < A.Max.X && A.Min.Y < A.Max.Y;
+}
+FM_FUN_TSI HasAreaFlipAllowed(rect2_base<t> A) -> bool {
+	return A.Min.X != A.Max.X && A.Min.Y != A.Max.Y;
+}
 FM_FUN_TSI Rect2BaseMinMax(t MinX, t MinY, t MaxX, t MaxY) -> rect2_base<t> {
 	rect2_base<t> R;
 	R.Min.X = MinX;
@@ -2464,6 +2477,26 @@ FM_FUN_TSI Rect2BaseMinDim(v2_base<t> Min, v2_base<t> Dim) -> rect2_base<t> {
 	R.Min = Min;
 	R.Max = Min + Dim;
 	return R;
+}
+FM_FUN_TSI Rect2BaseCenterRadius(v2_base<t> Center, t Radius) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min.X = Center.X - Radius;
+	R.Min.Y = Center.Y - Radius;
+	R.Max.X = Center.X + Radius;
+	R.Max.Y = Center.Y + Radius;
+	return R;
+}
+FM_FUN_TSI Rect2BaseCenterRadius(v2_base<t> Center, v2_base<t> Radius) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Center - Radius;
+	R.Max = Center + Radius;
+	return R;
+}
+FM_FUN_TSI Rect2BaseCenterDim(v2_base<t> Center, t Dim) -> rect2_base<t> {
+	return Rect2BaseCenterRadius<t>(Center, Dim / (t)2);
+}
+FM_FUN_TSI Rect2BaseCenterDim(v2_base<t> Center, v2_base<t> Dim) -> rect2_base<t> {
+	return Rect2BaseCenterRadius<t>(Center, Dim / (t)2);
 }
 FM_FUN_TSI Ptr(rect2_base<t>& A) -> t* {
 	return &A.Min.X;
@@ -2523,6 +2556,20 @@ FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, v2_base<t> Scalar) -> void {
 FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, t Scalar) -> void {
 	*A = ScaleWithFixedCenter(*A, Scalar);	
 }
+FM_FUN_TSI AddRadius(rect2_base<t> A, v2_base<t> Radius) -> rect2_base<t> {
+	A.Min -= Radius;
+	A.Max += Radius;
+	return A;
+}
+FM_FUN_TSI AddRadius(rect2_base<t> A, t Radius) -> rect2_base<t> {
+	return AddRadius(A, v2_base<t>(Radius));
+}
+FM_FUN_TSI AddRadius(rect2_base<t>* A, v2_base<t> Radius) -> void {
+	*A = AddRadius(*A, Radius);
+}
+FM_FUN_TSI AddRadius(rect2_base<t>* A, t Radius) -> void {
+	*A = AddRadius(*A, Radius);
+}
 FM_FUN_TSI Offset(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
 	rect2_base<t> R;
 	R.Min = A.Min + Offset;
@@ -2549,6 +2596,10 @@ FM_FUN_TSI MakeRectsNotHaveNegativeDim(rect2_base<t>* A, rect2_base<t>* B) -> vo
 FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
 	       Point.Y >= Rect.Min.Y && Point.Y <= Rect.Max.Y;
+}
+FM_FUN_TSI IntersectFlipAllowed(rect2_base<t> Rect, v2_base<t> Point) -> bool {
+	MakeRectNotHaveNegativeDim(&Rect);
+	return Intersect(Rect, Point);
 }
 FM_FUN_TSI Intersect(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Max.X >= B.Min.X && A.Min.X <= B.Max.X &&
@@ -2583,6 +2634,12 @@ FM_FUN_TSI GetIntersectionRectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> r
 	MakeRectNotHaveNegativeDim(&A, &B);
 	return GetIntersectionRect(A, B);
 }
+FM_FUN_TSI Union(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Min(A.Min, B.Min);
+	R.Max = Max(A.Max, B.Max);
+	return R;
+}
 FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Min == B.Min && A.Max == B.Max;
 }
@@ -2609,6 +2666,26 @@ FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM);
 	FM_FUN_SI Rect2##InsideName##MinDim(v2_base<T> Min, v2_base<T> Dim) -> rect2_base<T>\
 	{ return Rect2BaseMinDim<T>(Min, Dim); }
 FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM_2);
+	
+#define FM_RECT2_CENTER_RADIUS(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##CenterRadius(v2_base<T> Center, T Radius) -> rect2_base<T>\
+	{ return Rect2BaseCenterRadius<T>(Center, Radius); }
+FM_GENERIC_FUNCTION(FM_RECT2_CENTER_RADIUS);
+	
+#define FM_RECT2_CENTER_RADIUS_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##CenterRadius(v2_base<T> Center, v2_base<T> Radius) -> rect2_base<T>\
+	{ return Rect2BaseCenterRadius<T>(Center, Radius); }
+FM_GENERIC_FUNCTION(FM_RECT2_CENTER_RADIUS_2);
+	
+#define FM_RECT2_CENTER_DIM(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##CenterDim(v2_base<T> Center, T Dim) -> rect2_base<T>\
+	{ return Rect2BaseCenterDim<T>(Center, Dim); }
+FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM);
+	
+#define FM_RECT2_CENTER_DIM_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##CenterDim(v2_base<T> Center, v2_base<T> Dim) -> rect2_base<T>\
+	{ return Rect2BaseCenterDim<T>(Center, Dim); }
+FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM_2);
 
 ///////////////////////////////////////////
 // headers of not inlined mat4 functions //

@@ -31,9 +31,21 @@ TEST_CASE("rect2 construction")
 
 	CHECK_RECT2(Rect2MinDim(v2(-1.5f, 2.5f), v2(3, 4)), -1.5f, 2.5f, 1.5f, 6.5f);
 	CHECK_RECT2(Rect2iMinDim(v2i(-1, 2), v2i(3, 4)), -1, 2, 2, 6);
+
+	CHECK_RECT2(Rect2CenterRadius(v2(5, 3), 2), 3, 1, 7, 5);
+	CHECK_RECT2(Rect2iCenterRadius(v2i(5, 3), 2), 3, 1, 7, 5);
+
+	CHECK_RECT2(Rect2CenterRadius(v2(5, 3), v2(2, 1)), 3, 2, 7, 4);
+	CHECK_RECT2(Rect2iCenterRadius(v2i(5, 3), v2i(2, 1)), 3, 2, 7, 4);
+
+	CHECK_RECT2(Rect2CenterDim(v2(5, 3), 1), 4.5f, 2.5f, 5.5f, 3.5f);
+	CHECK_RECT2(Rect2iCenterDim(v2i(5, 3), 2), 4, 2, 6, 4);
+
+	CHECK_RECT2(Rect2CenterDim(v2(5, 3), v2(2, 1)), 4, 2.5f, 6, 3.5f);
+	CHECK_RECT2(Rect2iCenterDim(v2i(5, 3), v2i(4, 2)), 3, 2, 7, 4);
 }
 
-TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES)
+TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES_MIN_16_BYTES)
 {
 	auto R = Rect2BaseMinDim<t>(10, 5, 10, 20);
 	CHECK(R.Width() == 10);
@@ -41,6 +53,7 @@ TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES)
 	CHECK(R.W() == 10);
 	CHECK(R.H() == 20);
 	CHECK_V2(R.Dim(), 10, 20);
+	CHECK(R.Area() == 200);
 	CHECK_V2(R.Center(), 15, 15);
 	CHECK_V2(R.MaxXMinY(), 20, 5);
 	CHECK_V2(R.MinXMaxY(), 10, 25);
@@ -51,6 +64,18 @@ TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES)
 	CHECK(Ptr(R) == (t*)(&R));
 	CHECK_ARRAY4(Ptr(R), 10, 5, 20, 25);
 	CHECK_ARRAY2(PtrMax(R), 20, 25);
+
+	auto R2 = Rect2BaseMinDim<t>(1, 4, 0, 0);
+	auto R3 = Rect2BaseMinDim<t>(2, 3, 4, 0);
+	auto R4 = Rect2BaseMinMax<t>(12, 13, 2, 3);
+	CHECK(HasArea(R));
+	CHECK(!HasArea(R2));
+	CHECK(!HasArea(R3));
+	CHECK(!HasArea(R4));
+	CHECK(HasAreaFlipAllowed(R));
+	CHECK(!HasAreaFlipAllowed(R2));
+	CHECK(!HasAreaFlipAllowed(R3));
+	CHECK(HasAreaFlipAllowed(R4));
 }
 
 TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
@@ -141,6 +166,20 @@ TEST_CASE_TEMPLATE("rect2_base operations", t, NUMERICAL_TYPES_MIN_16_BYTES)
 	D = Rect2BaseMinMax<t>(20, 20, 30, 50);
 	MakeRectNotHaveNegativeDim(&D);
 	CHECK_RECT2(D, 20, 20, 30, 50);
+
+	CHECK_RECT2(Union(Rect2BaseMinMax<t>(10, 5, 20, 15), Rect2BaseMinMax<t>(15, 10, 25, 30)), 
+	            10, 5, 25, 30);
+
+
+	rect2_base<t> E = Rect2BaseMinMax<t>(5, 6, 10, 12);
+	CHECK_RECT2(AddRadius(E, (t)2), 3, 4, 12, 14);
+	CHECK_RECT2(AddRadius(E, v2_base<t>(1, 2)), 4, 4, 11, 14);
+
+	AddRadius(&E, (t)2);
+	CHECK_RECT2(E, 3, 4, 12, 14);
+
+	AddRadius(&E, v2_base<t>(1, 2));
+	CHECK_RECT2(E, 2, 2, 13, 16);
 }
 
 TEST_CASE_TEMPLATE("rect2_base intersections and comparisons", t, NUMERICAL_TYPES)
@@ -151,6 +190,7 @@ TEST_CASE_TEMPLATE("rect2_base intersections and comparisons", t, NUMERICAL_TYPE
 	auto D = Rect2BaseMinDim<t>(25, 10, 2, 2);
 	auto E = Rect2BaseMinMax<t>(10, 12, 5, 8);
 	auto F = Rect2BaseMinMax<t>(12, 12, 10, 8);
+	auto G = Rect2BaseMinMax<t>(12, 12, 3, 5);
 
 	auto P = v2_base<t>(4, 6);
 
@@ -179,6 +219,10 @@ TEST_CASE_TEMPLATE("rect2_base intersections and comparisons", t, NUMERICAL_TYPE
 	CHECK_RECT2(Intersection, 25, 10, 27, 12);
 
 	CHECK(!IntersectionRect(A, D, &Intersection));
+
+	CHECK(IntersectFlipAllowed(G, P));
+	CHECK(IntersectFlipAllowed(A, P));
+	CHECK(!IntersectFlipAllowed(E, P));
 
 	CHECK(A != B);
 	CHECK(C == C);
