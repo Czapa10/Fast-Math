@@ -48,19 +48,19 @@ TEST_CASE("rect2 construction")
 TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES_MIN_16_BYTES)
 {
 	auto R = Rect2BaseMinDim<t>(10, 5, 10, 20);
-	CHECK(R.Width() == 10);
-	CHECK(R.Height() == 20);
-	CHECK(R.W() == 10);
-	CHECK(R.H() == 20);
-	CHECK_V2(R.Dim(), 10, 20);
-	CHECK(R.Area() == 200);
-	CHECK_V2(R.Center(), 15, 15);
-	CHECK_V2(R.MaxXMinY(), 20, 5);
-	CHECK_V2(R.MinXMaxY(), 10, 25);
-	CHECK_V2(R.MinYCenter(), 15, 5);
-	CHECK_V2(R.MaxYCenter(), 15, 25);
-	CHECK_V2(R.MinXCenter(), 10, 15);
-	CHECK_V2(R.MaxXCenter(), 20, 15);
+	CHECK(GetWidth(R) == 10);
+	CHECK(GetHeight(R) == 20);
+	CHECK(GetW(R) == 10);
+	CHECK(GetH(R) == 20);
+	CHECK_V2(GetDim(R), 10, 20);
+	CHECK(GetArea(R) == 200);
+	CHECK_V2(GetCenter(R), 15, 15);
+	CHECK_V2(GetMaxXMinY(R), 20, 5);
+	CHECK_V2(GetMinXMaxY(R), 10, 25);
+	CHECK_V2(GetMinYCenter(R), 15, 5);
+	CHECK_V2(GetMaxYCenter(R), 15, 25);
+	CHECK_V2(GetMinXCenter(R), 10, 15);
+	CHECK_V2(GetMaxXCenter(R), 20, 15);
 	CHECK(Ptr(R) == (t*)(&R));
 	CHECK_ARRAY4(Ptr(R), 10, 5, 20, 25);
 	CHECK_ARRAY2(PtrMax(R), 20, 25);
@@ -76,29 +76,35 @@ TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES_MIN_16_BYTES)
 	CHECK(!HasAreaFlipAllowed(R2));
 	CHECK(!HasAreaFlipAllowed(R3));
 	CHECK(HasAreaFlipAllowed(R4));
+
+	FM_Rect2ToMinMax(R, Min, Max);
+	CHECK_V2(Min, 10, 5);
+	CHECK_V2(Max, 20, 25);
+
+	FM_Rect2ToMinDim(R, Min2, Dim);
+	CHECK_V2(Min2, 10, 5);
+	CHECK_V2(Dim, 10, 20);
 }
 
 TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
 {
 	auto A = Rect2BaseMinMax<t>(5, 0, 15, 30);
-	A.SetCenter(15, 15);
-	CHECK_RECT2(A, 10, 0, 20, 30);
+	CHECK_RECT2(SetCenter(A, (t)15, (t)15), 10, 0, 20, 30);
 
 	auto B = Rect2BaseMinMax<t>(20, 20, 30, 30);
-	B.SetCenter(v2_base<t>(10, 10));
-	CHECK_RECT2(B, 5, 5, 15, 15);
+	CHECK_RECT2(SetCenter(B, v2_base<t>(10, 10)), 5, 5, 15, 15);
 
 	auto C = Rect2BaseMinMax<t>(10, 10, 20, 20);
 
-	C.SetDimWithFixedCenter(20, 20);
+	C = SetDimWithFixedCenter(C, (t)20, (t)20);
 	CHECK_RECT2(C, 5, 5, 25, 25);
 
-	C.SetDimWithFixedMin(15, 15);
+	C = SetDimWithFixedMin(C, (t)15, (t)15);
 	CHECK_RECT2(C, 5, 5, 20, 20);
 
-	C.SetDimWithFixedMax(10, 10);
+	C = SetDimWithFixedMax(C, (t)10, (t)10);
 	CHECK_RECT2(C, 10, 10, 20, 20);
-	C.SetDimWithFixedMax(v2_base<t>(5, 5));
+	C = SetDimWithFixedMax(C, v2_base<t>(5, 5));
 	CHECK_RECT2(C, 15, 15, 20, 20);
 
 	C = Offset(C, v2_base<t>(10, 10));
