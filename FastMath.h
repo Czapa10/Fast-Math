@@ -2651,6 +2651,20 @@ FM_FUN_TSI Rect2BaseMinDim(v2_base<t> Min, v2_base<t> Dim) -> rect2_base<t> {
 	R.Max = Min + Dim;
 	return R;
 }
+FM_FUN_TSI Rect2BaseDimMax(t Width, t Height, t MaxX, t MaxY) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min.X = MaxX - Width;
+	R.Min.Y = MaxY - Height;
+	R.Max.X = MaxX;
+	R.Max.Y = MaxY;
+	return R;
+}
+FM_FUN_TSI Rect2BaseDimMax(v2_base<t> Dim, v2_base<t> Max) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Max - Dim;
+	R.Max = Max;
+	return R;
+}
 FM_FUN_TSI Rect2BaseCenterRadius(v2_base<t> Center, t Radius) -> rect2_base<t> {
 	rect2_base<t> R;
 	R.Min.X = Center.X - Radius;
@@ -2836,6 +2850,16 @@ FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM);
 	FM_FUN_SI Rect2##InsideName##MinDim(v2_base<T> Min, v2_base<T> Dim) -> rect2_base<T>\
 	{ return Rect2BaseMinDim<T>(Min, Dim); }
 FM_GENERIC_FUNCTION(FM_RECT2_MIN_DIM_2);
+	
+#define FM_RECT2_DIM_MAX(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##DimMax(T Width, T Height, T MaxX, T MaxY) -> rect2_base<T>\
+	{ return Rect2BaseDimMax<T>(Width, Height, MaxX, MaxY); }
+FM_GENERIC_FUNCTION(FM_RECT2_DIM_MAX);
+	
+#define FM_RECT2_DIM_MAX_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##DimMax(v2_base<T> Dim, v2_base<T> Max) -> rect2_base<T>\
+	{ return Rect2BaseDimMax<T>(Dim, Max); }
+FM_GENERIC_FUNCTION(FM_RECT2_DIM_MAX_2);
 	
 #define FM_RECT2_CENTER_RADIUS(InsideName, T) \
 	FM_FUN_SI Rect2##InsideName##CenterRadius(v2_base<T> Center, T Radius) -> rect2_base<T>\

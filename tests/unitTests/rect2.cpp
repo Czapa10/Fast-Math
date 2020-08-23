@@ -32,6 +32,9 @@ TEST_CASE("rect2 construction")
 	CHECK_RECT2(Rect2MinDim(v2(-1.5f, 2.5f), v2(3, 4)), -1.5f, 2.5f, 1.5f, 6.5f);
 	CHECK_RECT2(Rect2iMinDim(v2i(-1, 2), v2i(3, 4)), -1, 2, 2, 6);
 
+	CHECK_RECT2(Rect2DimMax(v2(5.5f, 2.5f), v2(3, 4)), -2.5f, 1.5f, 3, 4);
+	CHECK_RECT2(Rect2iDimMax(v2i(1, 2), v2i(3, 4)), 2, 2, 3, 4);
+
 	CHECK_RECT2(Rect2CenterRadius(v2(5, 3), 2), 3, 1, 7, 5);
 	CHECK_RECT2(Rect2iCenterRadius(v2i(5, 3), 2), 3, 1, 7, 5);
 
