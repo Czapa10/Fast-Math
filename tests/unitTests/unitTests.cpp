@@ -194,15 +194,15 @@ static char binaryOutput[128];
     INFO(_Mat[3] << ", " << _Mat[7] << ", " << _Mat[11] << ", " << _Mat[15]); \
 
 
-#include "utilityFunctions.cpp"
 #include "vec2.cpp"
 #include "vec3.cpp"
 #include "vec4.cpp"
 #include "v2.cpp"
 #include "v3.cpp"
 #include "v4.cpp"
-#include "vectorCasting.cpp"
 #include "rect2.cpp"
 #include "mat4.cpp"
-
+#include "vectorCasting.cpp"
+#include "invalidValues.cpp"
+#include "utilityFunctions.cpp"
 

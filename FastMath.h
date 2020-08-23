@@ -70,22 +70,9 @@ in one of C++ files that include this header, BEFORE the include, like this:
 
 namespace fm {
 
-static constexpr uint8_t U8Max = 255;
-static constexpr uint16_t U16Max = 65535;
-static constexpr uint32_t U32Max = ((uint32_t)-1);
-static constexpr uint64_t U64Max = ((uint64_t)-1);
-static constexpr int32_t I32Min = ((int32_t)0x80000000);
-static constexpr int32_t I32Max = ((int32_t)0x7fffffff);
-
-static constexpr float Pi = 3.14159265359f;
-static constexpr double Pi64 = 3.14159265358979323846;
-static constexpr float Tau = Pi * 2;
-static constexpr double Tau64 = Pi64 * 2;
-
 //////////////////////
 // type definitions //
 //////////////////////
-
 template<class t>
 union v2_base
 {
@@ -507,6 +494,25 @@ struct alignas(16) mat4
 
 	FM_FUN_I operator[](uint32_t Index) -> float&; 
 };
+
+///////////////
+// constants //
+///////////////
+static constexpr uint8_t MaxU8 = 255;
+static constexpr uint16_t MaxU16 = 65535;
+static constexpr uint32_t MaxU32 = ((uint32_t)-1);
+static constexpr uint64_t MaxU64 = ((uint64_t)-1);
+static constexpr int32_t MinI32 = ((int32_t)0x80000000);
+static constexpr int32_t MaxI32 = ((int32_t)0x7fffffff);
+static constexpr float MinF32 = 1.401298464e-45f;
+static constexpr float MaxF32 = 3.402823466e+38f;
+static constexpr double MinF64 = 4.9406564584124654e-324; 
+static constexpr double MaxF64 = 1.7976931348623158e+308;
+
+static constexpr float Pi = 3.14159265359f;
+static constexpr double Pi64 = 3.14159265358979323846;
+static constexpr float Tau = Pi * 2;
+static constexpr double Tau64 = Pi64 * 2;
 
 ///////////////////////////////////
 // forward function declarations //
@@ -3342,6 +3348,110 @@ FM_FUN_SIC Mat4OrthographicBottomUp(rect2 A) -> mat4 {
 	FM_Rect2ToMinMax(A, Min, Max);
 	return Mat4Orthographic(Min.X, Max.X, Min.Y, Max.Y);
 }
+
+////////////////////
+// invalid values //
+////////////////////
+static constexpr uint16_t InvalidU16 = MaxU16;
+static constexpr uint32_t InvalidU32 = MaxU32;
+static constexpr uint64_t InvalidU64 = MaxU64;
+static constexpr int32_t InvalidI32 = MinI32;
+static constexpr float InvalidF32 = MinF32;
+static constexpr double InvalidF64 = MinF64;
+static const v2 InvalidV2 = v2(InvalidF32, 0);
+static const v3 InvalidV3 = v3(InvalidF32, 0, 0);
+static const v4 InvalidV4 = v4(InvalidF32, 0, 0, 0);
+static const v2d InvalidV2d = v2d(InvalidF64, 0);
+static const v3d InvalidV3d = v3d(InvalidF64, 0, 0);
+static const v4d InvalidV4d = v4d(InvalidF64, 0, 0, 0);
+static const v2i InvalidV2i = v2i(InvalidI32, 0);
+static const v3i InvalidV3i = v3i(InvalidI32, 0, 0);
+static const v4i InvalidV4i = v4i(InvalidI32, 0, 0, 0);
+static const v2u InvalidV2u = v2u(InvalidU32, 0);
+static const v3u InvalidV3u = v3u(InvalidU32, 0, 0);
+static const v4u InvalidV4u = v4u(InvalidU32, 0, 0, 0);
+static const v2u16 InvalidV2u16 = v2u16(InvalidU16, 0);
+static const v3u16 InvalidV3u16 = v3u16(InvalidU16, 0, 0);
+static const v4u16 InvalidV4u16 = v4u16(InvalidU16, 0, 0, 0);
+static const v2u8 InvalidV2u8 = v2u8(1, 111);
+static const v3u8 InvalidV3u8 = v3u8(1, 111, 222);
+static const v4u8 InvalidV4u8 = v4u8(1, 111, 222, 33);
+static const rect2 InvalidRect2 = Rect2MinMax(InvalidF32, 0, 0, 0);
+static const rect2d InvalidRect2d = Rect2dMinMax(InvalidF64, 0, 0, 0);
+static const rect2i InvalidRect2i = Rect2iMinMax(InvalidI32, 0, 0, 0);
+static const rect2u InvalidRect2u = Rect2uMinMax(InvalidU32, 0, 0, 0);
+static const mat4 InvalidMat4 = Mat4Diagonal(InvalidF32, 0, 0, 0);
+
+FM_FUN_SI IsValid(v2 A) -> bool {
+	return A.X != InvalidF32;
+}
+FM_FUN_SI IsValid(v2d A) -> bool {
+	return A.X != InvalidF64;
+}
+FM_FUN_SI IsValid(v2i A) -> bool {
+	return A.X != InvalidI32;
+}
+FM_FUN_SI IsValid(v2u A) -> bool {
+	return A.X != InvalidU32;
+}
+FM_FUN_SI IsValid(v2u16 A) -> bool {
+	return A.X != InvalidU16;
+}
+FM_FUN_SI IsValid(v2u8 A) -> bool {
+	return A != InvalidV2u8;
+}
+FM_FUN_SI IsValid(v3 A) -> bool {
+	return A.X != InvalidF32;
+}
+FM_FUN_SI IsValid(v3d A) -> bool {
+	return A.X != InvalidF64;
+}
+FM_FUN_SI IsValid(v3i A) -> bool {
+	return A.X != InvalidI32;
+}
+FM_FUN_SI IsValid(v3u A) -> bool {
+	return A.X != InvalidU32;
+}
+FM_FUN_SI IsValid(v3u16 A) -> bool {
+	return A.X != InvalidU16;
+}
+FM_FUN_SI IsValid(v3u8 A) -> bool {
+	return A != InvalidV3u8;
+}
+FM_FUN_SI IsValid(v4 A) -> bool {
+	return A.X != InvalidF32;
+}
+FM_FUN_SI IsValid(v4d A) -> bool {
+	return A.X != InvalidF64;
+}
+FM_FUN_SI IsValid(v4i A) -> bool {
+	return A.X != InvalidI32;
+}
+FM_FUN_SI IsValid(v4u A) -> bool {
+	return A.X != InvalidU32;
+}
+FM_FUN_SI IsValid(v4u16 A) -> bool {
+	return A.X != InvalidU16;
+}
+FM_FUN_SI IsValid(v4u8 A) -> bool {
+	return A != InvalidV4u8;
+}
+FM_FUN_SI IsValid(rect2 A) -> bool {
+	return A.Min.X != InvalidF32;
+}
+FM_FUN_SI IsValid(rect2d A) -> bool {
+	return A.Min.X != InvalidF64;
+}
+FM_FUN_SI IsValid(rect2i A) -> bool {
+	return A.Min.X != InvalidI32;
+}
+FM_FUN_SI IsValid(rect2u A) -> bool {
+	return A.Min.X != InvalidU32;
+}
+FM_FUN_SI IsValid(mat4 A) -> bool {
+	return A[0] != InvalidF32;
+}
+
 
 }
 
