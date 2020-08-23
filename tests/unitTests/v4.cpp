@@ -49,7 +49,18 @@ TEST_CASE("v4 operations")
 
 	CHECK_V4(A + B, 3, 7, -1, 1);
 	CHECK_V4(A - B, -1, -1, 11, -15);
-
+	CHECK_V4(AddX(A, 2.f), 3, 3, 5, -7);
+	CHECK_V4(AddY(A, 2.f), 1, 5, 5, -7);
+	CHECK_V4(AddZ(A, -2.f), 1, 3, 3, -7);
+	CHECK_V4(AddW(A, 2.f), 1, 3, 5, -5);
+	CHECK_V4(MulX(A, 2.f), 2, 3, 5, -7);
+	CHECK_V4(MulY(A, 2.f), 1, 6, 5, -7);
+	CHECK_V4(MulZ(A, -2.f), 1, -6, 5, -7);
+	CHECK_V4(MulW(A, 2.f), 1, 3, 5, -14);
+	CHECK_V4(DivX(A, 2.f), 0.5f, 3, 5, -7);
+	CHECK_V4(DivY(A, 3.f), 1, 1, 5, -7);
+	CHECK_V4(DivZ(A, -2.f), 1, 3, -2.5f, -7);
+	CHECK_V4(DivW(A, -7.f), 1, 3, 5, 1);
 	CHECK_V4(A * 2.f, 2, 6, 10, -14);
 	CHECK_V4(2.f * A, 2, 6, 10, -14);
 	CHECK_V4(A / 2.f, 0.5f, 1.5f, 2.5f, -3.5f);

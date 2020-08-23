@@ -41,6 +41,12 @@ TEST_CASE("v2 operations")
 
 	CHECK_V2(A + B, -3, 7);
 	CHECK_V2(A - B, 7, 1);
+	CHECK_V2(AddX(A, 3.f), 5, 4);
+	CHECK_V2(AddY(A, -3.f), 2, 1);
+	CHECK_V2(MulX(A, 2.f), 4, 4);
+	CHECK_V2(MulY(A, 0.5f), 2, 2);
+	CHECK_V2(DivX(A, 2.f), 1, 4);
+	CHECK_V2(DivY(A, 2.f), 2, 2);
 	CHECK_V2(A * 2.f, 4, 8);
 	CHECK_V2(2.f * A, 4, 8);
 	CHECK_V2(A / 2.f, 1, 2);

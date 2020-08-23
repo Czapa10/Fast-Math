@@ -647,6 +647,30 @@ FM_FUN_TSI operator-=(v2_base<t>& A, v2_base<t> B) -> v2_base<t> {
 	A.Y -= B.Y;
 	return A;
 }
+FM_FUN_TSI AddX(v2_base<t> A, t X) -> v2_base<t> {
+	A.X += X;
+	return A;
+}
+FM_FUN_TSI AddY(v2_base<t> A, t Y) -> v2_base<t> {
+	A.Y += Y;
+	return A;
+}
+FM_FUN_TSI MulX(v2_base<t> A, t X) -> v2_base<t> {
+	A.X *= X;
+	return A;
+}
+FM_FUN_TSI MulY(v2_base<t> A, t Y) -> v2_base<t> {
+	A.Y *= Y;
+	return A;
+}
+FM_FUN_TSI DivX(v2_base<t> A, t X) -> v2_base<t> {
+	A.X /= X;
+	return A;
+}
+FM_FUN_TSI DivY(v2_base<t> A, t Y) -> v2_base<t> {
+	A.Y /= Y;
+	return A;
+}
 FM_FUN_TSI HadamardMul(v2_base<t> A, v2_base<t> B) -> v2_base<t> {
 	v2_base<t> R;
 	R.X = A.X * B.X;
@@ -792,6 +816,42 @@ FM_FUN_TSI operator+=(v3_base<t>& A, v3_base<t> B) -> v3_base<t>& {
 }
 FM_FUN_TSI operator-=(v3_base<t>& A, v3_base<t> B) -> v3_base<t>& {
 	A = A - B;
+	return A;
+}
+FM_FUN_TSI AddX(v3_base<t> A, t X) -> v3_base<t> {
+	A.X += X;
+	return A;
+}
+FM_FUN_TSI AddY(v3_base<t> A, t Y) -> v3_base<t> {
+	A.Y += Y;
+	return A;
+}
+FM_FUN_TSI AddZ(v3_base<t> A, t Z) -> v3_base<t> {
+	A.Z += Z;
+	return A;
+}
+FM_FUN_TSI MulX(v3_base<t> A, t X) -> v3_base<t> {
+	A.X *= X;
+	return A;
+}
+FM_FUN_TSI MulY(v3_base<t> A, t Y) -> v3_base<t> {
+	A.Y *= Y;
+	return A;
+}
+FM_FUN_TSI MulZ(v3_base<t> A, t Z) -> v3_base<t> {
+	A.Z *= Z;
+	return A;
+}
+FM_FUN_TSI DivX(v3_base<t> A, t X) -> v3_base<t> {
+	A.X /= X;
+	return A;
+}
+FM_FUN_TSI DivY(v3_base<t> A, t Y) -> v3_base<t> {
+	A.Y /= Y;
+	return A;
+}
+FM_FUN_TSI DivZ(v3_base<t> A, t Z) -> v3_base<t> {
+	A.Z /= Z;
 	return A;
 }
 FM_FUN_TSI HadamardMul(v3_base<t> A, v3_base<t> B) -> v3_base<t> {
@@ -951,6 +1011,54 @@ FM_FUN_TSI operator+=(v4_base<t>& A, v4_base<t> B) -> v4_base<t>& {
 }
 FM_FUN_TSI operator-=(v4_base<t>& A, v4_base<t> B) -> v4_base<t>& {
 	A = A - B;
+	return A;
+}
+FM_FUN_TSI AddX(v4_base<t> A, t X) -> v4_base<t> {
+	A.X += X;
+	return A;
+}
+FM_FUN_TSI AddY(v4_base<t> A, t Y) -> v4_base<t> {
+	A.Y += Y;
+	return A;
+}
+FM_FUN_TSI AddZ(v4_base<t> A, t Z) -> v4_base<t> {
+	A.Z += Z;
+	return A;
+}
+FM_FUN_TSI AddW(v4_base<t> A, t W) -> v4_base<t> {
+	A.W += W;
+	return A;
+}
+FM_FUN_TSI MulX(v4_base<t> A, t X) -> v4_base<t> {
+	A.X *= X;
+	return A;
+}
+FM_FUN_TSI MulY(v4_base<t> A, t Y) -> v4_base<t> {
+	A.Y *= Y;
+	return A;
+}
+FM_FUN_TSI MulZ(v4_base<t> A, t Z) -> v4_base<t> {
+	A.Y *= Z;
+	return A;
+}
+FM_FUN_TSI MulW(v4_base<t> A, t W) -> v4_base<t> {
+	A.W *= W;
+	return A;
+}
+FM_FUN_TSI DivX(v4_base<t> A, t X) -> v4_base<t> {
+	A.X /= X;
+	return A;
+}
+FM_FUN_TSI DivY(v4_base<t> A, t Y) -> v4_base<t> {
+	A.Y /= Y;
+	return A;
+}
+FM_FUN_TSI DivZ(v4_base<t> A, t Z) -> v4_base<t> {
+	A.Z /= Z;
+	return A;
+}
+FM_FUN_TSI DivW(v4_base<t> A, t W) -> v4_base<t> {
+	A.W /= W;
 	return A;
 }
 FM_FUN_TSI HadamardMul(v4_base<t> A, v4_base<t> B) -> v4_base<t> {
@@ -3451,7 +3559,6 @@ FM_FUN_SI IsValid(rect2u A) -> bool {
 FM_FUN_SI IsValid(mat4 A) -> bool {
 	return A[0] != InvalidF32;
 }
-
 
 }
 

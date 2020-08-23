@@ -45,6 +45,15 @@ TEST_CASE("v3 operations")
 
 	CHECK_V3(A + B, 0, 8, 5);
 	CHECK_V3(A - B, 4, -2, 3);
+	CHECK_V3(AddX(A, 2.f), 4, 3, 4);
+	CHECK_V3(AddY(A, -2.f), 2, 1, 4);
+	CHECK_V3(AddZ(A, -2.f), 2, 3, 2);
+	CHECK_V3(MulX(A, 2.f), 4, 3, 4);
+	CHECK_V3(MulY(A, -2.f), 2, -6, 4);
+	CHECK_V3(MulZ(A, 0.5f), 2, 3, 2);
+	CHECK_V3(DivX(A, 2.f), 1, 3, 4);
+	CHECK_V3(DivY(A, -3.f), 2, -1, 4);
+	CHECK_V3(DivZ(A, 2.f), 2, 3, 2);
 	CHECK_V3(A * 3.f, 6, 9, 12);
 	CHECK_V3(3.f * A, 6, 9, 12);
 	CHECK_V3(A / 2.f, 1, 1.5f, 2);
