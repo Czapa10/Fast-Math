@@ -500,10 +500,16 @@ struct alignas(16) mat4
 ///////////////
 static constexpr uint8_t MaxU8 = 255;
 static constexpr uint16_t MaxU16 = 65535;
-static constexpr uint32_t MaxU32 = ((uint32_t)-1);
-static constexpr uint64_t MaxU64 = ((uint64_t)-1);
-static constexpr int32_t MinI32 = ((int32_t)0x80000000);
-static constexpr int32_t MaxI32 = ((int32_t)0x7fffffff);
+static constexpr uint32_t MaxU32 = 4294967295;
+static constexpr uint64_t MaxU64 = 18446744073709551615;
+static constexpr int8_t MinI8 = -128;
+static constexpr int8_t MaxI8 = 127;
+static constexpr int16_t MinI16 = -32768;
+static constexpr int16_t MaxI16 = 32767;
+static constexpr int32_t MinI32 = -2147483648;
+static constexpr int32_t MaxI32 = 2147483647;
+static constexpr int64_t MinI64 = -9223372036854775808;
+static constexpr int64_t MaxI64 = 9223372036854775807;
 static constexpr float MinF32 = 1.401298464e-45f;
 static constexpr float MaxF32 = 3.402823466e+38f;
 static constexpr double MinF64 = 4.9406564584124654e-324; 
@@ -2532,6 +2538,9 @@ FM_FUN_TSI GetH(rect2_base<t> A) -> t {
 FM_FUN_TSI GetDim(rect2_base<t> A) -> v2_base<t> {
 	return A.Max - A.Min;
 }
+FM_FUN_TSI GetSize(rect2_base<t> A) -> v2_base<t> {
+	return GetDim(A);
+}
 FM_FUN_TSI GetRadius(rect2_base<t> A) -> v2_base<t> {
 	return GetDim(A) / (t)2;
 }
@@ -3487,7 +3496,9 @@ FM_FUN_SIC Mat4OrthographicBottomUp(rect2 A) -> mat4 {
 static constexpr uint16_t InvalidU16 = MaxU16;
 static constexpr uint32_t InvalidU32 = MaxU32;
 static constexpr uint64_t InvalidU64 = MaxU64;
+static constexpr int16_t InvalidI16 = MinI16;
 static constexpr int32_t InvalidI32 = MinI32;
+static constexpr int64_t InvalidI64 = MinI64;
 static constexpr float InvalidF32 = MinF32;
 static constexpr double InvalidF64 = MinF64;
 static const v2 InvalidV2 = v2(InvalidF32, 0);
