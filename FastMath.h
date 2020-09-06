@@ -775,7 +775,7 @@ FM_FUN_TSI operator==(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y;
 }
 FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
-	return A.X != B.X || A.X != B.X;
+	return !(A == B);
 }
 
 //////////////////
