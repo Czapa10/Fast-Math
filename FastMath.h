@@ -56,8 +56,13 @@ in one of C++ files that include this header, BEFORE the include, like this:
 	Macro(i8, int8_t) Macro(u8, uint8_t)
 
 #ifdef NDEBUG
-	#define FM_ASSERT(expression) if(!expression) (*(int32_t*)0 = 0);
-	#define FM_ERROR() (*(int32_t*)0 = 0);
+	#ifdef _MSC_VER
+		#define FM_ASSERT(expression) if(!expression)__debugbreak()
+		#define FM_ERROR() __debugbreak()
+	#else
+		#define FM_ASSERT(expression) if(!expression){*(int32_t*)0 = 0}
+		#define FM_ERROR() {*(int32_t*)0 = 0}
+	#endif
 #else
 	#define FM_ASSERT(expression) 
 	#define FM_ERROR() 
@@ -777,6 +782,17 @@ FM_FUN_TSI operator==(v2_base<t> A, v2_base<t> B) -> bool {
 FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
 	return !(A == B);
 }
+FM_FUN_TSI AllComponentsDiffer(v2_base<t> A, v2_base<t> B) -> bool {
+	return A.X != B.X && A.Y != B.Y;
+}
+FM_FUN_TSI OnlyOneComponentDiffers(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X != B.X)
+		return A.Y == B.Y;
+	else if(A.Y != B.Y)
+		return A.X == B.X;
+	else
+		return false;
+}
 
 //////////////////
 // v3 functions //
@@ -968,6 +984,19 @@ FM_FUN_TSI operator==(v3_base<t> A, v3_base<t> B) -> bool {
 }
 FM_FUN_TSI operator!=(v3_base<t> A, v3_base<t> B) -> bool {
 	return !(A == B);
+}
+FM_FUN_TSI AllComponentsDiffer(v3_base<t> A, v3_base<t> B) -> bool {
+	return A.X != B.X && A.Y != B.Y && A.Z != B.Z;
+}
+FM_FUN_TSI OnlyOneComponentDiffers(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X != B.X)
+		return A.Y == B.Y && A.Z == B.Z;
+	else if(A.Y != B.Y)
+		return A.X == B.X && A.Z == B.Z;
+	else if(A.Z != B.Z)
+		return A.X == B.X && A.Y == B.Y;
+	else
+		return false;
 }
 
 //////////////////
@@ -1182,6 +1211,21 @@ FM_FUN_TSI operator==(v4_base<t> A, v4_base<t> B) -> bool {
 FM_FUN_TSI operator!=(v4_base<t> A, v4_base<t> B) -> bool {
 	return !(A == B);
 } 
+FM_FUN_TSI AllComponentsDiffer(v4_base<t> A, v4_base<t> B) -> bool {
+	return A.X != B.X && A.Y != B.Y && A.Z != B.Z && A.W != B.W;
+}
+FM_FUN_TSI OnlyOneComponentDiffers(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X != B.X)
+		return A.Y == B.Y && A.Z == B.Z && A.W == B.W;
+	else if(A.Y != B.Y)
+		return A.X == B.X && A.Z == B.Z && A.W == B.W;
+	else if(A.Z != B.Z)
+		return A.X == B.X && A.Y == B.Y && A.W == B.W;
+	else if(A.W != B.W)
+		return A.X == B.X && A.Y == B.Y && A.Z == B.Z;
+	else
+		return false;
+}
 
 ////////////////////
 // vec2 functions //
@@ -2786,6 +2830,9 @@ FM_FUN_TSI MakeRectsNotHaveNegativeDim(rect2_base<t>* A, rect2_base<t>* B) -> vo
 	MakeRectNotHaveNegativeDim(A);
 	MakeRectNotHaveNegativeDim(B);
 }
+FM_FUN_TSI HasNegativeDim(rect2_base<t> A) -> bool {
+	return A.Min.X > A.Max.X || A.Min.Y > A.Max.Y;
+}
 FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
 	       Point.Y >= Rect.Min.Y && Point.Y <= Rect.Max.Y;
@@ -2832,6 +2879,28 @@ FM_FUN_TSI Union(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
 	R.Min = Min(A.Min, B.Min);
 	R.Max = Max(A.Max, B.Max);
 	return R;
+}
+FM_FUN_TSI ClampToRect(v2_base<t> V, rect2_base<t> Rect) -> v2_base<t> {
+	FM_ASSERT(!HasNegativeDim(Rect));
+	if(V.X < Rect.Min.X)	
+		V.X = Rect.Min.X;
+	else if(V.X > Rect.Max.X)
+		V.X = Rect.Max.X;
+	if(V.Y < Rect.Min.Y)
+		V.Y = Rect.Min.Y;
+	else if(V.Y > Rect.Max.Y)
+		V.Y = Rect.Max.Y;
+	return V;
+}
+FM_FUN_TSI ClampToRectFlipAllowed(v2_base<t> V, rect2_base<t> Rect) {
+	Rect = MakeRectNotHaveNegativeDim(Rect);
+	ClampToRect(V, Rect);
+}
+FM_FUN_TSI ClampToRect(v2_base<t>* V, rect2_base<t> Rect) {
+	*V = ClampToRect(*V, Rect);
+}
+FM_FUN_TSI ClampToRectFlipAllowed(v2_base<t>* V, rect2_base<t> Rect) {
+	*V = ClampToRectFlipAllowed(*V, Rect);
 }
 FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Min == B.Min && A.Max == B.Max;

@@ -178,6 +178,9 @@ TEST_CASE_TEMPLATE("rect2_base operations", t, NUMERICAL_TYPES_MIN_16_BYTES)
 	CHECK_RECT2(C, 70, 70, 166, 214);
 
 
+	CHECK(HasNegativeDim(Rect2BaseMinMax<t>(4, 5, 2, 3)));
+	CHECK(!HasNegativeDim(Rect2BaseMinMax<t>(5, 10, 20, 10)));
+	CHECK(!HasNegativeDim(Rect2BaseMinMax<t>(20, 20, 30, 50)));
 	CHECK_RECT2(MakeRectNotHaveNegativeDim(Rect2BaseMinMax<t>(4, 5, 2, 3)), 2, 3, 4, 5);
 	CHECK_RECT2(MakeRectNotHaveNegativeDim(Rect2BaseMinMax<t>(20, 10, 5, 10)), 5, 10, 20, 10);
 	CHECK_RECT2(MakeRectNotHaveNegativeDim(Rect2BaseMinMax<t>(20, 20, 30, 50)), 20, 20, 30, 50);
@@ -197,6 +200,7 @@ TEST_CASE_TEMPLATE("rect2_base operations", t, NUMERICAL_TYPES_MIN_16_BYTES)
 	CHECK_RECT2(Union(Rect2BaseMinMax<t>(10, 5, 20, 15), Rect2BaseMinMax<t>(15, 10, 25, 30)), 
 	            10, 5, 25, 30);
 
+	CHECK_V2(ClampToRect(v2(3, 6), Rect2MinMax(4, 4, 5, 5)), 4, 5);
 
 	rect2_base<t> E = Rect2BaseMinMax<t>(5, 6, 10, 12);
 	CHECK_RECT2(AddRadius(E, (t)2), 3, 4, 12, 14);
