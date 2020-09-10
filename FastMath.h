@@ -2833,6 +2833,18 @@ FM_FUN_TSI MakeRectsNotHaveNegativeDim(rect2_base<t>* A, rect2_base<t>* B) -> vo
 FM_FUN_TSI HasNegativeDim(rect2_base<t> A) -> bool {
 	return A.Min.X > A.Max.X || A.Min.Y > A.Max.Y;
 }
+FM_FUN_TSI HasNegativeWidth(rect2_base<t> A) -> bool {
+	return A.Min.X > A.Max.X;
+}
+FM_FUN_TSI HasNegativeHeight(rect2_base<t> A) -> bool {
+	return A.Min.Y > A.Max.Y;
+}
+FM_FUN_TSI HasNegativeW(rect2_base<t> A) -> bool {
+	return HasNegativeWidth(A);
+}
+FM_FUN_TSI HasNegativeH(rect2_base<t> A) -> bool {
+	return HasNegativeHeight(A);
+}
 FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
 	       Point.Y >= Rect.Min.Y && Point.Y <= Rect.Max.Y;
