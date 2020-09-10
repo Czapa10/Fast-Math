@@ -579,6 +579,18 @@ FM_FUN_TSI SafeDiv1(t Numerator, t Divisor) -> t {
 FM_FUN_TSI SafeDiv0(t Numerator, t Divisor) -> t {
 	return SafeDivN<t>(Numerator, Divisor, 0);
 }
+FM_FUN_SI Lerp(float Source, float Dest, float T) -> float {
+	return ((1.f - T) * Source) + (T * Dest);
+}
+FM_FUN_SI Lerp(double Source, double Dest, double T) -> double {
+	return ((1.0 - T) * Source) + (T * Dest);
+}
+FM_FUN_SI FastLerp(float Source, float Dest, float T) -> float {
+	return Source + (Dest - Source) * T;
+}
+FM_FUN_SI FastLerp(double Source, double Dest, double T) -> double {
+	return Source + (Dest - Source) * T;
+}
 
 /////////////////////////////////////////
 // fast math internal helper functions //
@@ -771,10 +783,16 @@ FM_FUN_TSI Normalize(v2_base<t>* V) -> void {
 FM_FUN_TSI Clamp(v2_base<t> V, v2_base<t> MinV, v2_base<t> MaxV) -> v2_base<t> {
 	return Min(Max(V, MinV), MaxV);
 }
-FM_FUN_TSI Lerp(v2_base<t> A, v2_base<t> B, float T) -> v2_base<t> {
-	v2 fA = static_cast<v2>(A);
-	v2 fB = static_cast<v2>(B);
-	return static_cast<v2_base<t>>(fA + (fB - fA)*T);
+FM_FUN_TSI Lerp(v2_base<t> Source, v2_base<t> Dest, float T) -> v2_base<t> {
+	v2 R;
+	R.X = Lerp((float)Source.X, (float)Dest.X, T);
+	R.Y = Lerp((float)Source.Y, (float)Dest.Y, T);
+	return (v2_base<t>)(R);
+}
+FM_FUN_TSI FastLerp(v2_base<t> Source, v2_base<t> Dest, float T) -> v2_base<t> {
+	v2 fSource = (v2)Source;
+	v2 fDest = (v2)Dest;
+	return (v2_base<t>)(fSource + T * (fDest - fSource));
 }
 FM_FUN_TSI operator==(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y;
@@ -976,8 +994,17 @@ FM_FUN_TSI Normalize(v3_base<t>* V) -> void {
 FM_FUN_TSI Clamp(v3_base<t> V, v3_base<t> MinV, v3_base<t> MaxV) -> v3_base<t> {
 	return Min(Max(V, MinV), MaxV);	
 } 
-FM_FUN_TSI Lerp(v3_base<t> A, v3_base<t> B, t T) -> v3_base<t> {
-	return A + (B - A) * T;
+FM_FUN_TSI Lerp(v3_base<t> Source, v3_base<t> Dest, float T) -> v3_base<t> {
+	v3 R;
+	R.X = Lerp((float)Source.X, (float)Dest.X, T);
+	R.Y = Lerp((float)Source.Y, (float)Dest.Y, T);
+	R.Z = Lerp((float)Source.Z, (float)Dest.Z, T);
+	return (v3_base<t>)(R);
+}
+FM_FUN_TSI FastLerp(v3_base<t> Source, v3_base<t> Dest, float T) -> v3_base<t> {
+	v3 fSource = (v3)Source;
+	v3 fDest = (v3)Dest;
+	return (v3_base<t>)(fSource + T * (fDest - fSource));
 }
 FM_FUN_TSI operator==(v3_base<t> A, v3_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y && A.Z == B.Z;
@@ -1202,8 +1229,18 @@ FM_FUN_TSI Normalize(v4_base<t>* V) -> void {
 FM_FUN_TSI Clamp(v4_base<t> V, v4_base<t> MinV, v4_base<t> MaxV) -> v4_base<t> {
 	return Min(Max(V, MinV), MaxV);
 } 
-FM_FUN_TSI Lerp(v4_base<t> A, v4_base<t> B, t T) -> v4_base<t> {
-	return A + (B - A) * T;
+FM_FUN_TSI Lerp(v4_base<t> Source, v4_base<t> Dest, float T) -> v4_base<t> {
+	v4 R;
+	R.X = Lerp((float)Source.X, (float)Dest.X, T);
+	R.Y = Lerp((float)Source.Y, (float)Dest.Y, T);
+	R.Z = Lerp((float)Source.Z, (float)Dest.Z, T);
+	R.W = Lerp((float)Source.W, (float)Dest.W, T);
+	return (v4_base<t>)(R);
+}
+FM_FUN_TSI FastLerp(v4_base<t> Source, v4_base<t> Dest, float T) -> v4_base<t> {
+	v4 fSource = (v4)Source;
+	v4 fDest = (v4)Dest;
+	return (v4_base<t>)(fSource + T * (fDest - fSource));
 }
 FM_FUN_TSI operator==(v4_base<t> A, v4_base<t> B) -> bool {
 	return A.X == B.X && A.Y == B.Y && A.Z == B.Z && A.W == B.W;
