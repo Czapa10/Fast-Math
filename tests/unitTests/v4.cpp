@@ -6,7 +6,7 @@ TEST_CASE_TEMPLATE("v4_construction and getters", t, NUMERICAL_TYPES)
 	CHECK_V4(v4_base<t>(v3_base<t>(1, 2, 3), 4), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>(1, v3_base<t>(2, 3, 4)), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>(5), 5, 5, 5, 5);
-	CHECK_V4(v4_base<t>(v3(1, 2, 3), 4), 1, 2, 3, 4);
+	CHECK_V4(v4_base<t>(v3_base<t>(1, 2, 3), 4), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>{}, 0, 0, 0, 0);
 
 	t Arr[4] = {1, 2, 3, 4};

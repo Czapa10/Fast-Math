@@ -92,7 +92,7 @@ union v2_base
 	explicit v2_base(const t* Mem) :X(Mem[0]), Y(Mem[1]) {}
 	v2_base() = default;
 
-	template<class u> v2_base(v2_base<u> V)
+	template<class u> explicit v2_base(v2_base<u> V)
 		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
@@ -129,7 +129,7 @@ union v3_base
 	explicit v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
 	v3_base() = default;
 
-	template<class u> v3_base(v3_base<u> V)
+	template<class u> explicit v3_base(v3_base<u> V)
 		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
@@ -193,7 +193,7 @@ union v4_base
 	explicit v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
 	v4_base() = default;
 
-	template<class u> v4_base(v4_base<u> V)
+	template<class u> explicit v4_base(v4_base<u> V)
 		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
