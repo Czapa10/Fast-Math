@@ -114,7 +114,7 @@ TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
 	C = SetDimWithFixedMax(C, v2_base<t>(5, 5));
 	CHECK_RECT2(C, 15, 15, 20, 20);
 
-	C = Offset(C, v2_base<t>(10, 10));
+	C = MoveRect(C, v2_base<t>(10, 10));
 	CHECK_RECT2(C, 25, 25, 30, 30);
 
 	C = Rect2BaseMinMax<t>(10, 10, 20, 20);
@@ -130,7 +130,7 @@ TEST_CASE_TEMPLATE("rect2_base setters", t, NUMERICAL_TYPES)
 	SetDimWithFixedMax(&C, v2_base<t>(5, 5));
 	CHECK_RECT2(C, 15, 15, 20, 20);
 
-	Offset(&C, v2_base<t>(30, 30));
+	MoveRect(&C, v2_base<t>(30, 30));
 	CHECK_RECT2(C, 45, 45, 50, 50);
 }
 

@@ -114,6 +114,7 @@ union v3_base
 	struct { t X, Y, Z; };
 	struct { t U, V, W; };
 	struct { t R, G, B; };
+	struct { t Width, Height, Depth; };
 	struct { v2_base<t> XY; t Placeholder1_; };
 	struct { t Placeholder2_; v2_base<t> YZ; };
 	struct { v2_base<t> UV; t Placeholder3_; };
@@ -774,6 +775,9 @@ FM_FUN_TSI Length(v2_base<t> V) -> t {
 FM_FUN_TSI LengthSquared(v2_base<t> V) -> t {
 	return V.X * V.X + V.Y * V.Y;
 } 
+FM_FUN_TSI GetArea(v2_base<t> V) -> t {
+	return V.Width * V.Height;
+}
 FM_FUN_TSI Normalize(v2_base<t> V) -> v2_base<t> {
 	return V / Length(V);
 }
@@ -985,6 +989,9 @@ FM_FUN_TSI Length(v3_base<t> V) -> t {
 FM_FUN_TSI LengthSquared(v3_base<t> V) -> t {
 	return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 } 
+FM_FUN_TSI GetArea(v3_base<t> V) -> t {
+	return V.Width * V.Height * V.Depth;
+}
 FM_FUN_TSI Normalize(v3_base<t> V) -> v3_base<t> {
 	return V / Length(V);
 }
@@ -2844,13 +2851,13 @@ FM_FUN_TSI AddRadius(rect2_base<t>* A, v2_base<t> Radius) -> void {
 FM_FUN_TSI AddRadius(rect2_base<t>* A, t Radius) -> void {
 	*A = AddRadius(*A, Radius);
 }
-FM_FUN_TSI Offset(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
+FM_FUN_TSI MoveRect(rect2_base<t> A, v2_base<t> Offset) -> rect2_base<t> {
 	rect2_base<t> R;
 	R.Min = A.Min + Offset;
 	R.Max = A.Max + Offset;
 	return R;
 }
-FM_FUN_TSI Offset(rect2_base<t>* A, v2_base<t> Offset) -> void {
+FM_FUN_TSI MoveRect(rect2_base<t>* A, v2_base<t> Offset) -> void {
 	A->Min += Offset;
 	A->Max += Offset;
 }
