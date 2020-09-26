@@ -46,6 +46,9 @@ TEST_CASE("rect2 construction")
 
 	CHECK_RECT2(Rect2CenterDim(v2(5, 3), v2(2, 1)), 4, 2.5f, 6, 3.5f);
 	CHECK_RECT2(Rect2iCenterDim(v2i(5, 3), v2i(4, 2)), 3, 2, 7, 4);
+
+	CHECK_RECT2(Rect2Dim(v2(5, 3.2f)), 0, 0, 5, 3.2f);
+	CHECK_RECT2(Rect2iDim(v2i(5, 3)), 0, 0, 5, 3);
 }
 
 TEST_CASE_TEMPLATE("rect2_base getters", t, NUMERICAL_TYPES_MIN_16_BYTES)
@@ -211,6 +214,22 @@ TEST_CASE_TEMPLATE("rect2_base operations", t, NUMERICAL_TYPES_MIN_16_BYTES)
 
 	AddRadius(&E, v2_base<t>(1, 2));
 	CHECK_RECT2(E, 2, 2, 13, 16);
+}
+
+TEST_CASE("rect2 FitRectInsideBounds")
+{
+	rect2 Bounds = Rect2Dim(10, 5);
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(-5, -5, 2, 4), Bounds), 0, 0, 2, 4); // top left
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(-5, 2, 5, 3), Bounds), 0, 2, 5, 5); // left
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(-5, 10, 1, 2), Bounds), 0, 3, 1, 5); // bottom left
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(3, 10, 5, 2), Bounds), 3, 3, 8, 5); // bottom
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(8, 10, 3, 3), Bounds), 7, 2, 10, 5); // bottom right
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(12, 0, 5, 4), Bounds), 5, 0, 10, 4); // right
+	MoveRect(&Bounds, v2(-3, 3));
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(10, -2, 2, 2), Bounds), 5, 3, 7, 5); // top right
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(0, 0, 2, 5), Bounds), 0, 3, 2, 8); // top crossing
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(-2, 5, 2, 2), Bounds), -2, 5, 0, 7); // center
+	CHECK_RECT2(FitRectInsideBounds(Rect2MinDim(-3, 3, 10, 5), Bounds), -3, 3, 7, 8); // center full 
 }
 
 TEST_CASE_TEMPLATE("rect2_base intersections and comparisons", t, NUMERICAL_TYPES)

@@ -2785,6 +2785,15 @@ FM_FUN_TSI Rect2BaseCenterDim(v2_base<t> Center, t Dim) -> rect2_base<t> {
 FM_FUN_TSI Rect2BaseCenterDim(v2_base<t> Center, v2_base<t> Dim) -> rect2_base<t> {
 	return Rect2BaseCenterRadius<t>(Center, Dim / (t)2);
 }
+FM_FUN_TSI Rect2BaseDim(v2_base<t> Dim) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = {};
+	R.Max = Dim;
+	return R;
+}
+FM_FUN_TSI Rect2BaseDim(t Width, t Height) -> rect2_base<t> {
+	return Rect2BaseDim<t>({Width, Height});
+}
 FM_FUN_TSI Ptr(rect2_base<t>& A) -> t* {
 	return &A.Min.X;
 }
@@ -2961,6 +2970,33 @@ FM_FUN_TSI ClampToRect(v2_base<t>* V, rect2_base<t> Rect) {
 FM_FUN_TSI ClampToRectFlipAllowed(v2_base<t>* V, rect2_base<t> Rect) {
 	*V = ClampToRectFlipAllowed(*V, Rect);
 }
+FM_FUN_TSI FitRectInsideBounds(rect2_base<t> Rect, rect2_base<t> Bounds) -> rect2 {
+	auto RectDim = GetDim(Rect);
+	if(Rect.Min.X < Bounds.Min.X)
+	{
+		Rect.Min.X = Bounds.Min.X;
+		Rect.Max.X = Bounds.Min.X + RectDim.W;
+	}
+	if(Rect.Min.Y < Bounds.Min.Y)
+	{
+		Rect.Min.Y = Bounds.Min.Y;
+		Rect.Max.Y = Bounds.Min.Y + RectDim.H;
+	}
+	if(Rect.Max.X > Bounds.Max.X)
+	{
+		Rect.Min.X = Bounds.Max.X - RectDim.W;
+		Rect.Max.X = Bounds.Max.X;
+	}
+	if(Rect.Max.Y > Bounds.Max.Y)
+	{
+		Rect.Min.Y = Bounds.Max.Y - RectDim.H;
+		Rect.Max.Y = Bounds.Max.Y;
+	}
+	return Rect;
+}
+FM_FUN_TSI FitRectInsideBounds(rect2_base<t>* Rect, rect2_base<t> Bounds) -> void {
+	*Rect = FitRectInsideBounds(*Rect, Bounds);
+}
 FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Min == B.Min && A.Max == B.Max;
 }
@@ -3017,6 +3053,16 @@ FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM);
 	FM_FUN_SI Rect2##InsideName##CenterDim(v2_base<T> Center, v2_base<T> Dim) -> rect2_base<T>\
 	{ return Rect2BaseCenterDim<T>(Center, Dim); }
 FM_GENERIC_FUNCTION(FM_RECT2_CENTER_DIM_2);
+	
+#define FM_RECT2_DIM(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##Dim(v2_base<T> Dim) -> rect2_base<T>\
+	{ return Rect2BaseDim<T>(Dim); }
+FM_GENERIC_FUNCTION(FM_RECT2_DIM);
+	
+#define FM_RECT2_DIM_2(InsideName, T) \
+	FM_FUN_SI Rect2##InsideName##Dim(T Width, T Height) -> rect2_base<T>\
+	{ return Rect2BaseDim<T>(Width, Height); }
+FM_GENERIC_FUNCTION(FM_RECT2_DIM_2);
 	
 #define FM_Rect2ToMinMax(_Rect, _Min, _Max) \
 	auto _Min = (_Rect).Min; \
