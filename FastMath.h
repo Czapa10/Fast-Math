@@ -48,6 +48,8 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FM_FUN_2T template<class t> template<class u> auto
 #define FM_FUN_SIC static FM_INL auto FM_CALL
 
+#define FM_ArrayCount(_Arr) (sizeof(_Arr)/sizeof((_Arr)[0]))
+
 #define FM_GENERIC_FUNCTION(Macro) \
 	Macro(, float) Macro(d, double) \
 	Macro(i, int32_t) Macro(u, uint32_t) \
@@ -810,11 +812,63 @@ FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
 FM_FUN_TSI AllComponentsDiffer(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X != B.X && A.Y != B.Y;
 }
+FM_FUN_TSI AllComponentsAreLesser(v2_base<t> A, v2_base<t> B) -> bool {
+	return A.X < B.X && A.Y < B.Y;
+}
+FM_FUN_TSI AllComponentsAreGreater(v2_base<t> A, v2_base<t> B) -> bool {
+	return A.X > B.X && A.Y > B.Y;
+}
+FM_FUN_TSI AllComponentsAreLesserOrEqual(v2_base<t> A, v2_base<t> B) -> bool {
+	return A.X <= B.X && A.Y <= B.Y;
+}
+FM_FUN_TSI AllComponentsAreGreaterOrEqual(v2_base<t> A, v2_base<t> B) -> bool {
+	return A.X >= B.X && A.Y >= B.Y;
+}
+FM_FUN_TSI OnlyOneComponentEquals(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X == B.X)
+		return A.Y != B.Y;
+	else if(A.Y == B.Y)
+		return A.X != B.X;
+	else
+		return false;
+}
 FM_FUN_TSI OnlyOneComponentDiffers(v2_base<t> A, v2_base<t> B) -> bool {
 	if(A.X != B.X)
 		return A.Y == B.Y;
 	else if(A.Y != B.Y)
 		return A.X == B.X;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesser(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X < B.X)
+		return A.Y >= B.Y;
+	else if(A.Y < B.Y)
+		return A.X >= B.X;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreater(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X > B.X)
+		return A.Y <= B.Y;
+	else if(A.Y > B.Y)
+		return A.X <= B.X;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesserOrEqual(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X <= B.X)
+		return A.Y > B.Y;
+	else if(A.Y <= B.Y)
+		return A.X > B.X;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v2_base<t> A, v2_base<t> B) -> bool {
+	if(A.X >= B.X)
+		return A.Y < B.Y;
+	else if(A.Y >= B.Y)
+		return A.X < B.X;
 	else
 		return false;
 }
@@ -1025,6 +1079,28 @@ FM_FUN_TSI operator!=(v3_base<t> A, v3_base<t> B) -> bool {
 FM_FUN_TSI AllComponentsDiffer(v3_base<t> A, v3_base<t> B) -> bool {
 	return A.X != B.X && A.Y != B.Y && A.Z != B.Z;
 }
+FM_FUN_TSI AllComponentsAreLesser(v3_base<t> A, v3_base<t> B) -> bool {
+	return A.X < B.X && A.Y < B.Y && A.Z > B.Z;
+}
+FM_FUN_TSI AllComponentsAreGreater(v3_base<t> A, v3_base<t> B) -> bool {
+	return A.X > B.X && A.Y > B.Y && A.Z > B.Z;
+}
+FM_FUN_TSI AllComponentsAreLesserOrEqual(v3_base<t> A, v3_base<t> B) -> bool {
+	return A.X < B.X && A.Y < B.Y && A.Z > B.Z;
+}
+FM_FUN_TSI AllComponentsAreGreaterOrEqual(v3_base<t> A, v3_base<t> B) -> bool {
+	return A.X > B.X && A.Y > B.Y && A.Z > B.Z;
+}
+FM_FUN_TSI OnlyOneComponentEquals(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X == B.X)
+		return A.Y != B.Y && A.Z != B.Z;
+	else if(A.Y == B.Y)
+		return A.X != B.X && A.Z != B.Z;
+	else if(A.Z == B.Z)
+		return A.X != B.X && A.Y != B.Y;
+	else
+		return false;
+}
 FM_FUN_TSI OnlyOneComponentDiffers(v3_base<t> A, v3_base<t> B) -> bool {
 	if(A.X != B.X)
 		return A.Y == B.Y && A.Z == B.Z;
@@ -1032,6 +1108,46 @@ FM_FUN_TSI OnlyOneComponentDiffers(v3_base<t> A, v3_base<t> B) -> bool {
 		return A.X == B.X && A.Z == B.Z;
 	else if(A.Z != B.Z)
 		return A.X == B.X && A.Y == B.Y;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesser(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X < B.X)
+		return A.Y >= B.Y && A.Z >= B.Z;
+	else if(A.Y < B.Y)
+		return A.X >= B.X && A.Z >= B.Z;
+	else if(A.Z < B.Z)
+		return A.X >= B.X && A.Y >= B.Y;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreater(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X > B.X)
+		return A.Y <= B.Y && A.Z <= B.Z;
+	else if(A.Y > B.Y)
+		return A.X <= B.X && A.Z <= B.Z;
+	else if(A.Z > B.Z)
+		return A.X <= B.X && A.Y <= B.Y;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesserOrEqual(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X <= B.X)
+		return A.Y > B.Y && A.Z > B.Z;
+	else if(A.Y <= B.Y)
+		return A.X > B.X && A.Z > B.Z;
+	else if(A.Z <= B.Z)
+		return A.X > B.X && A.Y > B.Y;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v3_base<t> A, v3_base<t> B) -> bool {
+	if(A.X >= B.X)
+		return A.Y < B.Y && A.Z < B.Z;
+	else if(A.Y >= B.Y)
+		return A.X < B.X && A.Z < B.Z;
+	else if(A.Z >= B.Z)
+		return A.X < B.X && A.Y < B.Y;
 	else
 		return false;
 }
@@ -1261,6 +1377,30 @@ FM_FUN_TSI operator!=(v4_base<t> A, v4_base<t> B) -> bool {
 FM_FUN_TSI AllComponentsDiffer(v4_base<t> A, v4_base<t> B) -> bool {
 	return A.X != B.X && A.Y != B.Y && A.Z != B.Z && A.W != B.W;
 }
+FM_FUN_TSI AllComponentsAreLesser(v4_base<t> A, v4_base<t> B) -> bool {
+	return A.X < B.X && A.Y < B.Y && A.Z < B.Z && A.W < B.W;
+}
+FM_FUN_TSI AllComponentsAreGreater(v4_base<t> A, v4_base<t> B) -> bool {
+	return A.X > B.X && A.Y > B.Y && A.Z > B.Z && A.W > B.W;
+}
+FM_FUN_TSI AllComponentsAreLesserOrEqual(v4_base<t> A, v4_base<t> B) -> bool {
+	return A.X <= B.X && A.Y <= B.Y && A.Z <= B.Z && A.W <= B.W;
+}
+FM_FUN_TSI AllComponentsAreGreaterOrEqual(v4_base<t> A, v4_base<t> B) -> bool {
+	return A.X >= B.X && A.Y >= B.Y && A.Z >= B.Z && A.W >= B.W;
+}
+FM_FUN_TSI OnlyOneComponentEquals(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X == B.X)
+		return A.Y != B.Y && A.Z != B.Z && A.W != B.W;
+	else if(A.Y == B.Y)
+		return A.X != B.X && A.Z != B.Z && A.W != B.W;
+	else if(A.Z == B.Z)
+		return A.X != B.X && A.Y != B.Y && A.W != B.W;
+	else if(A.W == B.W)
+		return A.X != B.X && A.Y != B.Y && A.Z != B.Z;
+	else
+		return false;
+}
 FM_FUN_TSI OnlyOneComponentDiffers(v4_base<t> A, v4_base<t> B) -> bool {
 	if(A.X != B.X)
 		return A.Y == B.Y && A.Z == B.Z && A.W == B.W;
@@ -1270,6 +1410,54 @@ FM_FUN_TSI OnlyOneComponentDiffers(v4_base<t> A, v4_base<t> B) -> bool {
 		return A.X == B.X && A.Y == B.Y && A.W == B.W;
 	else if(A.W != B.W)
 		return A.X == B.X && A.Y == B.Y && A.Z == B.Z;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesser(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X < B.X)
+		return A.Y >= B.Y && A.Z >= B.Z && A.W >= B.W;
+	else if(A.Y < B.Y)
+		return A.X >= B.X && A.Z >= B.Z && A.W >= B.W;
+	else if(A.Z < B.Z)
+		return A.X >= B.X && A.Y >= B.Y && A.W >= B.W;
+	else if(A.W < B.W)
+		return A.X >= B.X && A.Y >= B.Y && A.Z >= B.Z;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreater(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X > B.X)
+		return A.Y <= B.Y && A.Z <= B.Z && A.W <= B.W;
+	else if(A.Y > B.Y)
+		return A.X <= B.X && A.Z <= B.Z && A.W <= B.W;
+	else if(A.Z > B.Z)
+		return A.X <= B.X && A.Y <= B.Y && A.W <= B.W;
+	else if(A.W > B.W)
+		return A.X <= B.X && A.Y <= B.Y && A.Z <= B.Z;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsLesserOrEqual(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X <= B.X)
+		return A.Y > B.Y && A.Z > B.Z && A.W > B.W;
+	else if(A.Y <= B.Y)
+		return A.X > B.X && A.Z > B.Z && A.W > B.W;
+	else if(A.Z <= B.Z)
+		return A.X > B.X && A.Y > B.Y && A.W > B.W;
+	else if(A.W <= B.W)
+		return A.X > B.X && A.Y > B.Y && A.Z > B.Z;
+	else
+		return false;
+}
+FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v4_base<t> A, v4_base<t> B) -> bool {
+	if(A.X >= B.X)
+		return A.Y < B.Y && A.Z < B.Z && A.W < B.W;
+	else if(A.Y >= B.Y)
+		return A.X < B.X && A.Z < B.Z && A.W < B.W;
+	else if(A.Z >= B.Z)
+		return A.X < B.X && A.Y < B.Y && A.W < B.W;
+	else if(A.W >= B.W)
+		return A.X < B.X && A.Y < B.Y && A.Z < B.Z;
 	else
 		return false;
 }

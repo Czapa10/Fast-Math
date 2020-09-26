@@ -1,4 +1,6 @@
 
+// TODO: AllComponents... and OnlyOneComponent...
+
 TEST_CASE_TEMPLATE("v4_construction and getters", t, NUMERICAL_TYPES) 
 {
 	CHECK_V4_ALL_ALIASES(v4_base<t>(1, 2, 3, 4), 1, 2, 3, 4);

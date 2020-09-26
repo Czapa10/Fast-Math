@@ -22,6 +22,8 @@ TEST_CASE("v2 cast constructors")
 {
 	CHECK_V2(v2(v2i(1, 2)), 1, 2);
 	CHECK_V2(v2(uint32_t(1)), 1, 1);
+	CHECK_V2((v2)v2i(1, 2), 1, 2);
+	CHECK_V2((v2)uint32_t(1), 1, 1);
 }
 
 TEST_CASE_TEMPLATE("v2_base some operations", t, NUMERICAL_TYPES)
@@ -94,5 +96,30 @@ TEST_CASE("v2 operations")
 	v2 F(-5.f, 3.f);
 	Normalize(&F);
 	CHECK_V2(F, F.X / Length(F), F.Y / Length(F));
+}
+
+TEST_CASE("v2 comparisons")
+{
+	CHECK(AllComponentsDiffer(v2(1, 2), v2(2, 1)));		
+	CHECK(!AllComponentsDiffer(v2i(1, 2), v2i(1, 1)));		
+	CHECK(!AllComponentsDiffer(v2u(1, 1), v2u(1, 1)));		
+
+	CHECK(AllComponentsAreLesser(v2(1, 2), v2(2, 3)));		
+	CHECK(!AllComponentsAreLesser(v2i(1, 1), v2i(1, 2)));		
+	CHECK(!AllComponentsAreLesser(v2u(0, 1), v2u(1, 1)));		
+
+	CHECK(AllComponentsAreGreater(v2(3, 2), v2(2, 1)));		
+	CHECK(!AllComponentsAreGreater(v2i(2, 2), v2i(2, 1)));		
+	CHECK(!AllComponentsAreGreater(v2u(1, 1), v2u(0, 1)));		
+
+	CHECK(AllComponentsAreLesserOrEqual(v2(1, 2), v2(2, 3)));		
+	CHECK(AllComponentsAreLesserOrEqual(v2i(1, 1), v2i(1, 1)));		
+	CHECK(!AllComponentsAreLesserOrEqual(v2u(2, 1), v2u(1, 1)));		
+
+	CHECK(AllComponentsAreGreaterOrEqual(v2(2, 2), v2(2, 1)));		
+	CHECK(AllComponentsAreGreaterOrEqual(v2i(1, 1), v2i(1, 1)));		
+	CHECK(!AllComponentsAreGreaterOrEqual(v2u(1, 2), v2u(2, 2)));		
+
+	// TODO: OnlyOneComponent...
 }
 
