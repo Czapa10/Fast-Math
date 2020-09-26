@@ -539,6 +539,9 @@ FM_SINL vec4 FM_CALL Vec4(v4 V);
 ///////////////////////
 // utility functions //
 ///////////////////////
+FM_FUN_TSI Negate(t* A) -> void {
+	*A = -(*A);
+}
 FM_FUN_TSI Min(t A, t B) -> t {
 	return A < B ? A : B; 
 }

@@ -91,4 +91,24 @@ TEST_CASE("utility functions")
 		CHECK(SafeDiv0(4, 0) == 0);
 		CHECK(SafeDiv0(4, 2) == 2);
 	}
+
+	{
+		f32 F = 5;
+		Negate(&F);
+		CHECK(F == -5);
+		Negate(&F);
+		CHECK(F == 5);
+
+		i32 I = -22;
+		Negate(&I);
+		CHECK(I == 22);
+		Negate(&I);
+		CHECK(I == -22);
+
+		v2 V(-5, 10);
+		Negate(&V);
+		CHECK_V2(V, 5, -10);
+		Negate(&V);
+		CHECK_V2(V, -5, 10);
+	}
 }
