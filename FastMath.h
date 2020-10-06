@@ -574,6 +574,26 @@ FM_FUN_SI DegreesToRadians(float Degrees) -> float {
 FM_FUN_SI DegreesToRadians(double Degrees) -> double {
 	return Degrees * Pi64 / 180.0;
 }
+FM_FUN_SI PeriodicClampRotationDegrees(float Degrees) -> float {
+	if(Degrees > 360)
+		Degrees -= 360;
+	else if(Degrees < 0)
+		Degrees += 360;
+	return Degrees;
+}
+FM_FUN_SI PeriodicClampRotationDegrees(double Degrees) -> double {
+	if(Degrees > 360)
+		Degrees -= 360;
+	else if(Degrees < 0)
+		Degrees += 360;
+	return Degrees;
+}
+FM_FUN_SI PeriodicClampRotationDegrees(float* Degrees) -> void {
+	*Degrees = PeriodicClampRotationDegrees(*Degrees);
+}
+FM_FUN_SI PeriodicClampRotationDegrees(double* Degrees) -> void {
+	*Degrees = PeriodicClampRotationDegrees(*Degrees);
+}
 FM_FUN_TSI SafeDivN(t Numerator, t Divisor, t N) -> t {
 	if(Divisor != 0)
 		return Numerator / Divisor;
