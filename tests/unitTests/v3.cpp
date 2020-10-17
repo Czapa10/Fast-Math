@@ -1,5 +1,6 @@
 
 // TODO: AllComponents... and OnlyOneComponent...
+// TODO: IsWithinRange
 
 TEST_CASE_TEMPLATE("v3_construction and getters", t, NUMERICAL_TYPES)
 {

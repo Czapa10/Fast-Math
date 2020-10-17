@@ -100,6 +100,10 @@ TEST_CASE("v2 operations")
 
 TEST_CASE("v2 comparisons")
 {
+	CHECK(IsWithinRange(v2(1, 2), v2(2, 3), v2(3, 4)));
+	CHECK(IsWithinRange(v2(2, 3), v2(2, 3), v2(2, 3)));
+	CHECK(!IsWithinRange(v2(3, 3), v2(2, 3), v2(3, 4)));
+
 	CHECK(AllComponentsDiffer(v2(1, 2), v2(2, 1)));		
 	CHECK(!AllComponentsDiffer(v2i(1, 2), v2i(1, 1)));		
 	CHECK(!AllComponentsDiffer(v2u(1, 1), v2u(1, 1)));		

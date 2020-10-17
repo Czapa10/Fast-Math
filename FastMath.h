@@ -87,6 +87,7 @@ union v2_base
 	struct { t U, V; };
 	struct { t Width, Height; };
 	struct { t W, H; };
+	struct { t Left, Right; };
 	t Elements[2];
 
 	v2_base(t X, t Y) :X(X), Y(Y) {}
@@ -562,6 +563,9 @@ FM_FUN_TSI Square(t A) -> t {
 FM_FUN_TSI Square(t* A) -> void {
 	*A = (*A) * (*A);
 }
+FM_FUN_TSI IsWithinRange(t Min, t A, t Max) -> bool {
+	return A >= Min && A <= Max;	
+}
 FM_FUN_SI RadiansToDegrees(float Radians) -> float {
 	return Radians * 180.f / Pi;
 }
@@ -829,6 +833,9 @@ FM_FUN_TSI operator==(v2_base<t> A, v2_base<t> B) -> bool {
 FM_FUN_TSI operator!=(v2_base<t> A, v2_base<t> B) -> bool {
 	return !(A == B);
 }
+FM_FUN_TSI IsWithinRange(v2_base<t> Min, v2_base<t> A, v2_base<t> Max) -> bool {
+	return A.X >= Min.X && A.Y >= Min.Y && A.X <= Max.X && A.Y <= Max.Y;
+}
 FM_FUN_TSI AllComponentsDiffer(v2_base<t> A, v2_base<t> B) -> bool {
 	return A.X != B.X && A.Y != B.Y;
 }
@@ -1095,6 +1102,10 @@ FM_FUN_TSI operator==(v3_base<t> A, v3_base<t> B) -> bool {
 }
 FM_FUN_TSI operator!=(v3_base<t> A, v3_base<t> B) -> bool {
 	return !(A == B);
+}
+FM_FUN_TSI IsWithinRange(v3_base<t> Min, v3_base<t> A, v3_base<t> Max) -> bool {
+	return A.X >= Min.X && A.Y >= Min.Y && A.Z >= Min.Z &&
+	       A.X <= Max.X && A.Y <= Max.Y && A.Z <= Max.Z;
 }
 FM_FUN_TSI AllComponentsDiffer(v3_base<t> A, v3_base<t> B) -> bool {
 	return A.X != B.X && A.Y != B.Y && A.Z != B.Z;

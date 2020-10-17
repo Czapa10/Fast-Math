@@ -69,6 +69,13 @@ TEST_CASE("utility functions")
 	}
 
 	{
+		CHECK(IsWithinRange(1, 2, 3));
+		CHECK(!IsWithinRange(5u, 2u, 3u));
+		CHECK(!IsWithinRange(10.f, 12.f, 11.f));
+		CHECK(!IsWithinRange(15.f, 10.f, 5.f));
+	}
+
+	{
 		CHECK(DegreesToRadians(30.f) == FloatCmp(0.5235f));
 		CHECK(DegreesToRadians(30.0) == FloatCmp(0.5235));
 		CHECK(RadiansToDegrees(0.5235f) == FloatCmp(30.f));
