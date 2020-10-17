@@ -67,7 +67,7 @@ TEST_CASE("v2 operations")
 	CHECK_V2(Max(A, B), 2.f, 4.f);
 	CHECK_V2(Abs(B), 5.f, 3.f);
 	CHECK_V2(Normalize(B), B.X / sqrt(34.f), B.Y / sqrt(34.f));
-	CHECK_V2(Clamp(B, v2(), v2(5.f, 2.f)), 0.f, 2.f);
+	CHECK_V2(Clamp({}, B, v2(2)), 0, 2);
 	CHECK_V2(Lerp(v2(), v2(2.f, 4.f), 0.5f), 1.f, 2.f);
 	CHECK_V2(Lerp(v2(2.f, 4.f), v2(), 0.5f), 1.f, 2.f);
 	CHECK(Dot(A, B) == 2.f);

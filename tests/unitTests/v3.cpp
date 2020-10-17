@@ -81,7 +81,7 @@ TEST_CASE("v3 operations")
 	CHECK(SumOfElements(B) == 4);
 	CHECK(Length(B) == FloatCmp(sqrt(30)));
 	CHECK(LengthSquared(B) == 30);
-	CHECK_V3(Clamp(B, v3(-1, 7, -5), v3(4, 8, -1)), -1, 7, -1);
+	CHECK_V3(Clamp(v3(-1, 7, -5), B, v3(4, 8, -1)), -1, 7, -1);
 	CHECK_V3(Lerp(v3(0, 2, 3), v3(4, 5, 6), 0.5f), 2, 3.5f, 4.5f);
 	CHECK_V3(Lerp(v3(4, 5, 6), v3(0, 2, 3), 0.5f), 2, 3.5f, 4.5f);
 	CHECK(A == A);

@@ -93,7 +93,7 @@ TEST_CASE("v4 operations")
 	v4 C(1, 3, 5, -7);
 	v4 Min(2, 2, 2, 2);
 	v4 Max(5, 5, 3, 2);
-	CHECK_V4(Clamp(C, Min, Max), 2, 3, 3, 2);
+	CHECK_V4(Clamp(Min, C, Max), 2, 3, 3, 2);
 
 	v4 G(0, 2, 3, 0);
 	v4 H(4, 5, 6, 100);

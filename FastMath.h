@@ -96,7 +96,7 @@ union v2_base
 	v2_base() = default;
 
 	template<class u> explicit v2_base(v2_base<u> V)
-		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)) {}
+		:X((t)V.X), Y((t)V.Y) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
@@ -134,7 +134,7 @@ union v3_base
 	v3_base() = default;
 
 	template<class u> explicit v3_base(v3_base<u> V)
-		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)) {}
+		:X((t)V.X), Y((t)V.Y), Z((t)V.Z) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 
@@ -198,7 +198,7 @@ union v4_base
 	v4_base() = default;
 
 	template<class u> explicit v4_base(v4_base<u> V)
-		:X(static_cast<t>(V.X)), Y(static_cast<t>(V.Y)), Z(static_cast<t>(V.Z)), W(static_cast<t>(V.W)) {}
+		:X((t)V.X), Y((t)V.Y), Z((t)V.Z), W((t)V.W) {}
 
 	FM_FUN_I operator[](uint32_t Index) -> t&; 
 };
@@ -566,6 +566,28 @@ FM_FUN_TSI Square(t* A) -> void {
 FM_FUN_TSI IsWithinRange(t Min, t A, t Max) -> bool {
 	return A >= Min && A <= Max;	
 }
+FM_FUN_TSI Clamp(t Min, t Value, t Max) -> t {
+	if(Value < Min)
+		Value = Min;
+	else if(Value > Max)
+		Value = Max;
+	return Value;
+}
+FM_FUN_TSI Clamp01(t Value) -> t {
+	return Clamp(0, Value, 1);
+}
+FM_FUN_TSI ClampAboveZero(t Value) -> t {
+	return Value < 0 ? 0 : Value;
+}
+FM_FUN_TSI Clamp(t Min, t* Value, t Max) -> void {
+	*Value = Clamp(Min, *Value, Max);	
+}
+FM_FUN_TSI Clamp01(t* Value) -> void {
+	*Value = Clamp01(*Value);
+}
+FM_FUN_TSI ClampAboveZero(t* Value) -> void {
+	*Value = ClampAboveZero(*Value);
+}
 FM_FUN_SI RadiansToDegrees(float Radians) -> float {
 	return Radians * 180.f / Pi;
 }
@@ -799,7 +821,7 @@ FM_FUN_TSI SumOfElements(v2_base<t> V) -> t {
 	return V.X + V.Y;
 }
 FM_FUN_TSI Length(v2_base<t> V) -> t {
-	return static_cast<t>(sqrt(V.X * V.X + V.Y * V.Y));
+	return (t)(sqrt(V.X * V.X + V.Y * V.Y));
 }
 FM_FUN_TSI LengthSquared(v2_base<t> V) -> t {
 	return V.X * V.X + V.Y * V.Y;
@@ -813,8 +835,27 @@ FM_FUN_TSI Normalize(v2_base<t> V) -> v2_base<t> {
 FM_FUN_TSI Normalize(v2_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-FM_FUN_TSI Clamp(v2_base<t> V, v2_base<t> MinV, v2_base<t> MaxV) -> v2_base<t> {
-	return Min(Max(V, MinV), MaxV);
+FM_FUN_TSI Clamp(v2_base<t> Min, v2_base<t> V, v2_base<t> Max) -> v2_base<t> {
+	V.X = Clamp(Min.X, V.X, Max.X);
+	V.Y = Clamp(Min.Y, V.Y, Max.Y);
+	return V;
+}
+FM_FUN_TSI ClampAboveZero(v2_base<t> Min, v2_base<t> V, v2_base<t> Max) -> v2_base<t> {
+	V.X = ClampAboveZero(Min.X, V.X, Max.X);
+	V.Y = ClampAboveZero(Min.Y, V.Y, Max.Y);
+	return V;
+}
+FM_FUN_TSI Clamp01(v2_base<t> V) -> v2_base<t> {
+	return Clamp({}, V, v2_base<t>(1));
+}
+FM_FUN_TSI Clamp(v2_base<t> Min, v2_base<t>* V, v2_base<t> Max) -> void {
+	*V = Clamp(Min, *V, Max);
+}
+FM_FUN_TSI ClampAboveZero(v2_base<t> Min, v2_base<t>* V, v2_base<t> Max) -> void {
+	*V = ClampAboveZero(Min, *V, Max);
+}
+FM_FUN_TSI Clamp01(v2_base<t>* V) -> void {
+	*V = Clamp01(*V);
 }
 FM_FUN_TSI Lerp(v2_base<t> Source, v2_base<t> Dest, float T) -> v2_base<t> {
 	v2 R;
@@ -1082,9 +1123,30 @@ FM_FUN_TSI Normalize(v3_base<t> V) -> v3_base<t> {
 FM_FUN_TSI Normalize(v3_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-FM_FUN_TSI Clamp(v3_base<t> V, v3_base<t> MinV, v3_base<t> MaxV) -> v3_base<t> {
-	return Min(Max(V, MinV), MaxV);	
+FM_FUN_TSI Clamp(v3_base<t> Min, v3_base<t> V, v3_base<t> Max) -> v3_base<t> {
+	V.X = Clamp(Min.X, V.X, Max.X);
+	V.Y = Clamp(Min.Y, V.Y, Max.Y);
+	V.Z = Clamp(Min.Z, V.Z, Max.Z);
+	return V;
 } 
+FM_FUN_TSI ClampAboveZero(v3_base<t> Min, v3_base<t> V, v3_base<t> Max) -> v3_base<t> {
+	V.X = ClampAboveZero(Min.X, V.X, Max.X);
+	V.Y = ClampAboveZero(Min.Y, V.Y, Max.Y);
+	V.Z = ClampAboveZero(Min.Z, V.Z, Max.Z);
+	return V;
+}
+FM_FUN_TSI Clamp01(v3_base<t> V) -> v3_base<t> {
+	return Clamp({}, V, v3_base<t>(1));
+} 
+FM_FUN_TSI Clamp(v3_base<t> Min, v3_base<t>* V, v3_base<t> Max) -> void {
+	*V = Clamp(Min, *V, Max);
+} 
+FM_FUN_TSI ClampAboveZero(v3_base<t> Min, v3_base<t>* V, v3_base<t> Max) -> void {
+	*V = ClampAboveZero(Min, *V, Max);
+}
+FM_FUN_TSI Clamp01(v3_base<t>* V) -> void {
+	*V = Clamp01(*V);
+}
 FM_FUN_TSI Lerp(v3_base<t> Source, v3_base<t> Dest, float T) -> v3_base<t> {
 	v3 R;
 	R.X = Lerp((float)Source.X, (float)Dest.X, T);
@@ -1383,9 +1445,32 @@ FM_FUN_TSI Normalize(v4_base<t> V) -> v4_base<t> {
 FM_FUN_TSI Normalize(v4_base<t>* V) -> void {
 	*V = *V / Length(*V);
 }
-FM_FUN_TSI Clamp(v4_base<t> V, v4_base<t> MinV, v4_base<t> MaxV) -> v4_base<t> {
-	return Min(Max(V, MinV), MaxV);
+FM_FUN_TSI Clamp(v4_base<t> Min, v4_base<t> V, v4_base<t> Max) -> v4_base<t> {
+	V.X = Clamp(Min.X, V.X, Max.X);
+	V.Y = Clamp(Min.Y, V.Y, Max.Y);
+	V.Z = Clamp(Min.Z, V.Z, Max.Z);
+	V.W = Clamp(Min.W, V.W, Max.W);
+	return V;
 } 
+FM_FUN_TSI ClampAboveZero(v4_base<t> Min, v4_base<t> V, v4_base<t> Max) -> v4_base<t> {
+	V.X = ClampAboveZero(Min.X, V.X, Max.X);
+	V.Y = ClampAboveZero(Min.Y, V.Y, Max.Y);
+	V.Z = ClampAboveZero(Min.Z, V.Z, Max.Z);
+	V.W = ClampAboveZero(Min.W, V.W, Max.W);
+	return V;
+}
+FM_FUN_TSI Clamp01(v4_base<t> V) -> v4_base<t> {
+	return Clamp({}, V, v4_base<t>(1));
+} 
+FM_FUN_TSI Clamp(v4_base<t> Min, v4_base<t>* V, v4_base<t> Max) -> void {
+	*V = Clamp(Min, *V, Max);
+} 
+FM_FUN_TSI ClampAboveZero(v4_base<t> Min, v4_base<t>* V, v4_base<t> Max) -> void {
+	*V = ClampAboveZero(Min, *V, Max);
+}
+FM_FUN_TSI Clamp01(v4_base<t>* V) -> void {
+	*V = Clamp01(*V);
+}
 FM_FUN_TSI Lerp(v4_base<t> Source, v4_base<t> Dest, float T) -> v4_base<t> {
 	v4 R;
 	R.X = Lerp((float)Source.X, (float)Dest.X, T);
@@ -2830,8 +2915,8 @@ FM_FUN_SIC CastToVec4(v4 V) -> vec4 {
 // rect2 functions //
 /////////////////////
 template<class t> template<class u> rect2_base<t>::rect2_base(rect2_base<u> A) {
-	Min = static_cast<v2_base<t>>(A.Min);
-	Max = static_cast<v2_base<t>>(A.Max);
+	Min = (v2_base<t>)A.Min;
+	Max = (v2_base<t>)A.Max;
 }
 FM_FUN_TSI GetWidth(rect2_base<t> A) -> t {
 	return A.Max.X - A.Min.X;
