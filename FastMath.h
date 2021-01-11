@@ -17,7 +17,7 @@ in one of C++ files that include this header, BEFORE the include, like this:
 #define FAST_MATH_H
 
 #include <stdint.h>
-#include <math.h>
+#include <cmath>
 
 #ifndef FM_USE_SSE2_INSTEAD_OF_SSE4
 	#include <smmintrin.h>
@@ -3114,41 +3114,77 @@ FM_FUN_TSI operator/(rect2_base<t> A, t Scalar) -> rect2_base<t> {
 	A.Max /= Scalar;
 	return A;
 }
-FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
-	auto NewDim = HadamardMul(GetDim(A), Scalar);
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(ACurrentDim, Scalar);
 	return SetDimWithFixedMin(A, NewDim);
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMin(A, GetDim(A), Scalar);
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, v2_base<t> ACurrentDim, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMin(A, ACurrentDim, v2_base<t>(Scalar));
 }
 FM_FUN_TSI ScaleWithFixedMin(rect2_base<t> A, t Scalar) -> rect2_base<t> {
 	return ScaleWithFixedMin(A, v2_base<t>(Scalar));
 }
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedMin(*A, ACurrentDim, Scalar);	
+}
 FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, v2_base<t> Scalar) -> void {
 	*A = ScaleWithFixedMin(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, v2_base<t> ACurrentDim, t Scalar) -> void {
+	*A = ScaleWithFixedMin(*A, ACurrentDim, v2_base<t>(Scalar));
 }
 FM_FUN_TSI ScaleWithFixedMin(rect2_base<t>* A, t Scalar) -> void {
 	*A = ScaleWithFixedMin(*A, v2_base<t>(Scalar));
 }
-FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
-	auto NewDim = HadamardMul(GetDim(A), Scalar);
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(ACurrentDim, Scalar);
 	return SetDimWithFixedMax(A, NewDim);
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMax(A, GetDim(A), Scalar);
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, v2_base<t> ACurrentDim, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedMax(A, ACurrentDim, v2_base<t>(Scalar));
 }
 FM_FUN_TSI ScaleWithFixedMax(rect2_base<t> A, t Scalar) -> rect2_base<t> {
 	return ScaleWithFixedMax(A, v2_base<t>(Scalar));
 }
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedMax(*A, ACurrentDim, Scalar);	
+}
 FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, v2_base<t> Scalar) -> void {
 	*A = ScaleWithFixedMax(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, v2_base<t> ACurrentDim, t Scalar) -> void {
+	*A = ScaleWithFixedMax(*A, ACurrentDim, Scalar);	
 }
 FM_FUN_TSI ScaleWithFixedMax(rect2_base<t>* A, t Scalar) -> void {
 	*A = ScaleWithFixedMax(*A, Scalar);	
 }
-FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
-	auto NewDim = HadamardMul(GetDim(A), Scalar);
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> rect2_base<t> {
+	auto NewDim = HadamardMul(ACurrentDim, Scalar);
 	return SetDimWithFixedCenter(A, NewDim);
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, v2_base<t> Scalar) -> rect2_base<t> {
+	return ScaleWithFixedCenter(A, GetDim(A), Scalar);
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, v2_base<t> ACurrentDim, t Scalar) -> rect2_base<t> {
+	return ScaleWithFixedCenter(A, ACurrentDim, v2_base<t>(Scalar));
 }
 FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t> A, t Scalar) -> rect2_base<t> {
 	return ScaleWithFixedCenter(A, v2_base<t>(Scalar));
 }
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, v2_base<t> ACurrentDim, v2_base<t> Scalar) -> void {
+	*A = ScaleWithFixedCenter(*A, ACurrentDim, Scalar);	
+}
 FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, v2_base<t> Scalar) -> void {
 	*A = ScaleWithFixedCenter(*A, Scalar);	
+}
+FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, v2_base<t> ACurrentDim, t Scalar) -> void {
+	*A = ScaleWithFixedCenter(*A, ACurrentDim, Scalar);
 }
 FM_FUN_TSI ScaleWithFixedCenter(rect2_base<t>* A, t Scalar) -> void {
 	*A = ScaleWithFixedCenter(*A, Scalar);	
@@ -3252,6 +3288,9 @@ FM_FUN_TSI Union(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
 	R.Max = Max(A.Max, B.Max);
 	return R;
 }
+FM_FUN_TSI Union(rect2_base<t>* A, rect2_base<t> B) -> void {
+	*A = Union(*A, B);
+}
 FM_FUN_TSI ClampToRect(v2_base<t> V, rect2_base<t> Rect) -> v2_base<t> {
 	FM_ASSERT(!HasNegativeDim(Rect));
 	if(V.X < Rect.Min.X)	
@@ -3300,6 +3339,27 @@ FM_FUN_TSI FitRectInsideBounds(rect2_base<t> Rect, rect2_base<t> Bounds) -> rect
 }
 FM_FUN_TSI FitRectInsideBounds(rect2_base<t>* Rect, rect2_base<t> Bounds) -> void {
 	*Rect = FitRectInsideBounds(*Rect, Bounds);
+}
+FM_FUN_TSI GetWidthHeightRatio(rect2_base<t> Rect) -> t {
+	auto RectDim = GetDim(Rect);
+	return SafeDivN(RectDim.W, RectDim.H, InvalidF32);
+}
+FM_FUN_TSI GetHeightWidthRatio(rect2_base<t> Rect) -> t {
+	auto RectDim = GetDim(Rect);
+	return SafeDivN(RectDim.H, RectDim.W, InvalidF32);
+}
+FM_FUN_TSI ExpandToDesiredWidthHeightRatioWithFixedCenter(rect2_base<t> A, t DesiredWidthHeightRatio) -> rect2_base<t> {
+	t WidthHeightRatio = GetWidthHeightRatio(A);
+	FM_ASSERT(IsValid(WidthHeightRatio));
+	t Factor = DesiredWidthHeightRatio / WidthHeightRatio;
+	if(Factor > 1)
+		ScaleWithFixedCenter(&A, v2_base<t>(Factor, 1));
+	else
+		ScaleWithFixedCenter(&A, v2_base<t>(1, 1 / Factor));
+	return A;
+}
+FM_FUN_TSI ExpandToDesiredWidthHeightRatioWithFixedCenter(rect2_base<t>* A, t DesiredWidthHeightRatio) -> void {
+	*A = ExpandToDesiredWidthHeightRatioWithFixedCenter(*A, DesiredWidthHeightRatio);
 }
 FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Min == B.Min && A.Max == B.Max;
