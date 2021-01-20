@@ -3242,6 +3242,10 @@ FM_FUN_TSI HasNegativeH(rect2_base<t> A) -> bool {
 	return HasNegativeHeight(A);
 }
 FM_FUN_TSI Intersect(rect2_base<t> Rect, v2_base<t> Point) -> bool {
+	return Point.X > Rect.Min.X && Point.X < Rect.Max.X &&
+	       Point.Y > Rect.Min.Y && Point.Y < Rect.Max.Y;
+}
+FM_FUN_TSI IntersectOrTouch(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	return Point.X >= Rect.Min.X && Point.X <= Rect.Max.X &&
 	       Point.Y >= Rect.Min.Y && Point.Y <= Rect.Max.Y;
 }
@@ -3249,7 +3253,15 @@ FM_FUN_TSI IntersectFlipAllowed(rect2_base<t> Rect, v2_base<t> Point) -> bool {
 	MakeRectNotHaveNegativeDim(&Rect);
 	return Intersect(Rect, Point);
 }
+FM_FUN_TSI IntersectOrTouchFlipAllowed(rect2_base<t> Rect, v2_base<t> Point) -> bool {
+	MakeRectNotHaveNegativeDim(&Rect);
+	return IntersectOrTouch(Rect, Point);
+}
 FM_FUN_TSI Intersect(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return A.Max.X > B.Min.X && A.Min.X < B.Max.X &&
+	       A.Max.Y > B.Min.Y && A.Min.Y < B.Max.Y;
+}
+FM_FUN_TSI IntersectOrTouch(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return A.Max.X >= B.Min.X && A.Min.X <= B.Max.X &&
 	       A.Max.Y >= B.Min.Y && A.Min.Y <= B.Max.Y;
 }
@@ -3257,11 +3269,23 @@ FM_FUN_TSI FullyIntersect(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return Intersect(A, B.Min) && Intersect(A, B.Max) &&
 	       Intersect(A, GetMaxXMinY(B)) && Intersect(A, GetMinXMaxY(B));
 }
+FM_FUN_TSI FullyIntersectOrTouch(rect2_base<t> A, rect2_base<t> B) -> bool {
+	return IntersectOrTouch(A, B.Min) && IntersectOrTouch(A, B.Max) &&
+	       IntersectOrTouch(A, GetMaxXMinY(B)) && IntersectOrTouch(A, GetMinXMaxY(B));
+}
 FM_FUN_TSI IntersectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
 	MakeRectsNotHaveNegativeDim(&A, &B);
 	return Intersect(A, B);
 }
+FM_FUN_TSI IntersectOrTouchFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
+	MakeRectsNotHaveNegativeDim(&A, &B);
+	return IntersectOrTouch(A, B);
+}
 FM_FUN_TSI FullyIntersectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
+	MakeRectsNotHaveNegativeDim(&A, &B);
+	return FullyIntersect(A, B);
+}
+FM_FUN_TSI FullyIntersectOrTouchFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> bool {
 	MakeRectsNotHaveNegativeDim(&A, &B);
 	return FullyIntersect(A, B);
 }
@@ -3278,9 +3302,9 @@ FM_FUN_TSI IntersectionRect(rect2_base<t> A, rect2_base<t> B, rect2_base<t>* Int
 		return false;
 	}
 }
-FM_FUN_TSI GetIntersectionRectFlipAllowed(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
+FM_FUN_TSI IntersectionRectFlipAllowed(rect2_base<t> A, rect2_base<t> B, rect2_base<t>* Intersection) -> bool {
 	MakeRectNotHaveNegativeDim(&A, &B);
-	return GetIntersectionRect(A, B);
+	return IntersectionRect(A, B, Intersection);
 }
 FM_FUN_TSI Union(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
 	rect2_base<t> R;

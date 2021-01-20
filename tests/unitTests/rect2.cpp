@@ -253,11 +253,11 @@ TEST_CASE_TEMPLATE("rect2_base intersections and comparisons", t, NUMERICAL_TYPE
 	CHECK(!Intersect(C, P));
 
 	CHECK(Intersect(C, C));
-	CHECK(FullyIntersect(C, C));
+	CHECK(FullyIntersectOrTouch(C, C));
 	CHECK(Intersect(C, D));
 	CHECK(FullyIntersect(C, D));
 
-	CHECK(IntersectFlipAllowed(E, F));
+	CHECK(IntersectOrTouchFlipAllowed(E, F));
 	CHECK(!FullyIntersectFlipAllowed(E, F));
 	
 	rect2_base<t> Intersection;
