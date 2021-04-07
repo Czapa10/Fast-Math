@@ -118,16 +118,16 @@ union v3_base
 	struct { t U, V, W; };
 	struct { t R, G, B; };
 	struct { t Width, Height, Depth; };
-	struct { v2_base<t> XY; t Placeholder1_; };
-	struct { t Placeholder2_; v2_base<t> YZ; };
-	struct { v2_base<t> UV; t Placeholder3_; };
-	struct { t Placeholder4_; v2_base<t> VW; };
-	struct { v2_base<t> RG; t Placeholder5_; };
-	struct { t Placeholder6_; v2_base<t> GB; };
+	struct { v2_base<t> XY; };
+	struct { t Placeholder1_; v2_base<t> YZ; };
+	struct { v2_base<t> UV; };
+	struct { t Placeholder2_; v2_base<t> VW; };
+	struct { v2_base<t> RG; };
+	struct { t Placeholder3_; v2_base<t> GB; };
 	t Elements[3];
 
 	v3_base(t X, t Y, t Z) :X(X), Y(Y), Z(Z) {}
-	v3_base(v2_base<t> XY, t Z) :XY(XY), Z(Z) {}
+	v3_base(v2_base<t> XY, t Z = 0) :XY(XY), Z(Z) {}
 	v3_base(t X, v2_base<t> YZ) :X(X), YZ(YZ) {}
 	explicit v3_base(t XYZ) :X(XYZ), Y(XYZ), Z(XYZ) {}
 	explicit v3_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]) {}
@@ -154,44 +154,39 @@ using v3u8 = v3_base<uint8_t>;
 template<class t>
 union v4_base
 {
+	struct { t X, Y, Z, W; };
+	struct { t R, G, B, A; };
+
+	v3_base<t> XYZ;
+	v3_base<t> RGB;
+
 	struct 
 	{
-		union 
-		{
-			v3_base<t> XYZ;
-			struct { t X, Y, Z; };
-		};
-		t W;
-	};
-	struct
-	{
-		union 
-		{
-			v3_base<t> RGB;
-			struct { t R, G, B; };
-		};
-		t A;
-	};
-	struct {
 		v2_base<t> XY;
-		t Placeholder1_;
-		t Placeholder2_;
-	};
-	struct {
-		t Placeholder3_;
-		v2_base<t> YZ;
-		t Placeholder4_;
-	};
-	struct {
-		t Placeholder5_;
-		t Placeholder6_;
 		v2_base<t> ZW;
 	};
+	struct 
+	{
+		t Placeholder1_;
+		v2_base<t> YZ;
+	};
+
+	struct 
+	{
+		v2_base<t> RG;
+		v2_base<t> BA;
+	};
+	struct 
+	{
+		t Placeholder2_;
+		v2_base<t> GB;
+	};
+
 	t Elements[4];
 
 	v4_base(t X, t Y, t Z, t W) :X(X), Y(Y), Z(Z), W(W) {}
-	v4_base(v2_base<t> XY, v2_base<t> ZW) :XY(XY), ZW(ZW) {}
-	v4_base(v3_base<t> XYZ, t W) :XYZ(XYZ), W(W) {}
+	v4_base(v2_base<t> XY, v2_base<t> ZW = {}) :XY(XY), ZW(ZW) {}
+	v4_base(v3_base<t> XYZ, t W = 0) :XYZ(XYZ), W(W) {}
 	v4_base(t X, v3_base<t> YZW) :X(X), YZ(YZW.XY), W(YZW.Z) {}
 	explicit v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
 	explicit v4_base(const t* Mem) :X(Mem[0]), Y(Mem[1]), Z(Mem[2]), W(Mem[3]) {}
