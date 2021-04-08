@@ -521,10 +521,134 @@ static constexpr double MinPositiveF64 = 4.9406564584124654e-324;
 static constexpr double MaxF64 = 1.7976931348623158e+308;
 static constexpr double MinF64 = -MaxF64;
 
-static constexpr float Pi = 3.14159265359f;
+static constexpr float EpsilonF32 = 1.19209290E-07f;
+static constexpr double EpsilonF64 = 2.2204460492503131e-16;
+
+static constexpr float Pi32 = 3.14159265359f;
 static constexpr double Pi64 = 3.14159265358979323846;
-static constexpr float Tau = Pi * 2;
+static constexpr float Tau32 = Pi32 * 2;
 static constexpr double Tau64 = Pi64 * 2;
+
+template<class t> class constants
+{
+	static constexpr bool IsSpecialized = false;
+	static constexpr t Epsilon() { return {}; }
+	static constexpr t Min() { return {}; }
+	static constexpr t Max() { return {}; }
+	static constexpr t Pi() { return {}; }
+	static constexpr t Tau() { return {}; }
+	static constexpr t MinPositive() { return {}; }
+};
+
+template<> class constants<float>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr float Epsilon() { return EpsilonF32; }
+	static constexpr float Min() { return MinF32; }
+	static constexpr float Max() { return MaxF32; }
+	static constexpr float Pi() { return Pi32; }
+	static constexpr float Tau() { return Tau32; }
+	static constexpr float MinPositive() { return MinPositiveF32; }
+};
+
+template<> class constants<double>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr double Epsilon() { return EpsilonF64; }
+	static constexpr double Min() { return MinF64; }
+	static constexpr double Max() { return MaxF64; }
+	static constexpr double Pi() { return Pi64; }
+	static constexpr double Tau() { return Tau64; }
+	static constexpr double MinPositive() { return MinPositiveF64; }
+};
+
+template<> class constants<uint8_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr uint8_t Epsilon() { return 0; }
+	static constexpr uint8_t Min() { return 0; }
+	static constexpr uint8_t Max() { return MaxU8; }
+	static constexpr uint8_t Pi() { return 0; }
+	static constexpr uint8_t Tau() { return 0; }
+	static constexpr uint8_t MinPositive() { return 1; }
+};
+
+template<> class constants<int8_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr int8_t Epsilon() { return 0; }
+	static constexpr int8_t Min() { return MinI8; }
+	static constexpr int8_t Max() { return MaxI8; }
+	static constexpr int8_t Pi() { return 0; }
+	static constexpr int8_t Tau() { return 0; }
+	static constexpr int8_t MinPositive() { return 1; }
+};
+
+template<> class constants<uint16_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr uint16_t Epsilon() { return 0; }
+	static constexpr uint16_t Min() { return 0; }
+	static constexpr uint16_t Max() { return MaxU16; }
+	static constexpr uint16_t Pi() { return 0; }
+	static constexpr uint16_t Tau() { return 0; }
+	static constexpr uint16_t MinPositive() { return 1; }
+};
+
+template<> class constants<int16_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr int16_t Epsilon() { return 0; }
+	static constexpr int16_t Min() { return MinI16; }
+	static constexpr int16_t Max() { return MaxI16; }
+	static constexpr int16_t Pi() { return 0; }
+	static constexpr int16_t Tau() { return 0; }
+	static constexpr int16_t MinPositive() { return 1; }
+};
+
+template<> class constants<uint32_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr uint32_t Epsilon() { return 0; }
+	static constexpr uint32_t Min() { return 0; }
+	static constexpr uint32_t Max() { return MaxU32; }
+	static constexpr uint32_t Pi() { return 0; }
+	static constexpr uint32_t Tau() { return 0; }
+	static constexpr uint32_t MinPositive() { return 1; }
+};
+
+template<> class constants<int32_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr int32_t Epsilon() { return 0; }
+	static constexpr int32_t Min() { return MinI32; }
+	static constexpr int32_t Max() { return MaxI32; }
+	static constexpr int32_t Pi() { return 0; }
+	static constexpr int32_t Tau() { return 0; }
+	static constexpr int32_t MinPositive() { return 1; }
+};
+
+template<> class constants<uint64_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr uint64_t Epsilon() { return 0; }
+	static constexpr uint64_t Min() { return 0; }
+	static constexpr uint64_t Max() { return MaxU64; }
+	static constexpr uint64_t Pi() { return 0; }
+	static constexpr uint64_t Tau() { return 0; }
+	static constexpr uint64_t MinPositive() { return 1; }
+};
+
+template<> class constants<int64_t>
+{
+	static constexpr bool IsSpecialized = true;
+	static constexpr int64_t Epsilon() { return 0; }
+	static constexpr int64_t Min() { return MinI64; }
+	static constexpr int64_t Max() { return MaxI64; }
+	static constexpr int64_t Pi() { return 0; }
+	static constexpr int64_t Tau() { return 0; }
+	static constexpr int64_t MinPositive() { return 1; }
+};
 
 ///////////////////////////////////
 // forward function declarations //
@@ -586,13 +710,13 @@ FM_FUN_TSI ClampAboveZero(t* Value) -> void {
 	*Value = ClampAboveZero(*Value);
 }
 FM_FUN_SI RadiansToDegrees(float Radians) -> float {
-	return Radians * 180.f / Pi;
+	return Radians * 180.f / Pi32;
 }
 FM_FUN_SI RadiansToDegrees(double Radians) -> double {
 	return Radians * 180.0 / Pi64;
 }
 FM_FUN_SI DegreesToRadians(float Degrees) -> float {
-	return Degrees * Pi / 180.f;
+	return Degrees * Pi32 / 180.f;
 }
 FM_FUN_SI DegreesToRadians(double Degrees) -> double {
 	return Degrees * Pi64 / 180.0;
@@ -639,6 +763,14 @@ FM_FUN_SI FastLerp(float Source, float Dest, float T) -> float {
 }
 FM_FUN_SI FastLerp(double Source, double Dest, double T) -> double {
 	return Source + (Dest - Source) * T;
+}
+FM_FUN_SI Equal(float A, float B, float Epsilon = 0.0001f) -> bool {
+	float Difference = Abs(A - B);
+	return Difference < Epsilon;
+}
+FM_FUN_SI Equal(double A, double B, double Epsilon = 0.0001) -> bool {
+	double Difference = Abs(A - B);
+	return Difference < Epsilon;
 }
 
 /////////////////////////////////////////
@@ -936,6 +1068,9 @@ FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v2_base<t> A, v2_base<t> B) -> bool 
 		return A.X < B.X;
 	else
 		return false;
+}
+FM_FUN_TSI Equal(v2_base<t> A, v2_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
+	return Equal(A.X, B.X, Epsilon) && Equal(A.Y, B.Y, Epsilon);
 }
 
 //////////////////
@@ -1240,6 +1375,9 @@ FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v3_base<t> A, v3_base<t> B) -> bool 
 		return A.X < B.X && A.Y < B.Y;
 	else
 		return false;
+}
+FM_FUN_TSI Equal(v3_base<t> A, v3_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
+	return Equal(A.X, B.X, Epsilon) && Equal(A.Y, B.Y, Epsilon) && Equal(A.Z, B.Z, Epsilon);
 }
 
 //////////////////
@@ -1573,6 +1711,9 @@ FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v4_base<t> A, v4_base<t> B) -> bool 
 		return A.X < B.X && A.Y < B.Y && A.Z < B.Z;
 	else
 		return false;
+}
+FM_FUN_TSI Equal(v4_base<t> A, v4_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
+	return Equal(A.X, B.X, Epsilon) && Equal(A.Y, B.Y, Epsilon) && Equal(A.Z, B.Z, Epsilon) && Equal(A.W, B.W, Epsilon);
 }
 
 ////////////////////
@@ -3388,6 +3529,9 @@ FM_FUN_TSI operator==(rect2_base<t> A, rect2_base<t> B) -> bool {
 FM_FUN_TSI operator!=(rect2_base<t> A, rect2_base<t> B) -> bool {
 	return !(A == B);
 }
+FM_FUN_TSI Equal(rect2_base<t> A, rect2_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
+	return Equal(A.Min, B.Min) && Equal(A.Max, B.Max);
+}
 	
 #define FM_RECT2_MIN_MAX(InsideName, T) \
 	FM_FUN_SI Rect2##InsideName##MinMax(T Left, T Top, T Right, T Bottom) -> rect2_base<T>\
@@ -4216,7 +4360,7 @@ FM_FUN Mat4Orthographic(float Left, float Right, float Bottom, float Top, float 
 		0.f, 0.f, 0.f, 1.f);
 }
 FM_FUN Mat4Perspective(float Fov, float AspectRatio, float Near, float Far) -> mat4 {
-	float Cotangent = 1.f / tanf(Fov * Pi / 360.f);
+	float Cotangent = 1.f / tanf(Fov * Pi32 / 360.f);
 	float NF = Near - Far;
 		
 	return Mat4FromRows(
