@@ -125,6 +125,8 @@ TEST_CASE("utility functions")
 		CHECK(DifferenceBetweenDegrees(180, 0) == FloatCmp(180));
 		CHECK(DifferenceBetweenDegrees(90, 275) == FloatCmp(175));
 		CHECK(DifferenceBetweenDegrees(275, 90) == FloatCmp(175));
+		CHECK(DifferenceBetweenDegrees(180, 185) == FloatCmp(5));
+		CHECK(DifferenceBetweenDegrees(175, 180) == FloatCmp(5));
 		CHECK(DifferenceBetweenDegrees(300, 0) == FloatCmp(60));
 		CHECK(DifferenceBetweenDegrees(10, 260) == FloatCmp(110));
 	}
