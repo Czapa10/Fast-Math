@@ -741,6 +741,15 @@ FM_FUN_SI PeriodicClampRotationDegrees(float* Degrees) -> void {
 FM_FUN_SI PeriodicClampRotationDegrees(double* Degrees) -> void {
 	*Degrees = PeriodicClampRotationDegrees(*Degrees);
 }
+FM_FUN_SI DifferenceBetweenDegrees(float A, float B) -> float {
+	FM_ASSERT(A >= 0 && B >= 0);
+	if(A >= 180 && B <= 180)
+		return 360 - A + B;
+	else if(A <= 180 && B >= 180)
+		return 360 - B + A;
+	else
+		return Abs(B - A);
+}
 FM_FUN_TSI SafeDivN(t Numerator, t Divisor, t N) -> t {
 	if(Divisor != 0)
 		return Numerator / Divisor;

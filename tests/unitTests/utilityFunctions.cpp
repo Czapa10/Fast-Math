@@ -118,4 +118,14 @@ TEST_CASE("utility functions")
 		Negate(&V);
 		CHECK_V2(V, -5, 10);
 	}
+
+	{
+		CHECK(DifferenceBetweenDegrees(0, 0) == FloatCmp(0));
+		CHECK(DifferenceBetweenDegrees(0, 180) == FloatCmp(180));
+		CHECK(DifferenceBetweenDegrees(180, 0) == FloatCmp(180));
+		CHECK(DifferenceBetweenDegrees(90, 275) == FloatCmp(175));
+		CHECK(DifferenceBetweenDegrees(275, 90) == FloatCmp(175));
+		CHECK(DifferenceBetweenDegrees(300, 0) == FloatCmp(60));
+		CHECK(DifferenceBetweenDegrees(10, 260) == FloatCmp(110));
+	}
 }
