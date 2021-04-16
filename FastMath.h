@@ -4235,6 +4235,30 @@ static const rect2i InvalidRect2i = Rect2iMinMax(InvalidI32, InvalidI32, Invalid
 static const rect2u InvalidRect2u = Rect2uMinMax(InvalidU32, InvalidU32, InvalidU32, InvalidU32);
 static const mat4 InvalidMat4 = Mat4Diagonal(InvalidF32, InvalidF32, InvalidF32, InvalidF32);
 
+FM_FUN_SI IsValid(uint16_t A) -> bool {
+	return A != InvalidU16;
+}
+FM_FUN_SI IsValid(uint32_t A) -> bool {
+	return A != InvalidU32;
+}
+FM_FUN_SI IsValid(uint64_t A) -> bool {
+	return A != InvalidU64;
+}
+FM_FUN_SI IsValid(int16_t A) -> bool {
+	return A != InvalidI16;
+}
+FM_FUN_SI IsValid(int32_t A) -> bool {
+	return A != InvalidI32;
+}
+FM_FUN_SI IsValid(int64_t A) -> bool {
+	return A != InvalidI64;
+}
+FM_FUN_SI IsValid(float A) -> bool {
+	return A != InvalidF32;
+}
+FM_FUN_SI IsValid(double A) -> bool {
+	return A != InvalidF64;
+}
 FM_FUN_SI IsValid(v2 A) -> bool {
 	return A.X != InvalidF32;
 }
