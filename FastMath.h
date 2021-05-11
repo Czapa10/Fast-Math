@@ -1079,6 +1079,11 @@ FM_FUN_TSI OnlyOneComponentIsGreaterOrEqual(v2_base<t> A, v2_base<t> B) -> bool 
 FM_FUN_TSI Equal(v2_base<t> A, v2_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
 	return Equal(A.X, B.X, Epsilon) && Equal(A.Y, B.Y, Epsilon);
 }
+FM_FUN_TSI GetDistanceBetween(v2_base<t> A, v2_base<t> B) -> t {
+	v2 Diff = A - B;
+	Diff = HadamardMul(Diff, Diff);
+	return (float)(sqrt(Diff.X + Diff.Y));
+}
 
 //////////////////
 // v3 functions //

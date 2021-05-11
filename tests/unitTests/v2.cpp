@@ -124,6 +124,10 @@ TEST_CASE("v2 comparisons")
 	CHECK(AllComponentsAreGreaterOrEqual(v2i(1, 1), v2i(1, 1)));		
 	CHECK(!AllComponentsAreGreaterOrEqual(v2u(1, 2), v2u(2, 2)));		
 
+	CHECK(GetDistanceBetween(v2(-1, 0), v2(2, 0)) == FloatCmp(3));
+	CHECK(GetDistanceBetween(v2(0, 2), v2(0, -1)) == FloatCmp(3));
+	CHECK(GetDistanceBetween(v2(0, 0), v2(1, 1)) == FloatCmp(1.41));
+
 	// TODO: OnlyOneComponent...
 }
 
