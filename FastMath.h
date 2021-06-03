@@ -4453,6 +4453,7 @@ FM_FUN_C mat4::GetRowV4(uint32_t Index) -> v4 {
 		
 		default: {
 			FM_ERROR(); // Index has to be in range from 0 to 3
+			return {};
 		}
 	}
 }
