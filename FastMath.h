@@ -3089,6 +3089,12 @@ FM_FUN_TSI GetSize(rect2_base<t> A) -> v2_base<t> {
 FM_FUN_TSI GetRadius(rect2_base<t> A) -> v2_base<t> {
 	return GetDim(A) / (t)2;
 }
+FM_FUN_TSI GetRadiusX(rect2_base<t> A) -> t {
+	return GetWidth(A) / (t)2;
+}
+FM_FUN_TSI GetRadiusY(rect2_base<t> A) -> t {
+	return GetHeight(A) / (t)2;
+}
 FM_FUN_TSI GetArea(rect2_base<t> A) -> t {
 	auto Dim = GetDim(A);
 	return Dim.W * Dim.H;
@@ -3170,6 +3176,82 @@ FM_FUN_TSI SetDimWithFixedMax(rect2_base<t>* A, v2_base<t> Dim) -> void {
 }
 FM_FUN_TSI SetDimWithFixedMax(rect2_base<t>* A, t Width, t Height) -> void {
 	*A = SetDimWithFixedMax(*A, v2_base<t>(Width, Height));
+}
+FM_FUN_TSI SetMin(rect2_base<t> A, v2_base<t> Min) -> rect2_base<t> {
+	auto Dim = GetDim(A);
+	A.Min = Min;
+	A.Max = Min + Dim;
+	return A;
+}
+FM_FUN_TSI SetMin(rect2_base<t>* A, v2_base<t> Min) -> void {
+	*A = SetMin(*A, Min);
+}
+FM_FUN_TSI SetMax(rect2_base<t> A, v2_base<t> Max) -> rect2_base<t> {
+	auto Dim = GetDim(A);
+	A.Min = Max - Dim;
+	A.Max = Max;
+	return A;
+}
+FM_FUN_TSI SetMax(rect2_base<t>* A, v2_base<t> Max) -> void {
+	*A = SetMax(*A, Max);
+}
+FM_FUN_TSI SetMaxXMinY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	auto Dim = GetDim(A);
+	A.Min = {P.X - Dim.W, P.Y};
+	A.Max = {P.X, P.Y + Dim.H};
+	return A;
+}
+FM_FUN_TSI SetMaxXMinY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetMaxXMinY(*A, P);
+}
+FM_FUN_TSI SetMinXMaxY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	auto Dim = GetDim(A);
+	A.Min = {P.X, P.Y - Dim.H};
+	A.Max = {P.X + Dim.W, P.Y};
+	return A;
+}
+FM_FUN_TSI SetMinXMaxY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetMinXMaxY(*A, P);
+}
+FM_FUN_TSI SetCenterXMinY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	t Rx = GetRadiusX(A);
+	t H = GetHeight(A);
+	A.Min = {P.X - Rx, P.Y};
+	A.Max = {P.X + Rx, P.Y + H};
+	return A;
+}
+FM_FUN_TSI SetCenterXMinY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetCenterXMinY(*A, P);
+}
+FM_FUN_TSI SetCenterXMaxY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	t Rx = GetRadiusX(A);
+	t H = GetHeight(A);
+	A.Min = {P.X - Rx, P.Y - H};
+	A.Max = {P.X + Rx, P.Y};
+	return A;
+}
+FM_FUN_TSI SetCenterXMaxY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetCenterXMaxY(*A, P);
+}
+FM_FUN_TSI SetMinXCenterY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	t Ry = GetRadiusY(A);
+	t W = GetWidth(A);
+	A.Min = {P.X, P.Y - Ry};
+	A.Max = {P.X + W, P.Y + Ry};
+	return A;
+}
+FM_FUN_TSI SetMinXCenterY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetMinXCenterY(*A, P);
+}
+FM_FUN_TSI SetMaxXCenterY(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	t Ry = GetRadiusY(A);
+	t W = GetWidth(A);
+	A.Min = {P.X - W, P.Y - Ry};
+	A.Max = {P.X, P.Y + Ry};
+	return A;
+}
+FM_FUN_TSI SetMaxXCenterY(rect2_base<t>* A, v2_base<t> P) -> void {
+	*A = SetMaxXCenterY(*A, P);
 }
 FM_FUN_TSI HasArea(rect2_base<t> A) -> bool {
 	return A.Min.X < A.Max.X && A.Min.Y < A.Max.Y;
