@@ -186,6 +186,7 @@ union v4_base
 
 	v4_base(t X, t Y, t Z, t W) :X(X), Y(Y), Z(Z), W(W) {}
 	v4_base(v2_base<t> XY, v2_base<t> ZW = {}) :XY(XY), ZW(ZW) {}
+	v4_base(v2_base<t> XY, t Z = 0, t W = 0) :XY(XY), Z(Z), W(W) {}
 	v4_base(v3_base<t> XYZ, t W = 0) :XYZ(XYZ), W(W) {}
 	v4_base(t X, v3_base<t> YZW) :X(X), YZ(YZW.XY), W(YZW.Z) {}
 	explicit v4_base(t XYZW) :X(XYZW), Y(XYZW), Z(XYZW), W(XYZW) {}
@@ -695,10 +696,10 @@ FM_FUN_TSI Clamp(t Min, t Value, t Max) -> t {
 	return Value;
 }
 FM_FUN_TSI Clamp01(t Value) -> t {
-	return Clamp(0, Value, 1);
+	return Clamp((t)0, Value, (t)1);
 }
 FM_FUN_TSI ClampAboveZero(t Value) -> t {
-	return Value < 0 ? 0 : Value;
+	return Value < (t)0 ? (t)0 : Value;
 }
 FM_FUN_TSI Clamp(t Min, t* Value, t Max) -> void {
 	*Value = Clamp(Min, *Value, Max);	
@@ -3547,6 +3548,15 @@ FM_FUN_TSI Union(rect2_base<t> A, rect2_base<t> B) -> rect2_base<t> {
 FM_FUN_TSI Union(rect2_base<t>* A, rect2_base<t> B) -> void {
 	*A = Union(*A, B);
 }
+FM_FUN_TSI Union(rect2_base<t> A, v2_base<t> P) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Min(A.Min, P);
+	R.Max = Max(A.Max, P);
+	return R;
+}
+FM_FUN_TSI Union(rect2_base<t>* A, v2_base<t> B) -> void {
+	*A = Union(*A, B);
+}
 FM_FUN_TSI ClampToRect(v2_base<t> V, rect2_base<t> Rect) -> v2_base<t> {
 	FM_ASSERT(!HasNegativeDim(Rect));
 	if(V.X < Rect.Min.X)	
@@ -3626,6 +3636,17 @@ FM_FUN_TSI operator!=(rect2_base<t> A, rect2_base<t> B) -> bool {
 FM_FUN_TSI Equal(rect2_base<t> A, rect2_base<t> B, t Epsilon = constants<t>::Epsilon()) -> bool {
 	return Equal(A.Min, B.Min) && Equal(A.Max, B.Max);
 }
+FM_FUN_TSI Lerp(rect2_base<t> Source, rect2_base<t> Dest, float T) -> rect2_base<t> {
+	rect2_base<t> R;
+	R.Min = Lerp((v2)Source.Min, (v2)Dest.Min, T);
+	R.Max = Lerp((v2)Source.Max, (v2)Dest.Max, T);
+	return (rect2_base<t>)(R);
+}
+FM_FUN_TSI FastLerp(rect2_base<t> Source, rect2_base<t> Dest, float T) -> rect2_base<t> {
+	rect2 fSource = (rect2)Source;
+	rect2 fDest = (rect2)Dest;
+	return (rect2_base<t>)(fSource + T * (fDest - fSource));
+}
 	
 #define FM_RECT2_MIN_MAX(InsideName, T) \
 	FM_FUN_SI Rect2##InsideName##MinMax(T Left, T Top, T Right, T Bottom) -> rect2_base<T>\
@@ -3694,6 +3715,32 @@ FM_GENERIC_FUNCTION(FM_RECT2_DIM_2);
 #define FM_Rect2ToMinDim(_Rect, _Min, _Dim) \
 	auto _Min = (_Rect).Min; \
 	auto _Dim = GetDim(_Rect);
+
+//////////////////////////////////
+// pointer versions of funcions // 
+//////////////////////////////////
+FM_FUN_TSI HadamardMul(t* A, t B) -> void {
+	*A = HadamardMul(*A, B);
+}
+FM_FUN_TSI SafeHadamardDivN(t* A, t B, t N) -> void {
+	*A = SafeHadamardDivN(*A, B, N);
+}
+FM_FUN_TSI SafeHadamardDiv1(t* A, t B) -> void {
+	return SafeHadamardDivN<t>(*A, B, t((t)1));
+}
+FM_FUN_TSI SafeHadamardDiv0(t* A, t B) -> void {
+	return SafeHadamardDivN<t>(*A, B, t((t)0));
+}
+
+////////////////////////
+// geometric funcions // 
+////////////////////////
+FM_FUN_SI RayIntersectsCircle(v2 RayPos, v2 RayDir, v2 CircleCenter, float CircleRadius) -> bool {
+	v2 RayToCircleCenterDirection = Normalize(CircleCenter - RayPos);
+	float RayStepsToGetToClosestPointFromCircleCenterOnRayLine = Dot(CircleCenter - RayPos, RayToCircleCenterDirection);
+	v2 ClosestPointFromCircleCenterOnRayLine = RayPos + RayDir * RayStepsToGetToClosestPointFromCircleCenterOnRayLine;
+	return GetDistanceBetween(CircleCenter, ClosestPointFromCircleCenterOnRayLine) <= CircleRadius;
+}
 
 ///////////////////////////////////////////
 // headers of not inlined mat4 functions //

@@ -5,7 +5,6 @@ TEST_CASE_TEMPLATE("v4_construction and getters", t, NUMERICAL_TYPES)
 {
 	CHECK_V4_ALL_ALIASES(v4_base<t>(1, 2, 3, 4), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>(v2_base<t>(1, 2), v2_base<t>(3, 4)), 1, 2, 3, 4);
-	CHECK_V4(v4_base<t>(v2_base<t>(1, 2)), 1, 2, 0, 0);
 	CHECK_V4(v4_base<t>(v3_base<t>(1, 2, 3), 4), 1, 2, 3, 4);
 	CHECK_V4(v4_base<t>(v3_base<t>(1, 2, 3)), 1, 2, 3, 0);
 	CHECK_V4(v4_base<t>(1, v3_base<t>(2, 3, 4)), 1, 2, 3, 4);
